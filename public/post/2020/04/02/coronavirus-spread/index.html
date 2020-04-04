@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>コロナウイルスの欧米感染状況 | A minimal website of Keiichi Shima</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/about/">About</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">コロナウイルスの欧米感染状況</span></h1>
+
+<h2 class="date">2020/04/02</h2>
+</div>
+
+<main>
+
+
+
+<p>ジョンズホプキンス大学の次のウェブサイトでは、コロナウイルスの感染者数に関する世界集計、並びにダッシュボード（地図化された情報）を確認できる：
+<a href="https://coronavirus.jhu.edu/">Coronavirus Resource Center at Johns Hopkins University</a></p>
+<p>また、JHUのダッシュボードで用いられる感染者数の国別のパネルデータについてはgithubで公表されており、wide形式のcsvファイルでダウンロード可能である：
+<a href="%3Chttps://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data">CSSEGISandData/COVID-19</a></p>
+<p>データの収録開始は2020-01-22で、それ以降、数値は毎日追加される。ただし、ファイルはConfirmed（感染者数）, Deaths（死亡者数）, Recovered（回復者数）別に分かれており、分析にはその結合が必要になる。データには不整合も存在する。そのため、githubの別のプロジェクトで、データクリーニングとファイル結合が施され、long形式変換済みのものが公開されている：
+<a href="https://github.com/datasets/covid-19">datasets/covid-19</a></p>
+<p>以上のサイトで’time-series-19-covid-combined.csv’を取得すれば、rのコードで容易に分析できる。</p>
+<div id="section" class="section level1">
+<h1>感染者数の増加</h1>
+<pre class="r"><code>library(ggplot2)
+library(readr)
+library(maps)
+library(viridis)
+## get the COVID-19 data
+url_csv &lt;- &#39;https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv&#39;
+c19 &lt;- read_csv(url(url_csv)) 
+
+## get the world map
+world &lt;- map_data(&quot;world&quot;)
+
+map1&lt;-ggplot() +
+  geom_polygon(data = world, aes(x=long, y=lat, group=group), fill=&quot;black&quot;, alpha=0.5) +
+  geom_point(data=c19, aes(x = Long, y = Lat, size=Confirmed, color=Confirmed),
+             stroke=F, alpha=0.7) +
+  scale_size_continuous(trans=&quot;log10&quot;) +
+  scale_color_viridis_c(option=&quot;A&quot;, trans=&quot;log10&quot;) +
+  labs(caption = &quot;Johns Hopkins U. CSSE Data&quot;)
+
+library(gganimate)
+#anim1&lt;-map1+transition_time(Date)+labs(title = &quot;Date: {frame_time}&quot;)
+
+#animate(anim1)</code></pre>
+</div>
+<div id="section-1" class="section level1">
+<h1>欧米データの時系列と散布図</h1>
+<p>イタリア、スペイン、ドイツ、フランス、イギリス、アメリカに、イラン、中国を加えた感染者数の多い8か国に絞って、時系列傾向を把握する。</p>
+<pre class="r"><code>library(dplyr)
+c19a&lt;-filter(c19,`Country/Region` %in% c(&quot;Italy&quot;,&quot;US&quot;,&quot;Spain&quot;,&quot;Germany&quot;,&quot;Iran&quot;)) 
+
+c19b&lt;-c19%&gt;%filter(`Country/Region` %in% c(&quot;China&quot;))%&gt;%
+  group_by(`Country/Region`,Date)%&gt;%
+  summarize_at(c(&quot;Confirmed&quot;,&quot;Recovered&quot;,&quot;Deaths&quot;),sum,na.rm=T)
+
+c19c&lt;-filter(c19,`Country/Region` %in% c(&quot;United Kingdom&quot;,&quot;France&quot;) &amp; is.na(`Province/State`))
+
+c197&lt;-c19a%&gt;%full_join(c19c)%&gt;%full_join(c19b)
+rm(&quot;c19a&quot;,&quot;c19b&quot;,&quot;c19c&quot;)
+
+c197&lt;-select(c197,-c(`Province/State`,&quot;Lat&quot;,&quot;Long&quot;))
+c197&lt;-rename(c197,Country=`Country/Region`)
+
+c197&lt;-c197%&gt;%mutate(active=Confirmed-Recovered-Deaths)
+c197&lt;-c197%&gt;%group_by(Country)%&gt;%mutate(newcase=Confirmed-lag(Confirmed))
+c197&lt;-c197%&gt;%group_by(Country)%&gt;%mutate(growth=newcase/lag(active))
+c197&lt;-c197%&gt;%group_by(Country)%&gt;%mutate(fatality=Deaths/lag(Confirmed))
+c197&lt;-c197%&gt;%group_by(Country)%&gt;%mutate(recovery=Recovered/lag(Confirmed))
+
+ggplot(c197,aes(Date,Confirmed,group=Country))+geom_line(aes(color=Country),size=1)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(c197,aes(Confirmed,Deaths,group=Country))+geom_point(aes(color=Country),size=2)+
+  geom_line(aes(color=Country))</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<p>一つ目の図は感染者数累計の推移であり、イタリア、スペイン、アメリカは中国を超えており、その趨勢はピークに至っていないと理解できる。二つ目は、縦軸に死亡者数、横軸に感染者数を用いた図であり、その傾きから、死亡確率を読み取ることができる。中国の傾きを挟み、イタリア、スペイン、フランス、イギリス、イランの死亡確率は高い傾向で推移しており、一方、ドイツ、アメリカは低い値を維持している。</p>
+</div>
+<div id="section-2" class="section level1">
+<h1>新規感染者数の推移と感染者増加率</h1>
+<p>次に、日次 <span class="math inline">\(t\)</span> の新規感染者数 <span class="math inline">\(newcase_t\)</span> （Confirmedの差分）の推移と増加率 <span class="math inline">\(growth_t\)</span> とを図示する。増加率の定義には
+<span class="math inline">\(active_t=Confirmed_t-Recovered_t-Deaths_t\)</span> を分母に用い、 <span class="math inline">\(growth_t=newcase_t/active_{t-1}\)</span> とした。</p>
+<pre class="r"><code>filter(c197,Confirmed&gt;99)-&gt;c197f
+ggplot(c197f,aes(Date,newcase,group=Country))+geom_line(aes(color=Country),size=1)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(c197f,aes(Date,newcase,group=Country))+geom_smooth(aes(color=Country),se=F)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(c197f,aes(Date,growth,group=Country))+geom_line(aes(color=Country),size=1)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-3-3.png" width="672" /></p>
+<pre class="r"><code>ggplot(c197f,aes(Date,growth,group=Country))+geom_smooth(aes(color=Country),se=F)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-3-4.png" width="672" /></p>
+<p>一つ目の図は、新規感染者の推移である。3月以降、ヨーロッパで感染拡大が始まり、3月半ばからアメリカで急激に拡大した。二つ目はsmoothing処理（データのギザギザを取り、滑らかにする）を施した同様の図である。イタリアでは、3月後半にピークが来た可能性が高い。</p>
+<p>三つ目は、感染者数増加率を図示したものである。国際的に数パーセントの水準に収束する可能性があるが、それがどの値であるか判断は難しい。四つ目はsmoothing後の図である。誤解を覚悟していえば、増加率は感染爆発の発生から一か月後には2パーセント台に収束する可能性が見受けられる。</p>
+</div>
+<div id="section-3" class="section level1">
+<h1>死亡確率と回復確率</h1>
+<p>現状のデータで、死亡確率 <span class="math inline">\(fatality_t=Deaths_t/Confirmed_{t-1}\)</span> の推移と回復確率 <span class="math inline">\(recovery_t=Recovered_t/Confirmed_{t-1}\)</span> の傾向を図示する。ただし、その傾向には収束する特徴はまだ見られない。</p>
+<pre class="r"><code>ggplot(c197f,aes(Date,fatality,group=Country))+geom_line(aes(color=Country),size=1)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(c197f,aes(Date,recovery,group=Country))+geom_line(aes(color=Country),size=1)</code></pre>
+<p><img src="/post/2020-04-02-coronavirus_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p>一つ目の図は、死亡確率の推移である。イタリア、スペイン、フランス、イギリスに関しては、1割前後にあり、マクロ的な医療対処の許容限度を恐らく超えていることに帰するはずである。他方、ドイツ、アメリカの水準は低く、医療の限界には来ていないと考えられる。</p>
+<p>二つ目の図は、回復確率の推移である。80パーセントの回復率というのは疑義があるが、客観的な判断にはより長期のパネルデータが必要である。</p>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © Keiichi Shima 2020 | <a href="https://github.com/yihui">Github</a>
+  
+  </footer>
+  </body>
+</html>
+
