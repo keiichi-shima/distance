@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Academic Reading on A minimal website of Keiichi Shima</title>
-    <link>https://keiichi-shima.github.io/tags/academic-reading/</link>
+    <link>/tags/academic-reading/</link>
     <description>Recent content in Academic Reading on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://keiichi-shima.github.io/tags/academic-reading/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/academic-reading/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>外書購読Aの遠隔講義</title>
-      <link>https://keiichi-shima.github.io/post/2020/04/04/academicreading/</link>
+      <link>/post/2020/04/04/academicreading/</link>
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://keiichi-shima.github.io/post/2020/04/04/academicreading/</guid>
+      <guid>/post/2020/04/04/academicreading/</guid>
       <description>講義予定 外書購読Aの遠隔講義についてご説明致します。誠に申し訳ありませんが、外書購読の開講に向けた当初のシラバスを変更致します。 本講義は、次</description>
     </item>
     

@@ -2,48 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on A minimal website of Keiichi Shima</title>
-    <link>https://keiichi-shima.github.io/</link>
+    <link>/</link>
     <description>Recent content in Home on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://keiichi-shima.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>コロナウイルスの欧米感染状況</title>
-      <link>https://keiichi-shima.github.io/post/2020/04/04/coronavirus-spread/</link>
+      <link>/post/2020/04/04/coronavirus-spread/</link>
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://keiichi-shima.github.io/post/2020/04/04/coronavirus-spread/</guid>
+      <guid>/post/2020/04/04/coronavirus-spread/</guid>
       <description>ジョンズホプキンス大学の次のウェブサイトでは、コロナウイルスの感染者数に関する世界集計、並びにダッシュボード（地図化された情報）を確認できる</description>
     </item>
     
     <item>
       <title>外書購読Aの遠隔講義</title>
-      <link>https://keiichi-shima.github.io/post/2020/04/04/academicreading/</link>
+      <link>/post/2020/04/04/academicreading/</link>
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://keiichi-shima.github.io/post/2020/04/04/academicreading/</guid>
+      <guid>/post/2020/04/04/academicreading/</guid>
       <description>講義予定 外書購読Aの遠隔講義についてご説明致します。誠に申し訳ありませんが、外書購読の開講に向けた当初のシラバスを変更致します。 本講義は、次</description>
     </item>
     
     <item>
       <title>計量経済学の遠隔講義</title>
-      <link>https://keiichi-shima.github.io/post/2020/04/04/econometrics/</link>
+      <link>/post/2020/04/04/econometrics/</link>
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://keiichi-shima.github.io/post/2020/04/04/econometrics/</guid>
+      <guid>/post/2020/04/04/econometrics/</guid>
       <description>講義予定 この遠隔講義では、計量経済学を講義ノートを基に学習します。講義の水準は基礎的なものですが、必ずしも容易ではありません。軽量経済学は確</description>
     </item>
     
     <item>
       <title>About myself</title>
-      <link>https://keiichi-shima.github.io/about/</link>
+      <link>/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://keiichi-shima.github.io/about/</guid>
+      <guid>/about/</guid>
       <description>I am a professor of Econometrics at Mie University. my teaching and research interests are primarily in the field of corporate finance, investment, and applied econometrics. View my publications on Google Scholar or Microsoft Academic.</description>
     </item>
     
