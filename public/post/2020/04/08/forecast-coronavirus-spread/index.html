@@ -39,7 +39,7 @@
 <h1>感染上位国の感染者数増加率</h1>
 <p>感染者数の増加を、イタリア、スペイン、アメリカ、フランス、イギリス、イギリス（感染者数上位国）
 と日本とを比較する。</p>
-<p>モデルは次の通りである。感染者数 <span class="math inline">\(y_t\)</span> を日付 <span class="math inline">\(t\)</span> に対する増加関数と考える。すなわち、時間増分<span class="math inline">\(dt\)</span>当たりの感染者数の増分は<span class="math inline">\(dy_t\)</span>であり、ここで感染者数の増加率を <span class="math inline">\(dy_t/dt \over y_t\)</span> と表す。感染者数の増加率を一定<span class="math inline">\(b\)</span>と仮定する。このとき、次式が成立する。
+<p>モデルは次の通りである。感染者数 <span class="math inline">\(y_t\)</span> を日付 <span class="math inline">\(t\)</span> の増加関数と考える。すなわち、時間増分<span class="math inline">\(dt\)</span>当たりの感染者数の増分は<span class="math inline">\(dy_t\)</span>であり、ここで感染者数の増加率を <span class="math inline">\(dy_t/dt \over y_t\)</span> と表す。感染者数の増加率を一定<span class="math inline">\(b\)</span>と仮定する。このとき、次式が成立する。
 <span class="math display">\[
 {dy_t/dt \over y_t} =b
 \]</span>
@@ -60,7 +60,7 @@
 <span class="math display">\[
 y_T=y_0 \exp(bT)
 \]</span>
-時間の経過で増加する感染者数の初期値<span class="math inline">\(y_0\)</span>に対し、<span class="math inline">\(T\)</span>時間が経過後の感染者数は<span class="math inline">\(y_T\)</span>である。この式を適用が許されれば、 <span class="math inline">\(\log y_T=\log y_0+bt\)</span> と変換できる。<span class="math inline">\(b\)</span>は増加率を表し、<span class="math inline">\(\log y_T\)</span>と<span class="math inline">\(T\)</span> との間に直線関係が見られれば、およそ増加率は一定と考えてよい。</p>
+時間の経過で増加する感染者数の初期値<span class="math inline">\(y_0\)</span>に対し、<span class="math inline">\(T\)</span>時間が経過後の感染者数は<span class="math inline">\(y_T\)</span>である。この式の適用が許されれば、 <span class="math inline">\(\log y_T=\log y_0+bt\)</span> と変換できる。<span class="math inline">\(b\)</span>は増加率を表し、<span class="math inline">\(\log y_T\)</span>と<span class="math inline">\(T\)</span> との間に直線関係が見られれば、およそ増加率は一定と考えてよい。</p>
 </div>
 <div id="section-1" class="section level1">
 <h1>時間経過と感染者数の対数値</h1>
@@ -93,23 +93,23 @@ summary(mf)</code></pre>
 ## Call:
 ## plm(formula = log(Confirmed) ~ days, data = c19p, model = &quot;within&quot;)
 ## 
-## Unbalanced Panel: n = 6, T = 33-44, N = 223
+## Unbalanced Panel: n = 6, T = 34-45, N = 229
 ## 
 ## Residuals:
 ##     Min.  1st Qu.   Median  3rd Qu.     Max. 
-## -1.84979 -0.34789  0.10270  0.45815  0.79941 
+## -1.89198 -0.36795  0.12215  0.46747  0.82002 
 ## 
 ## Coefficients:
 ##       Estimate Std. Error t-value  Pr(&gt;|t|)    
-## days 0.1889147  0.0034651   54.52 &lt; 2.2e-16 ***
+## days 0.1853121  0.0034373  53.912 &lt; 2.2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Total Sum of Squares:    1008
-## Residual Sum of Squares: 68.285
-## R-Squared:      0.93225
-## Adj. R-Squared: 0.93037
-## F-statistic: 2972.39 on 1 and 216 DF, p-value: &lt; 2.22e-16</code></pre>
+## Total Sum of Squares:    1052.5
+## Residual Sum of Squares: 74.688
+## R-Squared:      0.92904
+## Adj. R-Squared: 0.92712
+## F-statistic: 2906.52 on 1 and 222 DF, p-value: &lt; 2.22e-16</code></pre>
 <p>推定結果では、増加率<span class="math inline">\(b\)</span>の推定値は0.19であり、過去のデータから平均的には毎日19パーセントの勢いで新規感染者が増えていると考えられる。</p>
 <p>#　日本の感染増加率の推定</p>
 <p>次いで、日本のデータに限って<span class="math inline">\(b\)</span>の推定を行う。推定結果は次の通りである。</p>
@@ -122,18 +122,18 @@ summary(mj)</code></pre>
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.27089 -0.07220 -0.01655  0.08174  0.18582 
+## -0.26775 -0.07161 -0.01753  0.07613  0.18498 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 4.924854   0.030281  162.64   &lt;2e-16 ***
-## days        0.071012   0.001159   61.27   &lt;2e-16 ***
+## (Intercept) 4.921708   0.029808   165.1   &lt;2e-16 ***
+## days        0.071222   0.001116    63.8   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.1044 on 44 degrees of freedom
-## Multiple R-squared:  0.9884, Adjusted R-squared:  0.9882 
-## F-statistic:  3753 on 1 and 44 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1038 on 45 degrees of freedom
+## Multiple R-squared:  0.9891, Adjusted R-squared:  0.9888 
+## F-statistic:  4070 on 1 and 45 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>日本のデータからは、感染者数の増加率<span class="math inline">\(b\)</span>は0.07と推定される。これは欧米の4割程度の大きさであり、その理由は私には分からない。日本人と欧米人との間に社会動態の違いがあるか、あるいは欧米に比べ日本の検査数が少ないことと関係するのか、いくつか探るべき理由はあると思われる。</p>
 </div>
 <div id="section-3" class="section level1">
