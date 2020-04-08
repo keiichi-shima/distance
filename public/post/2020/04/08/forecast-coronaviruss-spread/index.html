@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>コロナウイルスの日本の感染予測 | A minimal website of Keiichi Shima</title>
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="../../../../../">Home</a></li>
+      
+      <li><a href="../../../../../about/">About</a></li>
+      
+      <li><a href="../../../../../categories/">Categories</a></li>
+      
+      <li><a href="../../../../../tags/">Tags</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">コロナウイルスの日本の感染予測</span></h1>
+
+<h2 class="date">2020/04/08</h2>
+</div>
+
+<main>
+
+
+
+<div id="section" class="section level1">
+<h1>感染上位国の感染者数増加率</h1>
+<p>感染者数の増加を、イタリア、スペイン、アメリカ、フランス、イギリス、イギリス（感染者数上位国）
+と日本とを比較する。</p>
+<p>モデルは次の通りである。感染者数 <span class="math inline">\(y_t\)</span> を日付 <span class="math inline">\(t\)</span> に対する増加関数と考える。すなわち、時間増分<span class="math inline">\(dt\)</span>当たりの感染者数の増分は<span class="math inline">\(dy_t\)</span>であり、ここで感染者数の増加率を<span class="math inline">\(dy_t/dt \over y_t\)</span>と表す。感染者数の増加率を一定<span class="math inline">\(b\)</span>と仮定すれば、次の式で表すことができる。
+<span class="math display">\[
+{dy_t/dt \over y_t} =b
+\]</span>
+ただし、<span class="math inline">\(b&gt;0\)</span>である。
+以上は
+<span class="math display">\[
+{dy_t \over y_t} =bdt
+\]</span>
+を満たすため、両辺を積分すれば次が得られる。
+<span class="math display">\[
+\int {dy_t \over y_t} =\int bdt+C
+\]</span>
+ただし、<span class="math inline">\(C\)</span>は不定積分の定数である、<span class="math inline">\(t,y_t\)</span>の積分範囲は、<span class="math inline">\(0&lt;t \leq T\)</span>に対して <span class="math inline">\(y_0 &lt; y_t \leq y_T\)</span> であることに従って定積分すると、以上は次のように求められる：
+<span class="math display">\[
+\log y_T -\log y_0 =bT
+\]</span>
+すなわち、特定時刻<span class="math inline">\(T\)</span>について<span class="math inline">\(y_T\)</span>を次のように表現できる。
+<span class="math display">\[
+y_T=y_0 \exp(bT)
+\]</span>
+時間の経過で増加する感染者数の初期値を<span class="math inline">\(y_0\)</span>に対して、<span class="math inline">\(T\)</span>時間が経過後の感染者数が<span class="math inline">\(y_T\)</span>である。この式を当てはめることが許されれば、 <span class="math inline">\(\log y_T=\log y_0+bt\)</span> と変換できる。この<span class="math inline">\(b\)</span>は増加率を表し、<span class="math inline">\(\log y_T\)</span>と<span class="math inline">\(T\)</span> との間に直線関係が見られれば、およそ増加率は一定と考えてよい。</p>
+</div>
+<div id="section-1" class="section level1">
+<h1>時間経過と感染者数の対数値</h1>
+<p>ジョンズホプキンス大学のデータを用いて描いた図が次である。ここでは感染者数が100人を超えた時点を<span class="math inline">\(t=0\)</span>、その値を<span class="math inline">\(y_0\)</span>とする。</p>
+<pre class="r"><code>rm(list=ls())
+library(tidyverse)
+url_csv &lt;- &#39;https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv&#39;
+c19 &lt;- read_csv(url(url_csv)) 
+
+c19a&lt;-filter(c19,`Country/Region` %in% 
+ c(&quot;Italy&quot;,&quot;US&quot;,&quot;Spain&quot;,&quot;Germany&quot;,&quot;Japan&quot;,&quot;France&quot;,&quot;United Kingdom&quot;) &amp; is.na(`Province/State`))
+
+select(c19a,-c(3:5))-&gt;c19a
+rename(c19a,Country=`Country/Region`)-&gt;c19a
+
+filter(c19a,Confirmed&gt;99)-&gt;c19b
+c19b%&gt;%group_by(Country)%&gt;%mutate(days=Date-min(Date))-&gt;c19b
+
+summary(lm(data=c19b,log(Confirmed)~days+Country))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log(Confirmed) ~ days + Country, data = c19b)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.9451 -0.4735  0.1888  0.5032  1.7715 
+## 
+## Coefficients:
+##                        Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            5.773231   0.146700  39.354  &lt; 2e-16 ***
+## days                   0.161157   0.004152  38.816  &lt; 2e-16 ***
+## CountryGermany         0.370520   0.177958   2.082 0.038311 *  
+## CountryItaly           0.344708   0.171078   2.015 0.044939 *  
+## CountryJapan          -2.876630   0.169711 -16.950  &lt; 2e-16 ***
+## CountrySpain           0.669891   0.179242   3.737 0.000228 ***
+## CountryUnited Kingdom -0.144168   0.183623  -0.785 0.433088    
+## CountryUS              0.894642   0.180611   4.953 1.31e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7705 on 261 degrees of freedom
+## Multiple R-squared:  0.8845, Adjusted R-squared:  0.8815 
+## F-statistic: 285.7 on 7 and 261 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>ggplot(data=c19b,aes(x=days,y=log(Confirmed),col=Country))+geom_point()+geom_smooth(method=lm,se=F)</code></pre>
+<p><img src="../../../../../post/2020-04-08-coronavirus-japan_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>イタリア、スペイン、アメリカ、フランス、イギリス、イギリス</p>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © Keiichi Shima 2020
+  
+  </footer>
+  </body>
+</html>
+

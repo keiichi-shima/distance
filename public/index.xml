@@ -6,10 +6,19 @@
     <description>Recent content in Home on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 08 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>コロナウイルスの日本の感染予測</title>
+      <link>/post/2020/04/08/forecast-coronavirus-spread/</link>
+      <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/08/forecast-coronavirus-spread/</guid>
+      <description>感染上位国の感染者数増加率 感染者数の増加を、イタリア、スペイン、アメリカ、フランス、イギリス、イギリス（感染者数上位国） と日本とを比較する。</description>
+    </item>
     
     <item>
       <title>コロナウイルスの欧米感染状況</title>

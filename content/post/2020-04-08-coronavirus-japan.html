@@ -1,0 +1,141 @@
+---
+title: 'コロナウイルスの日本の感染予測'
+date: '2020-04-08'
+slug: Forecast Coronavirus spread 
+categories:
+  - R
+tags:
+  - Econometrics
+---
+
+
+
+<div id="section" class="section level1">
+<h1>感染上位国の感染者数増加率</h1>
+<p>感染者数の増加を、イタリア、スペイン、アメリカ、フランス、イギリス、イギリス（感染者数上位国）
+と日本とを比較する。</p>
+<p>モデルは次の通りである。感染者数 <span class="math inline">\(y_t\)</span> を日付 <span class="math inline">\(t\)</span> に対する増加関数と考える。すなわち、時間増分<span class="math inline">\(dt\)</span>当たりの感染者数の増分は<span class="math inline">\(dy_t\)</span>であり、ここで感染者数の増加率を<span class="math inline">\(dy_t/dt \over y_t\)</span>と表す。感染者数の増加率を一定<span class="math inline">\(b\)</span>と仮定すれば、次の式で表すことができる。
+<span class="math display">\[
+{dy_t/dt \over y_t} =b
+\]</span>
+ただし、<span class="math inline">\(b&gt;0\)</span>である。
+以上は
+<span class="math display">\[
+{dy_t \over y_t} =bdt
+\]</span>
+を満たすため、両辺を積分すれば次が得られる。
+<span class="math display">\[
+\int {dy_t \over y_t} =\int bdt+C
+\]</span>
+ただし、<span class="math inline">\(C\)</span>は不定積分の定数である、<span class="math inline">\(t,y_t\)</span>の積分範囲は、<span class="math inline">\(0&lt;t \leq T\)</span>に対して <span class="math inline">\(y_0 &lt; y_t \leq y_T\)</span> であることに従って定積分すると、以上は次のように求められる：
+<span class="math display">\[
+\log y_T -\log y_0 =bT
+\]</span>
+すなわち、特定時刻<span class="math inline">\(T\)</span>について<span class="math inline">\(y_T\)</span>を次のように表現できる。
+<span class="math display">\[
+y_T=y_0 \exp(bT)
+\]</span>
+時間の経過で増加する感染者数の初期値を<span class="math inline">\(y_0\)</span>に対して、<span class="math inline">\(T\)</span>時間が経過後の感染者数が<span class="math inline">\(y_T\)</span>である。この式を当てはめることが許されれば、 <span class="math inline">\(\log y_T=\log y_0+bt\)</span> と変換できる。この<span class="math inline">\(b\)</span>は増加率を表し、<span class="math inline">\(\log y_T\)</span>と<span class="math inline">\(T\)</span> との間に直線関係が見られれば、およそ増加率は一定と考えてよい。</p>
+</div>
+<div id="section-1" class="section level1">
+<h1>時間経過と感染者数の対数値</h1>
+<p>ジョンズホプキンス大学のデータを用いる。ここでは感染者数が100人を超えた時点を<span class="math inline">\(t=0\)</span>、その値を<span class="math inline">\(y_0\)</span>とする。</p>
+<pre class="r"><code>rm(list=ls())
+library(tidyverse)
+url_csv &lt;- &#39;https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv&#39;
+c19 &lt;- read_csv(url(url_csv)) 
+
+c19a&lt;-filter(c19,`Country/Region` %in% 
+ c(&quot;Italy&quot;,&quot;US&quot;,&quot;Spain&quot;,&quot;Germany&quot;,&quot;Japan&quot;,&quot;France&quot;,&quot;United Kingdom&quot;) &amp; is.na(`Province/State`))
+
+select(c19a,-c(3:5))-&gt;c19a
+rename(c19a,Country=`Country/Region`)-&gt;c19a
+
+filter(c19a,Confirmed&gt;99)-&gt;c19b
+c19b%&gt;%group_by(Country)%&gt;%mutate(days=Date-min(Date))-&gt;c19b
+
+ggplot(data=c19b,aes(x=days,y=log(Confirmed),col=Country))+geom_point()+geom_smooth(method=lm,se=F)</code></pre>
+<p><img src="/post/2020-04-08-coronavirus-japan_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>感染者数の対数と（感染者が100人を超えた日からの）経過日数との関係は、概ね直線に近い。ただし、イタリア、スペイン、アメリカでは30日を過ぎたあたりで傾きの低下が見られる。また、日本はイタリア、スペイン、アメリカ、フランス、イギリス、イギリスと比べ、傾きが著しく低い。</p>
+</div>
+<div id="section-2" class="section level1">
+<h1>欧米の感染増加率の推定</h1>
+<p>以上の図からは、欧米（以上の6国）と日本とで経過時間に対する感染者数対数の傾きが大きく違うことが分かる。そのため、まず欧米のみのデータで<span class="math inline">\(b\)</span>の値を推定する。以下はその結果である。</p>
+<pre class="r"><code>library(plm)
+c19b &lt;- c19b %&gt;% ungroup()
+filter(c19b,Country!=&quot;Japan&quot;)-&gt;c19c
+
+c19p&lt;-pdata.frame(c19c,index=c(&quot;Country&quot;,&quot;Date&quot;))
+
+plm(log(Confirmed)~days,data=c19p,model=&quot;within&quot;)-&gt;mf
+summary(mf)</code></pre>
+<pre><code>## Oneway (individual) effect Within Model
+## 
+## Call:
+## plm(formula = log(Confirmed) ~ days, data = c19p, model = &quot;within&quot;)
+## 
+## Unbalanced Panel: n = 6, T = 33-44, N = 223
+## 
+## Residuals:
+##     Min.  1st Qu.   Median  3rd Qu.     Max. 
+## -1.84979 -0.34789  0.10270  0.45815  0.79941 
+## 
+## Coefficients:
+##       Estimate Std. Error t-value  Pr(&gt;|t|)    
+## days 0.1889147  0.0034651   54.52 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Total Sum of Squares:    1008
+## Residual Sum of Squares: 68.285
+## R-Squared:      0.93225
+## Adj. R-Squared: 0.93037
+## F-statistic: 2972.39 on 1 and 216 DF, p-value: &lt; 2.22e-16</code></pre>
+<p>推定結果では、増加率<span class="math inline">\(b\)</span>の推定値は0.19であり、過去のデータから平均的には毎日19パーセントの勢いで新規感染者が増えていると考えられる。</p>
+<p>#　日本の感染増加率</p>
+<p>次いで、日本のデータに限って<span class="math inline">\(b\)</span>の推定を行う。推定結果は次の通りである。</p>
+<pre class="r"><code>c19j&lt;-filter(c19b,Country==&quot;Japan&quot;)
+lm(log(Confirmed)~days,data=c19j)-&gt;mj
+summary(mj)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log(Confirmed) ~ days, data = c19j)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.27089 -0.07220 -0.01655  0.08174  0.18582 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 4.924854   0.030281  162.64   &lt;2e-16 ***
+## days        0.071012   0.001159   61.27   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1044 on 44 degrees of freedom
+## Multiple R-squared:  0.9884, Adjusted R-squared:  0.9882 
+## F-statistic:  3753 on 1 and 44 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>日本のデータからは、感染者数の増加率<span class="math inline">\(b\)</span>は0.07と推定される。これは欧米の4割程度の大きさであり、その理由は私には分からない。日本人と欧米人との間に社会動態の違いがあるか、あるいは欧米に比べ日本の検査数が少ないことと関係するのか、いくつか探るべき理由はあると思われる。</p>
+</div>
+<div id="section-3" class="section level1">
+<h1>日本の感染者数の増加予測</h1>
+<p>日本のデータについて、以上の推定結果を用い、5月10日までの感染者数の増加予測を行う。</p>
+<pre class="r"><code>newd&lt;-data.frame(Date=seq(as.Date(&quot;2020-02-21&quot;),
+      as.Date(&quot;2020-05-10&quot;), by=&quot;days&quot;))
+newd$days&lt;-newd$Date-min(newd$Date)
+
+predict(mj, newdata = newd,interval=&quot;prediction&quot;)-&gt;pp
+cbind.data.frame(newd,pp)-&gt;newd
+
+ggplot(data=c19j,aes(x=days,y=log(Confirmed)))+
+  geom_point(size=3,color=&quot;blue&quot;)+
+  geom_line(data=newd,aes(x=days,y=fit),size=1,color=&quot;darkgrey&quot;)</code></pre>
+<p><img src="/post/2020-04-08-coronavirus-japan_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>ggplot()+
+  geom_point(data=c19j,aes(x=Date,y=Confirmed),size=3,color=&quot;blue&quot;)+
+  geom_line(data=newd,aes(x=Date,y=exp(fit)),size=1,color=&quot;darkblue&quot;)+
+  geom_ribbon(data=newd,fill=&quot;grey&quot;,alpha=0.5, aes(x=Date,ymin=exp(lwr),ymax=exp(upr))) </code></pre>
+<p><img src="/post/2020-04-08-coronavirus-japan_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p>一つ目の図は、感染者数の対数のままで、過去のデータ点と上で推定された<span class="math inline">\(b\)</span>の値で求めた直線を描いたものである。二つ目の図は、対数を外した感染者数の予測を誤差とともに示したものである。</p>
+<p>社会行動が昨日までと明日以降とが同様と仮定すれば、以上の増加率に関する推定結果からゴールデンウィーク明けには4万人程度に増加すると予測できる。外出規制などは社会行動を変え、感染拡大を抑制するはずである（<span class="math inline">\(b\)</span>の低下を誘導）。医療面、感染面を主とする政策発動を期待する。</p>
+</div>
