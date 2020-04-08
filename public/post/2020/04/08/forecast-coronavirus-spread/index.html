@@ -39,7 +39,7 @@
 <h1>感染上位国の感染者数増加率</h1>
 <p>感染者数の増加を、イタリア、スペイン、アメリカ、フランス、イギリス、イギリス（感染者数上位国）
 と日本とを比較する。</p>
-<p>モデルは次の通りである。感染者数 <span class="math inline">\(y_t\)</span> を日付 <span class="math inline">\(t\)</span> に対する増加関数と考える。すなわち、時間増分<span class="math inline">\(dt\)</span>当たりの感染者数の増分は<span class="math inline">\(dy_t\)</span>であり、ここで感染者数の増加率を<span class="math inline">\(dy_t/dt \over y_t\)</span>と表す。感染者数の増加率を一定<span class="math inline">\(b\)</span>と仮定すれば、次の式で表すことができる。
+<p>モデルは次の通りである。感染者数 <span class="math inline">\(y_t\)</span> を日付 <span class="math inline">\(t\)</span> に対する増加関数と考える。すなわち、時間増分<span class="math inline">\(dt\)</span>当たりの感染者数の増分は<span class="math inline">\(dy_t\)</span>であり、ここで感染者数の増加率を <span class="math inline">\(dy_t/dt \over y_t\)</span> と表す。感染者数の増加率を一定<span class="math inline">\(b\)</span>と仮定する。このとき、次式が成立する。
 <span class="math display">\[
 {dy_t/dt \over y_t} =b
 \]</span>
@@ -52,15 +52,15 @@
 <span class="math display">\[
 \int {dy_t \over y_t} =\int bdt+C
 \]</span>
-ただし、<span class="math inline">\(C\)</span>は不定積分の定数である、<span class="math inline">\(t,y_t\)</span>の積分範囲は、<span class="math inline">\(0&lt;t \leq T\)</span>に対して <span class="math inline">\(y_0 &lt; y_t \leq y_T\)</span> であることに従って定積分すると、以上は次のように求められる：
+ただし、<span class="math inline">\(C\)</span>は不定積分の定数である、<span class="math inline">\(t,y_t\)</span>の積分範囲は、<span class="math inline">\(0&lt;t \leq T\)</span>に対して <span class="math inline">\(y_0 &lt; y_t \leq y_T\)</span> である。これに従い定積分すれば、以上は次のように求められる：
 <span class="math display">\[
 \log y_T -\log y_0 =bT
 \]</span>
-すなわち、特定時刻<span class="math inline">\(T\)</span>について<span class="math inline">\(y_T\)</span>を次のように表現できる。
+このとき、特定時刻<span class="math inline">\(T\)</span>について<span class="math inline">\(y_T\)</span>を次のように表現できる。
 <span class="math display">\[
 y_T=y_0 \exp(bT)
 \]</span>
-時間の経過で増加する感染者数の初期値を<span class="math inline">\(y_0\)</span>に対して、<span class="math inline">\(T\)</span>時間が経過後の感染者数が<span class="math inline">\(y_T\)</span>である。この式を当てはめることが許されれば、 <span class="math inline">\(\log y_T=\log y_0+bt\)</span> と変換できる。この<span class="math inline">\(b\)</span>は増加率を表し、<span class="math inline">\(\log y_T\)</span>と<span class="math inline">\(T\)</span> との間に直線関係が見られれば、およそ増加率は一定と考えてよい。</p>
+時間の経過で増加する感染者数の初期値<span class="math inline">\(y_0\)</span>に対し、<span class="math inline">\(T\)</span>時間が経過後の感染者数は<span class="math inline">\(y_T\)</span>である。この式を適用が許されれば、 <span class="math inline">\(\log y_T=\log y_0+bt\)</span> と変換できる。<span class="math inline">\(b\)</span>は増加率を表し、<span class="math inline">\(\log y_T\)</span>と<span class="math inline">\(T\)</span> との間に直線関係が見られれば、およそ増加率は一定と考えてよい。</p>
 </div>
 <div id="section-1" class="section level1">
 <h1>時間経過と感染者数の対数値</h1>
@@ -69,16 +69,12 @@ y_T=y_0 \exp(bT)
 library(tidyverse)
 url_csv &lt;- &#39;https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv&#39;
 c19 &lt;- read_csv(url(url_csv)) 
-
 c19a&lt;-filter(c19,`Country/Region` %in% 
  c(&quot;Italy&quot;,&quot;US&quot;,&quot;Spain&quot;,&quot;Germany&quot;,&quot;Japan&quot;,&quot;France&quot;,&quot;United Kingdom&quot;) &amp; is.na(`Province/State`))
-
 select(c19a,-c(3:5))-&gt;c19a
 rename(c19a,Country=`Country/Region`)-&gt;c19a
-
 filter(c19a,Confirmed&gt;99)-&gt;c19b
 c19b%&gt;%group_by(Country)%&gt;%mutate(days=Date-min(Date))-&gt;c19b
-
 ggplot(data=c19b,aes(x=days,y=log(Confirmed),col=Country))+geom_point()+geom_smooth(method=lm,se=F)</code></pre>
 <p><img src="../../../../../post/2020-04-08-coronavirus-japan_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>感染者数の対数と（感染者が100人を超えた日からの）経過日数との関係は、概ね直線に近い。ただし、イタリア、スペイン、アメリカでは30日を過ぎたあたりで傾きの低下が見られる。また、日本はイタリア、スペイン、アメリカ、フランス、イギリス、イギリスと比べ、傾きが著しく低い。</p>
@@ -89,9 +85,7 @@ ggplot(data=c19b,aes(x=days,y=log(Confirmed),col=Country))+geom_point()+geom_smo
 <pre class="r"><code>library(plm)
 c19b &lt;- c19b %&gt;% ungroup()
 filter(c19b,Country!=&quot;Japan&quot;)-&gt;c19c
-
 c19p&lt;-pdata.frame(c19c,index=c(&quot;Country&quot;,&quot;Date&quot;))
-
 plm(log(Confirmed)~days,data=c19p,model=&quot;within&quot;)-&gt;mf
 summary(mf)</code></pre>
 <pre><code>## Oneway (individual) effect Within Model
@@ -117,7 +111,7 @@ summary(mf)</code></pre>
 ## Adj. R-Squared: 0.93037
 ## F-statistic: 2972.39 on 1 and 216 DF, p-value: &lt; 2.22e-16</code></pre>
 <p>推定結果では、増加率<span class="math inline">\(b\)</span>の推定値は0.19であり、過去のデータから平均的には毎日19パーセントの勢いで新規感染者が増えていると考えられる。</p>
-<p>#　日本の感染増加率</p>
+<p>#　日本の感染増加率の推定</p>
 <p>次いで、日本のデータに限って<span class="math inline">\(b\)</span>の推定を行う。推定結果は次の通りである。</p>
 <pre class="r"><code>c19j&lt;-filter(c19b,Country==&quot;Japan&quot;)
 lm(log(Confirmed)~days,data=c19j)-&gt;mj
@@ -162,7 +156,7 @@ ggplot(data=c19j,aes(x=days,y=log(Confirmed)))+
   geom_ribbon(data=newd,fill=&quot;grey&quot;,alpha=0.5, aes(x=Date,ymin=exp(lwr),ymax=exp(upr))) </code></pre>
 <p><img src="../../../../../post/2020-04-08-coronavirus-japan_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 <p>一つ目の図は、感染者数の対数のままで、過去のデータ点と上で推定された<span class="math inline">\(b\)</span>の値で求めた直線を描いたものである。二つ目の図は、対数を外した感染者数の予測を誤差とともに示したものである。</p>
-<p>社会行動が昨日までと明日以降とが同様と仮定すれば、以上の増加率に関する推定結果からゴールデンウィーク明けには4万人程度に増加すると予測できる。外出規制などは社会行動を変え、感染拡大を抑制するはずである（<span class="math inline">\(b\)</span>の低下を誘導）。医療面、感染面を主とする政策発動を期待する。</p>
+<p>社会行動が昨日までと変わらず、明日以降も同様であると仮定する。このとき、以上の増加率に関する推定結果から、ゴールデンウィーク明けには感染者数累計は4万人程度に増加すると予測できる。自治体の規制により<span class="math inline">\(b\)</span>の低下を誘導できるならば、即日手を打った方がよい。</p>
 </div>
 
 </main>
