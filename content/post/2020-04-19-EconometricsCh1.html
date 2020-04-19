@@ -1,0 +1,448 @@
+---
+title: '計量経済学講義：確率の性質'
+author: 嶋恵一
+date: '2020-04-19'
+slug: EconometricsCh1
+categories:
+  - Lecture
+tags:
+  - Econometrics
+---
+
+
+
+<p>この遠隔講義では、計量経済学を講義ノートを基に学習します。講義ノートはResearchmapの<a href="https://researchmap.jp/multidatabases/multidatabase_contents/download/235233/e53b3558c86a79319ed1b70907479ce4/3426?col_no=2&amp;frame_id=550541">資料公開</a>よりダウンロードして下さい。</p>
+<p>この遠隔講義では、講義ノート第１章「確率の性格」から開始致します。以下は第１章と同じ内容をwebに掲載したものです。ただし、Rのコードと練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは全く任意ですので、興味がある学生だけに向けたものです。興味がなければ読み飛ばせばよいです。)</p>
+<p>講義ノート第１章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところを中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。</p>
+<p>それでは、講義ノートに従って、確率の性質を学習しましょう。</p>
+<div id="section" class="section level1">
+<h1>確率変数</h1>
+<p>ある記号や文字で表されたものが数を表現するとき、それを定数ないし変数と呼ぶ。<span class="math inline">\(c\)</span>がただ一つの固定された値をとり、それが5だとする。<span class="math inline">\(c\)</span>を定数と呼び、
+<span class="math display">\[
+c=5
+\]</span>
+と表す。<span class="math inline">\(X\)</span>が複数の値をとり、それが<span class="math inline">\(\left\{ -1,0,2\right\}\)</span>だとする。<span class="math inline">\(X\)</span>を変数と呼び、
+<span class="math display">\[
+X=\left\{
+\begin{array}
+-1\\
+0\\
+2
+\end{array}
+\right.
+\]</span>
+と表す。このとき、<span class="math inline">\(X\)</span>が<span class="math inline">\(\left\{-1,0,2\right\}\)</span>のうちのどれをとるかは偶然に支配され、ただし、とりうる値毎に確率が定められているものを「確率変数」と呼ぶ。</p>
+<p>例えば、<span class="math inline">\(X\)</span>が-1をとる確率は1/2、0をとる確率は1/4、2をとる確率は1/4と定められているとき、それを
+<span class="math display">\[
+\begin{aligned}
+P\left(X=-1\right) &amp;= \frac{1}{2},\\
+P\left(X=0\right) &amp;= \frac{1}{4},\\
+P\left(X=2\right) &amp;= \frac{1}{4}
+\end{aligned}
+\]</span>
+と表現する。<span class="math inline">\(P\left( X=a\right)=b\)</span>を「確率関数」と呼び、確率変数<span class="math inline">\(X\)</span>が<span class="math inline">\(a\)</span>という値をとり、それが生じる確率が<span class="math inline">\(b\)</span>であることを表す。確率変数<span class="math inline">\(X\)</span>について、起こりうる値を事象と呼び、起こり得るすべての事象を指して「標本空間」と呼ぶ。</p>
+<p>いま、確率変数<span class="math inline">\(X\)</span>が<span class="math inline">\(n\)</span> 個の独立した事象をとり、それを<span class="math inline">\(x_{k}\)</span>と表す。標本空間を構成する<span class="math inline">\(n\)</span>個の独立した事象はしばしば「根元事象」と呼ばれる。確率変数<span class="math inline">\(X\)</span>が標本空間<span class="math inline">\(S\)</span>のうちどの根元事象をとるかは結果を見るまで分からないが、その確率は次のように定められているとする：
+<span class="math display">\[
+P\left(  X=x_{k}\right)  =p_{k}
+\]</span>
+このとき、以下の「確率の公理」（規則）が与えられる：
+<span class="math display">\[
+0 \leq P\left(X=x_{k}\right) \leq1, \tag{i}
+\]</span>
+<span class="math display">\[
+P\left( S\right) = \sum_{k=1}^{n}P\left( X=x_{k}\right) =1 \tag{ii}
+\]</span>
+確率変数<span class="math inline">\(X\)</span>が任意の事象<span class="math inline">\(x_{k}\)</span>をとる確率は0から1の間であり、すべての事象を包含する標本空間で確率を表したものは1である。例えば、確率変数<span class="math inline">\(X\)</span>が存在し、その標本空間が<span class="math inline">\(\left\{-1,0,2\right\}\)</span>のとき、「-1か0か2が出る」という確率は1である。3が出る確率は0である。すなわち、標本空間にない事象の生じる確率は必ず0である。</p>
+</div>
+<div id="section-1" class="section level1">
+<h1>期待値</h1>
+<p>確率変数<span class="math inline">\(X\)</span>について全部で<span class="math inline">\(n\)</span>個の根元事象<span class="math inline">\(x_{k}\)</span>が存在し、各根元事象の確率関数を<span class="math inline">\(P\left( X=x_{k}\right)\)</span>とする。標本空間<span class="math inline">\(S\)</span>に含まれる全ての根元事象と確率関数とによって求められる次式の値を期待値と呼ぶ。
+<span class="math display">\[
+E\left( X\right) =\sum_{k=1}^{n}P\left( X=x_{k}\right) x_{k}
+\tag{2}
+\]</span>
+左辺の<span class="math inline">\(E\left( \bullet\right)\)</span>を期待演算子と呼ぶ。(2)式の期待値は平均を表す。それは確率変数がとりうる値の中心像を意味する。</p>
+<p><strong>例１：</strong>確率変数<span class="math inline">\(X\)</span>の標本空間が<span class="math inline">\(\left\{ -1,0,2\right\}\)</span>で、<span class="math inline">\(P\left( X=-1\right) =\frac{1}{2}\)</span>、<span class="math inline">\(P\left( X=0\right) =\frac{1}{4}\)</span> 、<span class="math inline">\(P\left( X=2\right) =\frac{1}{4}\)</span>ならば、
+<span class="math display">\[
+E\left( X\right)=\frac{1}{2}\left( -1\right) +\frac{1}{4}\cdot0+\frac{1}{4}\cdot2=0
+\]</span>
+である。</p>
+<pre class="r"><code>rm(list=ls())
+x&lt;-c(-1,0,2)
+x</code></pre>
+<pre><code>## [1] -1  0  2</code></pre>
+<pre class="r"><code>p&lt;-c(1/2,1/4,1/4)
+p</code></pre>
+<pre><code>## [1] 0.50 0.25 0.25</code></pre>
+<pre class="r"><code>sum(p*x)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>確率変数<span class="math inline">\(X\)</span>の期待値の計算は以下を満たす。<span class="math inline">\(c\)</span>を定数とするとき、
+<span class="math display">\[
+\begin{aligned}
+E(c+X)  &amp;  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)  \left(  c+x_{k}\right)
+=c+E\left(  X\right)  ,\\
+E\left(  cX\right)   &amp;  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)  cx_{k}
+=cE\left(  X\right)  ,\\
+E\left(  X/c\right)   &amp;  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)
+x_{k}/c=E\left(  X\right)/c
+\end{aligned}
+\]</span>
+が成立する。</p>
+<p>確率変数<span class="math inline">\(X\)</span>の<span class="math inline">\(t\)</span>乗の期待値は
+<span class="math display">\[
+E\left(  X^{t}\right)  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)  x_{k}^{t}
+\]</span>
+で表される。なぜならば、上記の確率変数<span class="math inline">\(X\)</span>の例で確認できる通り、
+<span class="math display">\[
+\begin{aligned}
+P\left(  X=-1\right)   &amp;  =P\left(  X^{t}=\left(  -1\right)  ^{t}\right)  ,\\
+P\left(  X=0\right)   &amp;  =P\left(  X^{t}=0^{t}\right)  ,\\
+P\left(  X=2\right)   &amp;  =P\left(  X^{t}=2^{t}\right)
+\end{aligned}
+\]</span>
+であり、必ず<span class="math inline">\(P\left( X^{k}=x_{k}^{k}\right) =P\left( X=x_{k}\right)\)</span>を満たすからである。先の例では、
+<span class="math display">\[
+E\left( X^{2}\right) =\frac{1}{2}\left( -1\right) ^{2}+\frac{1}{4}
+\cdot0^{2}+\frac{1}{4}\cdot2^{2}=\frac{3}{2}
+\]</span>
+である。このような確率変数<span class="math inline">\(X\)</span>の<span class="math inline">\(t\)</span>乗の期待値を<span class="math inline">\(t\)</span>次のモーメントと呼ぶ。</p>
+<pre class="r"><code>sum(p*x^2)</code></pre>
+<pre><code>## [1] 1.5</code></pre>
+<p>確率変数<span class="math inline">\(X\)</span>について標本空間<span class="math inline">\(S\)</span>に含まれる全ての根元事象とその確率関数とにより、次式で求められる値を「分散」と呼ぶ。
+<span class="math display">\[
+E\left[ X-E\left( X\right)\right]^{2}=\sum_{k=1}^{n}P\left( X=x_{k}\right) \left[  x_{k}-E\left( X\right) \right] ^{2}
+\tag{4}
+\]</span>
+(4)式の右辺において、<span class="math inline">\(x_{k}-E\left(X\right)\)</span>を平均からの偏差と呼び、それは確率変数のとりうる各々の値が平均から見てどれだけ離れているかを表す。よって分散は確率変数がとりうる値の平均からの偏差を2乗し、その期待値を求めたものである。分散の右辺は次のように書き換えられる：
+<span class="math display">\[
+\begin{aligned}
+&amp; \sum_{k=1}^{n}P \left( X=x_{k}\right) \left[ x_{k}-E\left( X\right)\right]^{2} \\
+&amp;= \sum_{k=1}^{n}P\left( X=x_{k}\right) \left[ x_{k}^{2}-2x_{k}E\left(X\right)
++\left( E\left( X\right) \right)^{2}\right] \\
+&amp;= \sum_{k=1}^{n}P\left(  X=x_{k}\right)  x_{k}^{2}-2E\left( X\right)
+E\left( X\right) +\left( E\left( X\right) \right)^{2} \\
+&amp;= E\left( X^{2}\right) -\left( E\left( X\right) \right) ^{2}
+\end{aligned}
+\]</span>
+すなわち、確率変数 <span class="math inline">\(X\)</span>の分散は<span class="math inline">\(X\)</span>の2乗のモーメントから平均の2乗を引いたものに等しい。上記の例では分散は
+<span class="math display">\[
+E\left[ X-E\left( x\right) \right]^{2}=\frac{3}{2}-0^{2}=\frac{3}{2}
+\]</span>
+である。</p>
+<pre class="r"><code>sum(p*x^2)-sum(p*x)^2</code></pre>
+<pre><code>## [1] 1.5</code></pre>
+</div>
+<div id="section-2" class="section level1">
+<h1>標準偏差</h1>
+<p>確率変数<span class="math inline">\(X\)</span>について、それがとりうる値の期待値は平均であり、確率変数がとりうる値から平均を引いた偏差を2乗し、その期待値を求めたものが分散である。従って、平均の計算概念は一次元（長さ）であるのに対し、分散は2乗の計算から気付くように二次元（面積）の概念に基づく。換言すれば、分散とはあたかも<span class="math inline">\(x_{k}-E\left( X\right)\)</span> を一辺とする正方形、すなわち<span class="math inline">\(\left[ x_{k}-E\left( X\right) \right]^{2}\)</span>の期待値であり、それは確率変数の平均からの偏差を一辺とする正方形の平均的な面積といえる。</p>
+<p>正方形の面積が分かれば、その平方根を求めれば長さの概念に還元できる。この考えに従うのが標準偏差である。標準偏差は分散の平方根により求められる。
+<span class="math display">\[
+\sqrt{E\left[ X-E\left( X\right)\right]^{2}}
+\]</span>
+先の例では分散は<span class="math inline">\(\frac{3}{2}\)</span>であり、標準偏差は
+<span class="math display">\[
+\sqrt{E\left[ X-E\left( X\right) \right]^{2}}=\sqrt{\frac{3}{2}}
+\]</span>
+である。</p>
+</div>
+<div id="section-3" class="section level1">
+<h1>同時確率</h1>
+<p>二つの確率変数<span class="math inline">\(X,Y\)</span>が存在し、それぞれの根元事象が同時に起こる確率を定義する。</p>
+<p><strong>例2：</strong>確率変数<span class="math inline">\(X,Y\)</span>の標本空間を次のように定める。
+<span class="math display">\[
+x=\left\{
+\begin{array}
+-5\\
+5
+\end{array}
+\right.
+,
+y=\left\{
+\begin{array}
+15\\
+25
+\end{array}
+\right.
+\]</span>
+確率変数<span class="math inline">\(X,Y\)</span>のについて根元事象はそれぞれ2通りのため、<span class="math inline">\(x,y\)</span> の根元事象の組み合わせは4通り存在する。このとき、<span class="math inline">\(P\left(X=-5,Y=15\right)\)</span>のように、二つの確率変数が特定の事象の組み合わせをとる確率を「同時確率」とよぶ。<span class="math inline">\(P\left( X=a,Y=b\right) =c\)</span>を「同時確率関数」と呼び、確率変数<span class="math inline">\(X\)</span>が<span class="math inline">\(a\)</span>という値を、なおかつ確率変数<span class="math inline">\(Y\)</span>が<span class="math inline">\(b\)</span>という値を同時にとる確率が<span class="math inline">\(c\)</span>であることを表す。</p>
+<p>以上を一般化して、確率変数<span class="math inline">\(X\)</span>が<span class="math inline">\(n\)</span>個の根元事象をとりそれを<span class="math inline">\(x_{k}\)</span>と表し、確率変数<span class="math inline">\(Y\)</span>が<span class="math inline">\(m\)</span>個の根元事象をとりそれを<span class="math inline">\(y_{h}\)</span>と表す。確率変数<span class="math inline">\(X,Y\)</span>の特定の事象に関する同時確率関数は次のように表現できる：
+<span class="math display">\[
+P \left( X=x_{k},Y=y_{h} \right)
+\tag{6}
+\]</span>
+上の例では、確率変数<span class="math inline">\(X,Y\)</span>の同時確率関数は次のような「表形式」を用いて示すことができる。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(Y=15\)</span></th>
+<th><span class="math inline">\(Y=25\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X=-5\)</span></td>
+<td><span class="math inline">\(P(X=-5,Y=15)\)</span></td>
+<td><span class="math inline">\(P(X=-5,Y=25)\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X=5\)</span></td>
+<td><span class="math inline">\(P(X=5,Y=15)\)</span></td>
+<td><span class="math inline">\(P(X=5,Y=25)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>ここで、確率変数<span class="math inline">\(X,Y\)</span>の確率関数について次のように定める。
+<span class="math display">\[
+\begin{aligned}
+P\left( X=-5\right) &amp;= .4,\\
+P\left( X=5\right) &amp;= .6,\\
+P\left( Y=15\right) &amp;= .7,\\
+P\left( Y=25\right) &amp;= .3
+\end{aligned}
+\]</span>
+以上のように確率変数<span class="math inline">\(X\)</span>が他の確率変数<span class="math inline">\(Y\)</span>に依存せず<span class="math inline">\(X\)</span>の事象のみで確率関数が定義されるものを「周辺確率」と呼ぶ。一般化すれば、確率変数<span class="math inline">\(X\)</span>が<span class="math inline">\(n\)</span>個の根元事象<span class="math inline">\(x_{k}\)</span>を持ち、確率変数<span class="math inline">\(Y\)</span>が<span class="math inline">\(m\)</span>個の根元事象<span class="math inline">\(y_{h}\)</span>を持つとき、周辺確率と同時確率との間には次の関係が成り立つ。
+<span class="math display">\[
+\begin{aligned}
+\sum_{h=1}^{m}P\left(  X=x_{k},Y=y_{h}\right) &amp;= P\left( x_{k}\right),\\
+\sum_{k=1}^{n}P\left(  X=x_{k},Y=y_{h}\right) &amp;= P\left( y_{h}\right),\\
+\sum_{k=1}^{n}\sum_{h=1}^{m}P\left( X=x_{k},Y=y_{h}\right) &amp;= 1
+\end{aligned}
+\tag{7}
+\]</span>
+また、周辺確率と同時確率の間に以下の関係が成立する場合、(6)式は
+<span class="math display">\[
+P\left( X=x_{k},Y=y_{h}\right) =P\left( x_{k}\right) P\left( y_{h}\right)
+\tag{8}
+\]</span>
+と表される。このとき、確率変数<span class="math inline">\(x,y\)</span>は互いに「独立」であるという。</p>
+<p><strong>例3：</strong>例2について、同時確率と周辺確率とを次のように定める：</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(Y=15\)</span></th>
+<th><span class="math inline">\(Y=25\)</span></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X=-5\)</span></td>
+<td><span class="math inline">\(.3\)</span></td>
+<td><span class="math inline">\(.1\)</span></td>
+<td><span class="math inline">\(P(X=-5)=.4\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X=5\)</span></td>
+<td><span class="math inline">\(.4\)</span></td>
+<td><span class="math inline">\(.2\)</span></td>
+<td><span class="math inline">\(P(X=5)=.6\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><span class="math inline">\(P(Y=15)=.7\)</span></td>
+<td><span class="math inline">\(P(Y=25)=.3\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>以上は(7)式をすべて満たす。</p>
+<pre class="r"><code>pxy&lt;- matrix(c(.3,.4,.1,.2),2,2)
+pxy</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]  0.3  0.1
+## [2,]  0.4  0.2</code></pre>
+<pre class="r"><code>rowSums(pxy)</code></pre>
+<pre><code>## [1] 0.4 0.6</code></pre>
+<pre class="r"><code>colSums(pxy)</code></pre>
+<pre><code>## [1] 0.7 0.3</code></pre>
+<p>一方、
+<span class="math display">\[
+\begin{aligned}
+P\left( X=-5,Y=15\right) &amp; =.3,\\
+P\left( X=-5\right) P\left( Y=15\right) &amp; =.28
+\end{aligned}
+\]</span>
+であり、(8)式は満たさないことから、確率変数<span class="math inline">\(X,Y\)</span>は独立でなく、「従属関係」にあるという。</p>
+<pre class="r"><code>pxy[1,1]</code></pre>
+<pre><code>## [1] 0.3</code></pre>
+<pre class="r"><code>rowSums(pxy)[1]*colSums(pxy)[1]</code></pre>
+<pre><code>## [1] 0.28</code></pre>
+<p>確率変数<span class="math inline">\(X\)</span>の期待値は同時確率を用いて次のように表すことができる。
+<span class="math display">\[
+\begin{aligned}
+E\left( X\right) &amp;= P\left(  X=-5\right) \left( -5\right) +P\left(
+X=5\right) 5=-.4\cdot5+.6\cdot5 \\
+&amp;= P\left( X=-5,Y=15\right) \left( -5\right) +P\left( X=-5,Y=25\right)
+\left( -5\right) +P\left( X=5,Y=15\right) 5+P\left( X=5,Y=25\right) 5 \\
+&amp;= -.3\cdot5-.1\cdot5+.4\cdot5+.2\cdot5 =1
+\end{aligned}
+\]</span></p>
+<pre class="r"><code>x&lt;-c(-5,5)
+x</code></pre>
+<pre><code>## [1] -5  5</code></pre>
+<pre class="r"><code>rowSums(pxy)[1]*x[1]+rowSums(pxy)[2]*x[2]</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>pxy[1,1]*x[1]+pxy[1,2]*x[1]+pxy[2,1]*x[2]+pxy[2,2]*x[2]</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>一般化すれば、確率変数<span class="math inline">\(X,Y\)</span>について、同時確率による期待値と周辺確率による期待値との間には次の関係が成立する。
+<span class="math display">\[
+\begin{aligned}
+E\left(  X\right)   &amp;  =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left(  X=x_{k}
+,Y=y_{h}\right)  x_{k}=\sum_{k=1}^{n}P\left(  x_{k}\right)  x_{k},\\
+E\left(  Y\right)   &amp;  =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left(  X=x_{k}
+,Y=y_{h}\right)  y_{h}=\sum_{h=1}^{m}P\left(  y_{h}\right)  y_{h}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="section-4" class="section level1">
+<h1>共分散</h1>
+<p>確率変数<span class="math inline">\(X,Y\)</span>について、確率変数<span class="math inline">\(X\)</span>が<span class="math inline">\(n\)</span>個の根元事象<span class="math inline">\(x_{k}\)</span>を持ち、確率変数<span class="math inline">\(Y\)</span>が<span class="math inline">\(m\)</span>個の根元事象<span class="math inline">\(y_{h}\)</span>を持つとき、その同時確率関数により次式で求められる期待値を「共分散」と呼ぶ。
+<span class="math display">\[
+E\left[ X-E\left( X\right) \right] \left[ Y-E\left( Y\right) \right] 
+= \sum_{k=1}^{n}\sum_{h=1}^{m}P\left( X=x_{k},Y=y_{h}\right) 
+\left[ x_{k}-E\left( X\right) \right] \left[ y_{h}-E\left( Y\right) \right]
+\tag{9}
+\]</span>
+(9)式の右辺は、<span class="math inline">\(x_{k},y_{h}\)</span>の事象について平均からの偏差<span class="math inline">\(x_{k}-E\left(X\right)\)</span>、<span class="math inline">\(y_{h}-E\left( Y\right)\)</span>をそれぞれ求め、その積により各偏差を一辺とする長方形の面積の期待値を求めたものである。もし、<span class="math inline">\(Y\)</span>を<span class="math inline">\(X\)</span>に置き換え、
+<span class="math display">\[
+E\left[ X-E\left( X\right) \right] \left[ X-E\left( X\right) \right]
+\]</span>
+とすれば、それは<span class="math inline">\(X\)</span>の分散に等しい。</p>
+<p>分散が確率変数の標本空間の広がりを表すのと同様に、共分散は確率変数<span class="math inline">\(X,Y\)</span>の平均からの偏差の積の期待値であり、二つの確率変数が「平面的に見てどれほど大きな広がりを持つか」を表す。更に共分散は符号の情報を持ち、符号が正ならば確率変数<span class="math inline">\(X,Y\)</span>は正の傾きを保ちながら平面的に広がり、符号が負ならば<span class="math inline">\(X,Y\)</span> は負の傾きで平面的に広がる特徴を持つ。</p>
+<p>共分散は次のように書き直すことができる。
+<span class="math display">\[
+\begin{aligned}
+E\left[  X-E\left(  X\right)  \right]  \left[  Y-E\left(  Y\right)  \right]
+&amp;= E\left[  XY-YE\left(  X\right)  -XE\left(  Y\right)  +E\left(  X\right)
+E\left(  Y\right)  \right] \\
+&amp;= E\left[ XY\right]  -E\left(  X\right)  E\left(  Y\right)
+\end{aligned}
+\tag{10}
+\]</span>
+先の例では、確率変数<span class="math inline">\(X,Y\)</span>の同時確率は従属関係にあり、例3の表より
+<span class="math display">\[
+\begin{aligned}
+E\left( XY\right) &amp; =.3\left( -5\right) 15+.1\left( -5\right)
+25+.4\cdot5\cdot15+.2\cdot5\cdot25\\
+&amp;  =20\end{aligned}
+\]</span>
+と求められる。</p>
+<pre class="r"><code>y&lt;-c(15,25)
+y</code></pre>
+<pre><code>## [1] 15 25</code></pre>
+<pre class="r"><code>pxy[1,1]*x[1]*y[1]+pxy[1,2]*x[1]*y[2]+pxy[2,1]*x[2]*y[1]+pxy[2,2]*x[2]*y[2]</code></pre>
+<pre><code>## [1] 20</code></pre>
+<p>また、
+<span class="math display">\[
+E\left( X\right) E\left( Y\right) =1\cdot18
+\]</span>
+であり、よって共分散は次の通りである。
+<span class="math display">\[
+E\left[ X-E\left( X\right) \right] \left[ Y-E\left( Y\right) \right]
+=20-18=2
+\]</span>
+もし、確率変数<span class="math inline">\(X,Y\)</span>が互いに独立ならば、同時確率は
+<span class="math display">\[
+P\left( X=x_{k},Y=y_{h}\right) =P\left( x_{k}\right) P\left( y_{h}\right)
+\]</span>
+となり、次のような表の値になる。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(Y=15\)</span></th>
+<th><span class="math inline">\(Y=25\)</span></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X=-5\)</span></td>
+<td><span class="math inline">\(.28\)</span></td>
+<td><span class="math inline">\(.12\)</span></td>
+<td><span class="math inline">\(P(X=-5)=.4\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X=5\)</span></td>
+<td><span class="math inline">\(.42\)</span></td>
+<td><span class="math inline">\(.18\)</span></td>
+<td><span class="math inline">\(P(X=5)=.6\)</span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><span class="math inline">\(P(Y=15)=.7\)</span></td>
+<td><span class="math inline">\(P(Y=25)=.3\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>このとき、
+<span class="math display">\[
+\begin{aligned}
+E\left(  XY\right)   &amp;  =.28\left(  -5\right)  15+.12\left(  -5\right)
+25+.42\cdot5\cdot15+.18\cdot5\cdot25\\
+&amp;  =18\end{aligned}
+\]</span>
+であり、共分散はゼロとなる。</p>
+<pre class="r"><code>pxy&lt;- matrix(c(.28,.42,.12,.18),2,2)
+pxy[1,1]*x[1]*y[1]+pxy[1,2]*x[1]*y[2]+pxy[2,1]*x[2]*y[1]+pxy[2,2]*x[2]*y[2]</code></pre>
+<pre><code>## [1] 18</code></pre>
+<p>一般化すれば、確率変数<span class="math inline">\(X,Y\)</span>が独立なら同時確率は(8)式を満たし、<span class="math inline">\(E\left( XY\right)\)</span>は<span class="math inline">\(E\left( X\right) E\left( Y\right)\)</span>に一致する。
+<span class="math display">\[
+\begin{aligned}
+E\left(  XY\right) &amp; =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left( X=x_{k},Y=y_{h}\right)  x_{k}y_{h}\nonumber\\
+&amp; =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left(  x_{k}\right)  P\left(  y_{h}\right)
+x_{k}y_{h}\nonumber\\
+&amp;  =\sum_{k=1}^{n}P\left(  x_{k}\right)  x_{k}\sum_{h=1}^{m}P\left(
+y_{h}\right)  y_{h}=E\left(  X\right)  E\left(  Y\right) 
+\end{aligned}
+\tag{11}
+\]</span>
+従って、確率変数<span class="math inline">\(X,Y\)</span>が独立のとき、(10,11)式より共分散はゼロとなる。</p>
+</div>
+<div id="section-5" class="section level1">
+<h1>相関係数</h1>
+<p>二つの確率変数の関係を端的に表わす尺度が存在する。それは確率変数<span class="math inline">\(X,Y\)</span>の共分散と分散とにより求められ、次式に従う。
+<span class="math display">\[
+\rho=\frac{E\left[  X-E\left(  X\right)  \right]  \left[  X-E\left(  X\right)
+\right]  }{\sqrt{E\left[  X-E\left(  X\right)  \right]  ^{2}\left[  X-E\left(
+X\right)  \right]  ^{2}}}
+\]</span>
+この<span class="math inline">\(\rho\)</span>を相関係数と呼ぶ。</p>
+<p>確率変数<span class="math inline">\(X,Y\)</span>が独立のとき、共分散はゼロとなり、従って<span class="math inline">\(\rho=0\)</span>である。上述の通り共分散の符号には意味があり、符号が正ならば確率変数<span class="math inline">\(X,Y\)</span>は正の傾きを保ちながら平面的に広がり、符号が負ならば<span class="math inline">\(X,Y\)</span>は負の傾きで平面的に広がる特徴を持つ。すなわち、<span class="math inline">\(E\left[ X-E\left( X\right) \right] \left[ X-E\left( X\right) \right] &gt;0\)</span>ならば<span class="math inline">\(\rho&gt;0\)</span>、<span class="math inline">\(E\left[ X-E\left( X\right) \right] \left[ X-E\left( X\right) \right]&lt;0\)</span>ならば<span class="math inline">\(\rho&lt;0\)</span>となる。確率変数<span class="math inline">\(X,Y\)</span>について<span class="math inline">\(\rho=0\)</span>を無相関の状態、<span class="math inline">\(\rho&gt;0\)</span>を正の相関、<span class="math inline">\(\rho&lt;0\)</span>を負の相関と呼ぶ。また、後に説明する通り相関係数には上限と下限が存在し、必ず<span class="math inline">\(-1\leq\rho\leq1\)</span>を満たす。</p>
+</div>
+<div id="section-6" class="section level1">
+<h1>練習問題</h1>
+<p>以下の問題の解答を作成し提出せよ。</p>
+<p><strong>問1</strong>　じゃんけんの手を確率変数<span class="math inline">\(X\)</span>と考え、その標本空間を<span class="math inline">\(\left\{x_1,x_2,x_3\right\}\)</span>とする。ただし、グー<span class="math inline">\(x_1\)</span>、チョキ<span class="math inline">\(x_2\)</span>、パー<span class="math inline">\(x_2\)</span>である。二人で行うとき、次の条件の下で同時確率、周辺確率を表形式で示せ。（それぞれ必要に応じて条件を追加してよい）</p>
+<p><strong>(i)</strong>　二人とも<span class="math inline">\(x_i,i=1,2,3\)</span>の出現する確率は等しく、かつ相互の手の内<span class="math inline">\(X\)</span>が予測できない場合（互いに独立か従属かも答えよ）</p>
+<p><strong>(ii)</strong>　一人は相手の手が全く読めず、ただし、もう一人は相手の手が9割の確率で予測できる場合（同上）</p>
+<p><strong>問2</strong>　確率変数<span class="math inline">\(x,y\)</span>が存在し、以下の同時確率を持つと仮定する。相関係数を求めよ。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(y=1\)</span></th>
+<th><span class="math inline">\(y=2\)</span></th>
+<th><span class="math inline">\(y=3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(x=1\)</span></td>
+<td><span class="math inline">\(1 \over 12\)</span></td>
+<td><span class="math inline">\(1 \over 6\)</span></td>
+<td><span class="math inline">\(1 \over 3\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(x=2\)</span></td>
+<td><span class="math inline">\(1 \over 6\)</span></td>
+<td><span class="math inline">\(1 \over 12\)</span></td>
+<td><span class="math inline">\(1 \over 6\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>問3</strong>　１章に関連する練習問題を二つ作成し、解答を沿えよ。</p>
+</div>

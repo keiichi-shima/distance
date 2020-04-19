@@ -1,0 +1,393 @@
+---
+title: '計量経済学講義：確率の性質'
+author: 嶋恵一
+date: '2020-04-19'
+slug: EconometricsCh1
+categories:
+  - Lecture
+tags:
+  - Econometrics
+---
+
+この遠隔講義では、計量経済学を講義ノートを基に学習します。講義ノートはResearchmapの[資料公開](https://researchmap.jp/multidatabases/multidatabase_contents/download/235233/e53b3558c86a79319ed1b70907479ce4/3426?col_no=2&frame_id=550541)よりダウンロードして下さい。
+
+この遠隔講義では、講義ノート第１章「確率の性格」から開始致します。以下は第１章と同じ内容をwebに掲載したものです。ただし、Rのコードと練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは全く任意ですので、興味がある学生だけに向けたものです。興味がなければ読み飛ばせばよいです。)
+
+講義ノート第１章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところを中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。
+
+それでは、講義ノートに従って、確率の性質を学習しましょう。
+
+
+# 確率変数
+
+ある記号や文字で表されたものが数を表現するとき、それを定数ないし変数と呼ぶ。$c$がただ一つの固定された値をとり、それが5だとする。$c$を定数と呼び、
+$$
+c=5
+$$
+と表す。$X$が複数の値をとり、それが$\left\{ -1,0,2\right\}$だとする。$X$を変数と呼び、
+$$
+X=\left\{
+\begin{array}
+-1\\
+0\\
+2
+\end{array}
+\right.
+$$
+と表す。このとき、$X$が$\left\{-1,0,2\right\}$のうちのどれをとるかは偶然に支配され、ただし、とりうる値毎に確率が定められているものを「確率変数」と呼ぶ。
+
+例えば、$X$が-1をとる確率は1/2、0をとる確率は1/4、2をとる確率は1/4と定められているとき、それを
+$$
+\begin{aligned}
+P\left(X=-1\right) &= \frac{1}{2},\\
+P\left(X=0\right) &= \frac{1}{4},\\
+P\left(X=2\right) &= \frac{1}{4}
+\end{aligned}
+$$
+と表現する。$P\left( X=a\right)=b$を「確率関数」と呼び、確率変数$X$が$a$という値をとり、それが生じる確率が$b$であることを表す。確率変数$X$について、起こりうる値を事象と呼び、起こり得るすべての事象を指して「標本空間」と呼ぶ。
+
+いま、確率変数$X$が$n$ 個の独立した事象をとり、それを$x_{k}$と表す。標本空間を構成する$n$個の独立した事象はしばしば「根元事象」と呼ばれる。確率変数$X$が標本空間$S$のうちどの根元事象をとるかは結果を見るまで分からないが、その確率は次のように定められているとする：
+$$
+P\left(  X=x_{k}\right)  =p_{k}
+$$
+このとき、以下の「確率の公理」（規則）が与えられる： 
+$$
+0 \leq P\left(X=x_{k}\right) \leq1, \tag{i}
+$$
+$$
+P\left( S\right) = \sum_{k=1}^{n}P\left( X=x_{k}\right) =1 \tag{ii}
+$$
+確率変数$X$が任意の事象$x_{k}$をとる確率は0から1の間であり、すべての事象を包含する標本空間で確率を表したものは1である。例えば、確率変数$X$が存在し、その標本空間が$\left\{-1,0,2\right\}$のとき、「-1か0か2が出る」という確率は1である。3が出る確率は0である。すなわち、標本空間にない事象の生じる確率は必ず0である。
+
+# 期待値
+
+確率変数$X$について全部で$n$個の根元事象$x_{k}$が存在し、各根元事象の確率関数を$P\left(  X=x_{k}\right)$とする。標本空間$S$に含まれる全ての根元事象と確率関数とによって求められる次式の値を期待値と呼ぶ。
+$$
+E\left( X\right) =\sum_{k=1}^{n}P\left( X=x_{k}\right) x_{k}
+\tag{2}
+$$
+左辺の$E\left( \bullet\right)$を期待演算子と呼ぶ。(2)式の期待値は平均を表す。それは確率変数がとりうる値の中心像を意味する。
+
+**例１：**確率変数$X$の標本空間が$\left\{  -1,0,2\right\}$で、$P\left( X=-1\right)  =\frac{1}{2}$、$P\left(  X=0\right)  =\frac{1}{4}$ 、$P\left(  X=2\right) =\frac{1}{4}$ならば、
+$$
+E\left( X\right)=\frac{1}{2}\left( -1\right) +\frac{1}{4}\cdot0+\frac{1}{4}\cdot2=0
+$$
+である。
+
+```{r message=FALSE, warning=FALSE}
+rm(list=ls())
+x<-c(-1,0,2)
+x
+p<-c(1/2,1/4,1/4)
+p
+sum(p*x)
+```
+
+確率変数$X$の期待値の計算は以下を満たす。$c$を定数とするとき、
+$$
+\begin{aligned}
+E(c+X)  &  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)  \left(  c+x_{k}\right)
+=c+E\left(  X\right)  ,\\
+E\left(  cX\right)   &  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)  cx_{k}
+=cE\left(  X\right)  ,\\
+E\left(  X/c\right)   &  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)
+x_{k}/c=E\left(  X\right)/c
+\end{aligned}
+$$
+が成立する。
+
+確率変数$X$の$t$乗の期待値は
+$$
+E\left(  X^{t}\right)  =\sum_{k=1}^{n}P\left(  X=x_{k}\right)  x_{k}^{t}
+$$
+で表される。なぜならば、上記の確率変数$X$の例で確認できる通り、
+$$
+\begin{aligned}
+P\left(  X=-1\right)   &  =P\left(  X^{t}=\left(  -1\right)  ^{t}\right)  ,\\
+P\left(  X=0\right)   &  =P\left(  X^{t}=0^{t}\right)  ,\\
+P\left(  X=2\right)   &  =P\left(  X^{t}=2^{t}\right)
+\end{aligned}
+$$
+であり、必ず$P\left( X^{k}=x_{k}^{k}\right) =P\left(  X=x_{k}\right)$を満たすからである。先の例では、
+$$
+E\left( X^{2}\right) =\frac{1}{2}\left( -1\right) ^{2}+\frac{1}{4}
+\cdot0^{2}+\frac{1}{4}\cdot2^{2}=\frac{3}{2}
+$$
+である。このような確率変数$X$の$t$乗の期待値を$t$次のモーメントと呼ぶ。
+
+```{r}
+sum(p*x^2)
+```
+
+確率変数$X$について標本空間$S$に含まれる全ての根元事象とその確率関数とにより、次式で求められる値を「分散」と呼ぶ。
+$$
+E\left[ X-E\left( X\right)\right]^{2}=\sum_{k=1}^{n}P\left( X=x_{k}\right) \left[  x_{k}-E\left( X\right) \right] ^{2}
+\tag{4}
+$$
+(4)式の右辺において、$x_{k}-E\left(X\right)$を平均からの偏差と呼び、それは確率変数のとりうる各々の値が平均から見てどれだけ離れているかを表す。よって分散は確率変数がとりうる値の平均からの偏差を2乗し、その期待値を求めたものである。分散の右辺は次のように書き換えられる：
+$$
+\begin{aligned}
+& \sum_{k=1}^{n}P \left( X=x_{k}\right) \left[ x_{k}-E\left( X\right)\right]^{2} \\
+&= \sum_{k=1}^{n}P\left( X=x_{k}\right) \left[ x_{k}^{2}-2x_{k}E\left(X\right)
++\left( E\left( X\right) \right)^{2}\right] \\
+&= \sum_{k=1}^{n}P\left(  X=x_{k}\right)  x_{k}^{2}-2E\left( X\right)
+E\left( X\right) +\left( E\left( X\right) \right)^{2} \\
+&= E\left( X^{2}\right) -\left( E\left( X\right) \right) ^{2}
+\end{aligned}
+$$
+すなわち、確率変数 $X$の分散は$X$の2乗のモーメントから平均の2乗を引いたものに等しい。上記の例では分散は
+$$
+E\left[ X-E\left( x\right) \right]^{2}=\frac{3}{2}-0^{2}=\frac{3}{2}
+$$
+である。
+
+```{r}
+sum(p*x^2)-sum(p*x)^2
+```
+
+
+# 標準偏差
+
+確率変数$X$について、それがとりうる値の期待値は平均であり、確率変数がとりうる値から平均を引いた偏差を2乗し、その期待値を求めたものが分散である。従って、平均の計算概念は一次元（長さ）であるのに対し、分散は2乗の計算から気付くように二次元（面積）の概念に基づく。換言すれば、分散とはあたかも$x_{k}-E\left(  X\right)$ を一辺とする正方形、すなわち$\left[  x_{k}-E\left( X\right)  \right]^{2}$の期待値であり、それは確率変数の平均からの偏差を一辺とする正方形の平均的な面積といえる。
+
+正方形の面積が分かれば、その平方根を求めれば長さの概念に還元できる。この考えに従うのが標準偏差である。標準偏差は分散の平方根により求められる。
+$$
+\sqrt{E\left[ X-E\left( X\right)\right]^{2}}
+$$
+先の例では分散は$\frac{3}{2}$であり、標準偏差は
+$$
+\sqrt{E\left[ X-E\left( X\right) \right]^{2}}=\sqrt{\frac{3}{2}}
+$$
+である。
+
+# 同時確率
+
+二つの確率変数$X,Y$が存在し、それぞれの根元事象が同時に起こる確率を定義する。
+
+**例2：**確率変数$X,Y$の標本空間を次のように定める。
+$$
+x=\left\{
+\begin{array}
+-5\\
+5
+\end{array}
+\right.
+,
+y=\left\{
+\begin{array}
+15\\
+25
+\end{array}
+\right.
+$$
+確率変数$X,Y$のについて根元事象はそれぞれ2通りのため、$x,y$ の根元事象の組み合わせは4通り存在する。このとき、$P\left(X=-5,Y=15\right)$のように、二つの確率変数が特定の事象の組み合わせをとる確率を「同時確率」とよぶ。$P\left(  X=a,Y=b\right)  =c$を「同時確率関数」と呼び、確率変数$X$が$a$という値を、なおかつ確率変数$Y$が$b$という値を同時にとる確率が$c$であることを表す。
+
+以上を一般化して、確率変数$X$が$n$個の根元事象をとりそれを$x_{k}$と表し、確率変数$Y$が$m$個の根元事象をとりそれを$y_{h}$と表す。確率変数$X,Y$の特定の事象に関する同時確率関数は次のように表現できる： 
+$$
+P \left( X=x_{k},Y=y_{h} \right)
+\tag{6}
+$$
+上の例では、確率変数$X,Y$の同時確率関数は次のような「表形式」を用いて示すことができる。
+
+|        | $Y=15$         | $Y=25$         |
+| ------ | -------------- | -------------- |
+| $X=-5$ | $P(X=-5,Y=15)$ | $P(X=-5,Y=25)$ |
+| $X=5$  | $P(X=5,Y=15)$  | $P(X=5,Y=25)$  |
+
+ここで、確率変数$X,Y$の確率関数について次のように定める。
+$$
+\begin{aligned}
+P\left( X=-5\right) &= .4,\\
+P\left( X=5\right) &= .6,\\
+P\left( Y=15\right) &= .7,\\
+P\left( Y=25\right) &= .3
+\end{aligned}
+$$
+以上のように確率変数$X$が他の確率変数$Y$に依存せず$X$の事象のみで確率関数が定義されるものを「周辺確率」と呼ぶ。一般化すれば、確率変数$X$が$n$個の根元事象$x_{k}$を持ち、確率変数$Y$が$m$個の根元事象$y_{h}$を持つとき、周辺確率と同時確率との間には次の関係が成り立つ。
+$$
+\begin{aligned}
+\sum_{h=1}^{m}P\left(  X=x_{k},Y=y_{h}\right) &= P\left( x_{k}\right),\\
+\sum_{k=1}^{n}P\left(  X=x_{k},Y=y_{h}\right) &= P\left( y_{h}\right),\\
+\sum_{k=1}^{n}\sum_{h=1}^{m}P\left( X=x_{k},Y=y_{h}\right) &= 1
+\end{aligned}
+\tag{7}
+$$
+また、周辺確率と同時確率の間に以下の関係が成立する場合、(6)式は
+$$
+P\left( X=x_{k},Y=y_{h}\right) =P\left( x_{k}\right) P\left( y_{h}\right)
+\tag{8}
+$$
+と表される。このとき、確率変数$x,y$は互いに「独立」であるという。
+
+**例3：**例2について、同時確率と周辺確率とを次のように定める：
+
+|        | $Y=15$       | $Y=25$       |              |
+| ------ | ------------ | ------------ | ------------ |
+| $X=-5$ | $.3$         | $.1$         | $P(X=-5)=.4$ |
+| $X=5$  | $.4$         | $.2$         | $P(X=5)=.6$  |
+|        | $P(Y=15)=.7$ | $P(Y=25)=.3$ |              |
+
+以上は(7)式をすべて満たす。
+```{r}
+pxy<- matrix(c(.3,.4,.1,.2),2,2)
+pxy
+rowSums(pxy)
+colSums(pxy)
+```
+一方、
+$$
+\begin{aligned}
+P\left( X=-5,Y=15\right) & =.3,\\
+P\left( X=-5\right) P\left( Y=15\right) & =.28
+\end{aligned}
+$$
+であり、(8)式は満たさないことから、確率変数$X,Y$は独立でなく、「従属関係」にあるという。
+```{r}
+pxy[1,1]
+rowSums(pxy)[1]*colSums(pxy)[1]
+```
+
+確率変数$X$の期待値は同時確率を用いて次のように表すことができる。
+$$
+\begin{aligned}
+E\left( X\right) &= P\left(  X=-5\right) \left( -5\right) +P\left(
+X=5\right) 5=-.4\cdot5+.6\cdot5 \\
+&= P\left( X=-5,Y=15\right) \left( -5\right) +P\left( X=-5,Y=25\right)
+\left( -5\right) +P\left( X=5,Y=15\right) 5+P\left( X=5,Y=25\right) 5 \\
+&= -.3\cdot5-.1\cdot5+.4\cdot5+.2\cdot5 =1
+\end{aligned}
+$$
+```{r}
+x<-c(-5,5)
+x
+rowSums(pxy)[1]*x[1]+rowSums(pxy)[2]*x[2]
+pxy[1,1]*x[1]+pxy[1,2]*x[1]+pxy[2,1]*x[2]+pxy[2,2]*x[2]
+```
+一般化すれば、確率変数$X,Y$について、同時確率による期待値と周辺確率による期待値との間には次の関係が成立する。
+$$
+\begin{aligned}
+E\left(  X\right)   &  =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left(  X=x_{k}
+,Y=y_{h}\right)  x_{k}=\sum_{k=1}^{n}P\left(  x_{k}\right)  x_{k},\\
+E\left(  Y\right)   &  =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left(  X=x_{k}
+,Y=y_{h}\right)  y_{h}=\sum_{h=1}^{m}P\left(  y_{h}\right)  y_{h}
+\end{aligned}
+$$
+
+# 共分散
+
+確率変数$X,Y$について、確率変数$X$が$n$個の根元事象$x_{k}$を持ち、確率変数$Y$が$m$個の根元事象$y_{h}$を持つとき、その同時確率関数により次式で求められる期待値を「共分散」と呼ぶ。
+$$
+E\left[ X-E\left( X\right) \right] \left[ Y-E\left( Y\right) \right] 
+= \sum_{k=1}^{n}\sum_{h=1}^{m}P\left( X=x_{k},Y=y_{h}\right) 
+\left[ x_{k}-E\left( X\right) \right] \left[ y_{h}-E\left( Y\right) \right]
+\tag{9}
+$$
+(9)式の右辺は、$x_{k},y_{h}$の事象について平均からの偏差$x_{k}-E\left(X\right)$、$y_{h}-E\left( Y\right)$をそれぞれ求め、その積により各偏差を一辺とする長方形の面積の期待値を求めたものである。もし、$Y$を$X$に置き換え、
+$$
+E\left[ X-E\left( X\right) \right] \left[ X-E\left( X\right) \right]
+$$
+とすれば、それは$X$の分散に等しい。
+
+分散が確率変数の標本空間の広がりを表すのと同様に、共分散は確率変数$X,Y$の平均からの偏差の積の期待値であり、二つの確率変数が「平面的に見てどれほど大きな広がりを持つか」を表す。更に共分散は符号の情報を持ち、符号が正ならば確率変数$X,Y$は正の傾きを保ちながら平面的に広がり、符号が負ならば$X,Y$ は負の傾きで平面的に広がる特徴を持つ。
+
+共分散は次のように書き直すことができる。
+$$
+\begin{aligned}
+E\left[  X-E\left(  X\right)  \right]  \left[  Y-E\left(  Y\right)  \right]
+&= E\left[  XY-YE\left(  X\right)  -XE\left(  Y\right)  +E\left(  X\right)
+E\left(  Y\right)  \right] \\
+&= E\left[ XY\right]  -E\left(  X\right)  E\left(  Y\right)
+\end{aligned}
+\tag{10}
+$$
+先の例では、確率変数$X,Y$の同時確率は従属関係にあり、例3の表より
+$$
+\begin{aligned}
+E\left( XY\right) & =.3\left( -5\right) 15+.1\left( -5\right)
+25+.4\cdot5\cdot15+.2\cdot5\cdot25\\
+&  =20\end{aligned}
+$$
+と求められる。
+```{r}
+y<-c(15,25)
+y
+pxy[1,1]*x[1]*y[1]+pxy[1,2]*x[1]*y[2]+pxy[2,1]*x[2]*y[1]+pxy[2,2]*x[2]*y[2]
+```
+また、
+$$
+E\left( X\right) E\left( Y\right) =1\cdot18
+$$
+であり、よって共分散は次の通りである。
+$$
+E\left[ X-E\left( X\right) \right] \left[ Y-E\left( Y\right) \right]
+=20-18=2
+$$
+もし、確率変数$X,Y$が互いに独立ならば、同時確率は
+$$
+P\left( X=x_{k},Y=y_{h}\right) =P\left( x_{k}\right) P\left( y_{h}\right)
+$$
+となり、次のような表の値になる。
+
+|        | $Y=15$       | $Y=25$       |              |
+| ------ | ------------ | ------------ | ------------ |
+| $X=-5$ | $.28$        | $.12$        | $P(X=-5)=.4$ |
+| $X=5$  | $.42$        | $.18$        | $P(X=5)=.6$  |
+|        | $P(Y=15)=.7$ | $P(Y=25)=.3$ |              |
+このとき、
+$$
+\begin{aligned}
+E\left(  XY\right)   &  =.28\left(  -5\right)  15+.12\left(  -5\right)
+25+.42\cdot5\cdot15+.18\cdot5\cdot25\\
+&  =18\end{aligned}
+$$
+であり、共分散はゼロとなる。
+```{r}
+pxy<- matrix(c(.28,.42,.12,.18),2,2)
+pxy[1,1]*x[1]*y[1]+pxy[1,2]*x[1]*y[2]+pxy[2,1]*x[2]*y[1]+pxy[2,2]*x[2]*y[2]
+```
+一般化すれば、確率変数$X,Y$が独立なら同時確率は(8)式を満たし、$E\left( XY\right)$は$E\left( X\right) E\left( Y\right)$に一致する。
+$$
+\begin{aligned}
+E\left(  XY\right) & =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left( X=x_{k},Y=y_{h}\right)  x_{k}y_{h}\nonumber\\
+& =\sum_{k=1}^{n}\sum_{h=1}^{m}P\left(  x_{k}\right)  P\left(  y_{h}\right)
+x_{k}y_{h}\nonumber\\
+&  =\sum_{k=1}^{n}P\left(  x_{k}\right)  x_{k}\sum_{h=1}^{m}P\left(
+y_{h}\right)  y_{h}=E\left(  X\right)  E\left(  Y\right) 
+\end{aligned}
+\tag{11}
+$$
+従って、確率変数$X,Y$が独立のとき、(10,11)式より共分散はゼロとなる。
+
+# 相関係数
+
+二つの確率変数の関係を端的に表わす尺度が存在する。それは確率変数$X,Y$の共分散と分散とにより求められ、次式に従う。
+$$
+\rho=\frac{E\left[  X-E\left(  X\right)  \right]  \left[  X-E\left(  X\right)
+\right]  }{\sqrt{E\left[  X-E\left(  X\right)  \right]  ^{2}\left[  X-E\left(
+X\right)  \right]  ^{2}}}
+$$
+この$\rho$を相関係数と呼ぶ。
+
+確率変数$X,Y$が独立のとき、共分散はゼロとなり、従って$\rho=0$である。上述の通り共分散の符号には意味があり、符号が正ならば確率変数$X,Y$は正の傾きを保ちながら平面的に広がり、符号が負ならば$X,Y$は負の傾きで平面的に広がる特徴を持つ。すなわち、$E\left[  X-E\left(  X\right)  \right] \left[ X-E\left( X\right) \right] >0$ならば$\rho>0$、$E\left[  X-E\left( X\right) \right] \left[ X-E\left( X\right) \right]<0$ならば$\rho<0$となる。確率変数$X,Y$について$\rho=0$を無相関の状態、$\rho>0$を正の相関、$\rho<0$を負の相関と呼ぶ。また、後に説明する通り相関係数には上限と下限が存在し、必ず$-1\leq\rho\leq1$を満たす。
+
+# 練習問題
+
+以下の問題の解答を作成し提出せよ。
+
+**問1**　じゃんけんの手を確率変数$X$と考え、その標本空間を$\left\{x_1,x_2,x_3\right\}$とする。ただし、グー$x_1$、チョキ$x_2$、パー$x_2$である。二人で行うとき、次の条件の下で同時確率、周辺確率を表形式で示せ。（それぞれ必要に応じて条件を追加してよい）
+
+**(i)**　二人とも$x_i,i=1,2,3$の出現する確率は等しく、かつ相互の手の内$X$が予測できない場合（互いに独立か従属かも答えよ）
+
+
+**(ii)**　一人は相手の手が全く読めず、ただし、もう一人は相手の手が9割の確率で予測できる場合（同上）
+
+
+**問2**　確率変数$x,y$が存在し、以下の同時確率を持つと仮定する。相関係数を求めよ。
+
+|       | $y=1$        | $y=2$        | $y=3$       |
+| ----- | ------------ | ------------ | ----------- |
+| $x=1$ | $1 \over 12$ | $1 \over 6$  | $1 \over 3$ |
+| $x=2$ | $1 \over 6$  | $1 \over 12$ | $1 \over 6$ |
+
+**問3**　１章に関連する練習問題を二つ作成し、解答を沿えよ。
+

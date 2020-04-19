@@ -6,10 +6,19 @@
     <description>Recent content in Lecture on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/lecture/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>計量経済学講義：確率の性質</title>
+      <link>/post/2020/04/19/econometricsch1/</link>
+      <pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/19/econometricsch1/</guid>
+      <description>この遠隔講義では、計量経済学を講義ノートを基に学習します。講義ノートはResearchmapの資料公開よりダウンロードして下さい。 この遠隔講</description>
+    </item>
     
     <item>
       <title>外書購読Aの遠隔講義</title>
