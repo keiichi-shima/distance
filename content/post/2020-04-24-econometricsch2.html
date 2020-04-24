@@ -1,0 +1,285 @@
+---
+title: '計量経済学講義：eの導入'
+author: 嶋恵一
+date: '2020-04-24'
+slug: econometricsch2
+categories:
+  - Lecture
+tags:
+  - Econometrics
+---
+
+
+
+<p>この遠隔講義では、講義ノート第2章「<span class="math inline">\(e\)</span>の導入」に進みます。以下は第2章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは任意ですので、興味がなければ読み飛ばせばよいです。)</p>
+<p>講義ノート第2章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところを中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。</p>
+<p>それでは、講義ノート第2章を学習しましょう。</p>
+<div id="section" class="section level1">
+<h1>定義</h1>
+<p><span class="math inline">\(e\)</span>の定義は次の通りである。
+<span class="math display">\[
+e\equiv\lim_{n\rightarrow\infty}\left(  1+\frac{1}{n}\right)  ^{n}
+\]</span>
+いま、ある定数<span class="math inline">\(a\)</span>の下で、<span class="math inline">\(y\)</span>と<span class="math inline">\(x\)</span>との関係を次のように定める。
+<span class="math display">\[
+y=a^{x}
+\]</span>
+このとき、<span class="math inline">\(y\)</span>の導関数は次のように変形できる。
+<span class="math display">\[
+\begin{aligned}
+\frac{dy}{dx}  &amp;  =\lim_{dx\rightarrow0}\frac{a^{x+dx}-a^{x}}{dx}\\
+&amp;  =a^{x}\lim_{dx\rightarrow0}\frac{a^{dx}-1}{dx}\end{aligned}
+\]</span>
+もしも、
+<span class="math display">\[
+\lim_{dx\rightarrow0}\frac{a^{dx}-1}{dx}=1
+\tag{1}
+\]</span>
+が成立すれば、<span class="math inline">\(y=a^{x}\)</span>の導関数は次を満たす。
+<span class="math display">\[
+\frac{dy}{dx}=y
+\]</span>
+すなわち、(1)式を満たす特別な<span class="math inline">\(a\)</span>が存在すれば、そのとき<span class="math inline">\(a^{x}\)</span>の微分は<span class="math inline">\(a^{x}\)</span>に一致する。</p>
+<p>(1)式を変形すれば、次が得られる。
+<span class="math display">\[
+\begin{aligned}
+\lim_{dx\rightarrow0}\left(  a^{dx}-1\right)   &amp;  =\lim_{dx\rightarrow0}dx,\\
+\lim_{dx\rightarrow0}a^{dx}  &amp;  =\lim_{dx\rightarrow0}1+dx,\\
+\lim_{dx\rightarrow0}a  &amp;  =\lim_{dx\rightarrow0}\left(  1+dx\right)
+^{\frac{1}{dx}}\end{aligned}
+\]</span>
+上の式について、<span class="math inline">\(&quot;dx\rightarrow0&quot;\)</span>の影響を受けるのは右辺のみであり、左辺の<span class="math inline">\(a\)</span>には関係ない。果たして、
+<span class="math display">\[
+&quot;a&quot;=\lim_{dx\rightarrow0}\left( 1+dx\right)^{\frac{1}{dx}}
+\tag{2}
+\]</span>
+を満たす特別な<span class="math inline">\(&quot;a&quot;\)</span>は存在するだろうか。ここで、<span class="math inline">\(dx=\frac{1}{n}\)</span>と置き換え、(2)式の右辺を次のように書き直す。
+<span class="math display">\[
+\lim_{n\rightarrow\infty}\left( 1+\frac{1}{n}\right) ^{n}
+\tag{3}
+\]</span>
+括弧の中は1に近づき、括弧の指数は無限大に近づく。(3)式は極限でどのような値をとるだろうか。<span class="math inline">\(n\)</span>の値を増やしながら、(3)式を求めたものを図1に示す。</p>
+<pre class="r"><code>n&lt;-seq(.01,14,length=100)
+a&lt;-(1+1/n)^n
+library(ggplot2)
+qplot(n,a,geom=&quot;line&quot;,main=&quot;図1&quot;)</code></pre>
+<p><img src="/post/2020-04-24-econometricsch2_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>図からは(3)式の値はある水準へと「収束」するように見える。実際に収束し、その値は2.7183...となる。その値をとる<span class="math inline">\(&quot;a&quot;\)</span>は「ネイピア定数」と呼ばれ、<span class="math inline">\(e\)</span>という記号で表される。</p>
+<p><span class="math inline">\(e\)</span>は確率統計によく現れる定数である。指数分布、正規分布などの確率密度関数で用いられ、またその計算の際には、
+<span class="math display">\[
+\frac{de^{x}}{dx}=e^{x}
+\]</span>
+とともに、
+<span class="math display">\[
+\frac{de^{tx}}{dx}=te^{tx}
+\tag{4}
+\]</span>
+という微分が利用される。(4)式の証明は次の通りである。<span class="math inline">\(y=tx\)</span>と置き換える。合成関数の微分により、
+<span class="math display">\[
+\begin{aligned}
+\frac{de^{y}}{dy}\frac{dy}{dx}  &amp;  =e^{y}t\\
+&amp;  =te^{tx}
+\end{aligned}
+\]</span>
+が得られる。</p>
+</div>
+<div id="e" class="section level1">
+<h1><span class="math inline">\(e\)</span>に関する積分と確率分布</h1>
+<p>確率統計では<span class="math inline">\(e^{-x}\)</span>、<span class="math inline">\(e^{-x^{2}}\)</span>に基づく関数がよく用いられる。いずれも、任意の<span class="math inline">\(x\)</span>に対して正であり、
+<span class="math display">\[
+\lim_{x\rightarrow\infty}e^{-x}=0,\lim_{x\rightarrow\infty}e^{-x^{2}}=0
+\]</span>
+である。いま、<span class="math inline">\(x\)</span>の範囲として、<span class="math inline">\(0\leq x&lt;\infty\)</span>を考える。このとき、<span class="math inline">\(e^{-x}\)</span>の積分はどうなるだろうか。それは次のように
+<span class="math display">\[
+\int_{0}^{\infty}e^{-x}dx=\left[  -e^{-x}\right]  _{0}^{\infty}=1
+\]</span>
+となる。すなわち、確率変数<span class="math inline">\(X\)</span>が標本空間<span class="math inline">\(0\leq x&lt;\infty\)</span>を持ち、その確率密度関数が<span class="math inline">\(f(x)=e^{-x}\)</span>のとき、それは確率公準を満たす。</p>
+<p>一方、ある定数<span class="math inline">\(b&gt;0\)</span>を用い、<span class="math inline">\(0\leq x&lt;\infty\)</span>の範囲で<span class="math inline">\(e^{-bx}\)</span>の積分を求めると、
+<span class="math display">\[
+\int_{0}^{\infty}e^{-bx}dx=\left[  -\frac{1}{b}e^{-bx}\right]  _{0}^{\infty
+}=\frac{1}{b}
+\]</span>
+となる。もし、確率密度を
+<span class="math display">\[
+f(x)=be^{-bx} 
+\tag{5}
+\]</span>
+と定めれば、その積分は次の通りである。
+<span class="math display">\[
+\int_{0}^{\infty}be^{-bx}dx=\left[  -e^{-bx}\right]  _{0}^{\infty}=1
+\]</span>
+よって、(5)式の確率密度関数は確率公準を満たす。(5)式の確率密度を持つ確率分布関数は
+<span class="math display">\[
+\begin{aligned}
+F\left(  \alpha\right)   &amp;  =\int_{0}^{\alpha}be^{-bx}dx\nonumber\\
+&amp;  =\left[  -e^{-bx}\right]  _{0}^{\alpha}=1-e^{-b\alpha}
+\end{aligned}
+\tag{6}
+\]</span>
+で表され、その確率分布は「指数分布」と呼ばれる。指数分布に従う確率変数は正の範囲（<span class="math inline">\(0\)</span>から<span class="math inline">\(\infty\)</span>）を標本空間に持ち、その確率密度は単調減少関数である。</p>
+<p>今度は、<span class="math inline">\(e^{-x^{2}}\)</span>を考える。<span class="math inline">\(x^{2}=\left( -x\right) ^{2}\)</span>であり、<span class="math inline">\(e^{-x^{2}}\)</span>は<span class="math inline">\(x=0\)</span>で対称である。この性格は確率密度関数を定める上で好条件であり、指数分布では無理だった「すべての実数（<span class="math inline">\(-\infty\)</span>から<span class="math inline">\(\infty\)</span>）を標本区間に持つ」ことを可能にする。すなわち、<span class="math inline">\(e^{-x^{2}}\)</span>を用いれば、<span class="math inline">\(x=0\)</span>を境とする左右対称の確率密度関数を探ることができる。そこで、<span class="math inline">\(-\infty&lt;x&lt;\infty\)</span>における<span class="math inline">\(e^{-x^{2}}\)</span>の積分を考える。
+<span class="math display">\[
+\int_{-\infty}^{\infty}e^{-x^{2}}dx 
+\tag{7}
+\]</span>
+<span class="math inline">\(e^{-x^{2}}\)</span>の持つ対称性により、(7)式は次のように書き換えられる。
+<span class="math display">\[
+\int_{-\infty}^{\infty}e^{-x^{2}}dx=2\int_{0}^{\infty}e^{-x^{2}}dx
+\]</span>
+ただし、この積分を解くことは容易でない。まず、次の二重積分を定義する。
+<span class="math display">\[
+\begin{aligned}
+\left(  \int_{0}^{\infty}e^{-x^{2}}dx\right)  ^{2}  &amp;  =\int_{0}^{\infty
+}e^{-x^{2}}dx\int_{0}^{\infty}e^{-y^{2}}dy\\
+&amp;  =\int_{0}^{\infty}\int_{0}^{\infty}e^{-x^{2}-y^{2}}dxdy
+\end{aligned}
+\]</span>
+ここで、変数変換により、
+<span class="math display">\[
+x=r\cos\theta,y=r\sin\theta
+\tag{8}
+\]</span>
+とすれば、以上の二重積分は
+<span class="math display">\[
+\begin{aligned}
+\int_{0}^{\infty}\int_{0}^{\infty}e^{-\left(  x^{2}+y^{2}\right)  }dxdy  &amp;
+=\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}e^{-r^{2}\left(  \sin^{2}\theta
++\cos^{2}\theta\right)  }\left\vert r\right\vert drd\theta\nonumber\\
+&amp;  =\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-r^{2}}drd\theta
+\end{aligned}
+\tag{9}
+\]</span>
+と書き換えることができる。</p>
+<p>(8)式の変数変換は、<span class="math inline">\(xy\)</span>平面の<span class="math inline">\(dxdy\)</span>を<span class="math inline">\(r\theta\)</span>平面の<span class="math inline">\(drd\theta\)</span>に移すため、二つの平面間で面積が伸縮し、その調整が必要となる。それには「ヤコビ行列」と呼ばれる次式を用いる（計算自体は単純だか、若干の線形代数の知識が求められるため、初学者は以下を公式として覚えてもらえば結構である）。
+<span class="math display">\[
+\begin{aligned}
+J  &amp;  =\left(
+\begin{array}{c}
+\frac{\partial x}{\partial r} &amp; \frac{\partial x}{\partial\theta}\\
+\frac{\partial y}{\partial r} &amp; \frac{\partial y}{\partial\theta}
+\end{array}
+\right) \\
+&amp;  =\left(
+\begin{array}{c}
+\cos\theta &amp; -r\sin\theta\\
+\sin\theta &amp; r\cos\theta
+\end{array}
+\right)
+\end{aligned}
+\]</span>
+この行列式を求めれば次が得られる。
+<span class="math display">\[
+\left\vert J\right\vert =\left\vert r\cos^{2}\theta+r\sin^{2}\theta\right\vert
+=\left\vert r\right\vert
+\]</span>
+これより、二重積分に関する両平面間での微小な面積の変換は次のように表される。
+<span class="math display">\[
+dxdy=\left\vert r\right\vert drd\theta
+\]</span>
+よって、(9)式の左辺の二重積分は、(8)式の変数変換では右辺のように置き換えられる。(9)式の右辺は次のように解くことができる。
+<span class="math display">\[
+\begin{aligned}
+\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-r^{2}}drd\theta &amp;  =\int
+_{0}^{\frac{\pi}{2}}d\theta\int_{0}^{\infty}re^{-r^{2}}dr\\
+&amp;  =\frac{\pi}{2}\left[  -\frac{1}{2}e^{-r^{2}}\right]  _{0}^{\infty}\\
+&amp;  =\frac{\pi}{4}\end{aligned}
+\]</span>
+これより、
+<span class="math display">\[
+\int_{0}^{\infty}e^{-x^{2}}dx=\frac{\sqrt{\pi}}{2}
+\]</span>
+が得られる。</p>
+<p>続いて、<span class="math inline">\(e^{-bx^{2}}\)</span>の積分を考える。先と同様に(8)式の変数変換を用いれば、
+<span class="math display">\[
+\begin{aligned}
+\left(  \int_{0}^{\infty}e^{-bx^{2}}dx\right)  ^{2}  &amp;  =\int_{0}^{\infty}\int_{0}^{\infty}e^{-bx^{2}-by^{2}}dxdy\\
+&amp;  =\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-br^{2}}drd\theta\end{aligned}
+\]</span>
+が得られる。上式の右辺は次のように解くことができる。
+<span class="math display">\[
+\begin{aligned}
+\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-br^{2}}drd\theta &amp;  =\int
+_{0}^{\frac{\pi}{2}}d\theta\int_{0}^{\infty}re^{-br^{2}}dr\\
+&amp;  =\frac{\pi}{2}\left[  -\frac{1}{2b}e^{-br^{2}}\right]  _{0}^{\infty}\\
+&amp;  =\frac{\pi}{4b}\end{aligned}
+\]</span>
+これより、
+<span class="math display">\[
+\int_{0}^{\infty}e^{-bx^{2}}dx=\frac{1}{2}\sqrt{\frac{\pi}{b}}
+\]</span>
+が得られる。よって、<span class="math inline">\(e^{-bx^{2}}\)</span>の対称性により、
+<span class="math display">\[
+\int_{-\infty}^{\infty}e^{-bx^{2}}dx=\sqrt{\frac{\pi}{b}}
+\tag{10}
+\]</span>
+となる。(10)式の両辺を<span class="math inline">\(\sqrt{\pi/b}\)</span>で割り、確率密度関数を次のように定める。
+<span class="math display">\[
+f\left(  x\right)  =\sqrt{\frac{b}{\pi}}e^{-bx^{2}}
+\]</span>
+このとき、確率分布関数は
+<span class="math display">\[
+F\left(  \alpha\right)  =\int_{-\infty}^{\alpha}\sqrt{\frac{b}{\pi}}e^{-bx^{2}}dx
+\]</span>
+と表される。<span class="math inline">\(F\left( \infty\right)=1\)</span>であり、確率公準を満たす。以上のような確率密度関数、および確率分布関数を「正規分布」と呼ぶ。</p>
+<p>特に、<span class="math inline">\(b=1/2\)</span>の確率密度関数：
+<span class="math display">\[
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}
+\]</span>
+に基づく確率分布を「標準正規分布」と呼ぶ。標準正規分布に従う確率変数<span class="math inline">\(X\)</span>の平均は0、分散は1である。確率変数<span class="math inline">\(X\)</span>の期待値は次の通りである。
+<span class="math display">\[
+E\left(  X\right)  =\int_{-\infty}^{\infty}x\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}dx
+\]</span>
+右辺の積分を直接解かず、ここでは標準正規分布の密度関数の微分を利用する。
+<span class="math display">\[
+f^{\prime}\left(  x\right)  =-\frac{1}{\sqrt{2\pi}}xe^{-\frac{x^{2}}{2}}
+\]</span>
+この<span class="math inline">\(f^{\prime}\left( x\right)\)</span>を<span class="math inline">\(E\left( X\right)\)</span>の右辺の積分に代入すれば、次式が得られる。
+<span class="math display">\[
+\begin{aligned}
+E\left(  X\right)   &amp;  =-\int_{-\infty}^{\infty}f^{\prime}\left(  x\right)
+dx\\
+&amp;  =-f\left(  \infty\right)  +f\left(  -\infty\right) \\
+&amp;  =0\end{aligned}
+\]</span>
+他方、分散は部分積分を用いて、次のように解くことができる。
+<span class="math display">\[
+\begin{aligned}
+E\left[  X-E\left(  X\right)  \right]  ^{2}  &amp;  =\int_{-\infty}^{\infty
+}\left(  x-0\right)  ^{2}\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}dx\\
+&amp;  =-\int_{-\infty}^{\infty}xf^{\prime}\left(  x\right)  dx\\
+&amp;  =-\left[  xf\left(  x\right)  \right]  _{-\infty}^{\infty}+\int_{-\infty
+}^{\infty}f\left(  x\right)  dx\\
+&amp;  =1\end{aligned}
+\]</span></p>
+<p>以上の標準正規分布は広く用いられる正規分布の特別な表現である。一般には、正規分布の平均を<span class="math inline">\(\mu\)</span>、分散を<span class="math inline">\(\sigma^{2}\)</span>と定めた確率密度関数がよく用いられる。その確率密度関数は次のように表される。
+<span class="math display">\[
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(
+x-\mu\right)  ^{2}}{2\sigma^{2}}}
+\tag{11}
+\]</span>
+(11)式の確率密度関数による正規分布に従う確率変数<span class="math inline">\(X\)</span>の期待値と分散とは、
+<span class="math display">\[
+\begin{aligned}
+E\left(  X\right)   &amp;  =\mu,\\
+E\left[  X-E\left(  X\right)  \right]  ^{2}  &amp;  =\sigma^{2}
+\end{aligned}
+\]</span>
+である。これは先の標準正規分布の期待値と分散とを求めたのと同じ方法で導くことができる。</p>
+</div>
+<div id="section-1" class="section level1">
+<h1>練習問題</h1>
+<p>以下の問題の解答を作成し提出せよ。</p>
+<p><strong>問1</strong>　次の微分公式を証明せよ。
+<span class="math display">\[
+\frac{de^{x}}{dx}=e^{x}
+\]</span></p>
+<p><strong>問2</strong>　次の定積分を求めよ。　
+<span class="math display">\[
+\int_{0}^{1} \left( e-e^{x} \right) dx
+\]</span></p>
+<p><strong>問3（任意）</strong>　次の積分公式を証明せよ。(難問なので解答提出は任意)
+<span class="math display">\[
+\int_{0}^{\infty}e^{-x^{2}}dx=\frac{\sqrt{\pi}}{2}
+\]</span></p>
+<p><strong>問4</strong>　2章に関連する練習問題を一つ作成し、解答を沿えよ。</p>
+</div>

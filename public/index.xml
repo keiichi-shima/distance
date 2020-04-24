@@ -6,10 +6,28 @@
     <description>Recent content in Home on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 24 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>計量経済学講義：eの導入</title>
+      <link>/post/2020/04/24/econometricsch2/</link>
+      <pubDate>Fri, 24 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/24/econometricsch2/</guid>
+      <description>この遠隔講義では、講義ノート第2章「\(e\)の導入」に進みます。以下は第2章と同じ内容をwebに掲載したものです。ただし、練習問題を追加し</description>
+    </item>
+    
+    <item>
+      <title>計量経済学講義：確率分布</title>
+      <link>/post/2020/04/24/econometricsch3/</link>
+      <pubDate>Fri, 24 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/24/econometricsch3/</guid>
+      <description>この遠隔講義では、講義ノート第3章「確率分布」に進みます。以下は第3章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しておりま</description>
+    </item>
     
     <item>
       <title>計量経済学講義：確率の性質</title>

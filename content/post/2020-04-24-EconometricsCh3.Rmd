@@ -1,0 +1,386 @@
+---
+title: '計量経済学講義：確率分布'
+author: 嶋恵一
+date: '2020-04-24'
+slug: EconometricsCh3
+categories:
+  - Lecture
+tags:
+  - Econometrics
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+この遠隔講義では、講義ノート第3章「確率分布」に進みます。以下は第3章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは任意ですので、興味がなければ読み飛ばせばよいです。)
+
+講義ノート第3章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところ中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。
+
+それでは、講義ノート第3章を学習しましょう。
+
+
+確率分布
+
+# 離散確率
+
+確率変数$X$について$n$個の根元事象$x_{k}$が存在し、事象毎の確率関数を$P\left(  X=x_{k}\right)$とする。例えば確率変数$X$の標本空間を$\left\{ -1,0,2\right\}$をとする。その標本空間は3つの離散的な値によって構成される。この例のように、確率変数$X$の標本空間が個々の数により構成されるとき、それを「離散標本空間」と呼び、その標本空間を持つ確率変数を「離散確率変数」と呼ぶ。
+
+いま、確率変数$X$の3つの根元事象が、$P\left(X=-1\right)=\frac{1}{2}$、$P\left(X=0\right)=\frac{1}{4}$、$P\left(X=2\right)=\frac{1}{4}$という確率を持つと定める。このとき、確率変数$X$がある境界値$a$以下の値をとりうる確率
+$$
+F\left(  a\right)  =P\left(  X\leq a\right)
+$$
+を「（累積）分布関数」と呼ぶ。例えば
+$$
+\begin{aligned}
+F\left(  -2\right)   &  =P\left(  X\leq-2\right)  =0,\\
+F\left(  -1\right)   &  =P\left(  X\leq-1\right)  =P\left(  X=-1\right)
+=\frac{1}{2},\\
+F\left(  1\right)   &  =P\left(  X\leq1\right)  =P\left(  X=-1\right)
++P\left(  x=0\right)  =\frac{3}{4},\\
+F\left(  3\right)   &  =P\left(  X\leq3\right)  =P\left(  X=-1\right)
++P\left(  X=0\right)  +P\left(  X=2\right)  =1,\\
+&  etc.
+\end{aligned}
+$$
+と求めることができる。
+```{R}
+x<-c(-1,0,2)
+Px<-c(1/2,1/4,1/4)
+plot(x,Px,type="h",ylim=c(0,.6),xlim=c(-2,3),bty="l")
+Fx<-c(0,cumsum(Px),1)
+x_<-c(-2,x,3)
+plot(x_,Fx,type="s",ylim=c(0,1.1),xlim=c(-2,3),bty="l")
+```
+
+一般化すれば、離散確率変数の分布関数は次のように表される。
+$$
+F\left(  a\right)  =P\left(  X\leq a\right)  =\sum_{x_{k}\leq a}P\left(
+X=x_{k}\right)
+$$
+**例1** 確率変数$X$が存在し、0を含まない自然数を標本空間とする。すなわち、根元事象は$x_{k}=k$、ただし$k=1,2,\cdots,\infty$である。このとき、確率関数を次のように定める。
+$$
+P\left(  x_{k}=k\right)  =\frac{1}{2^{k}}
+$$
+
+これは第1章「確率の性質」で見た確率公理(i)、(ii)を満たす。全ての自然数に対して$P\left(x_{k}=k\right)<1$であり、また標本空間$S$に関して、
+$$
+\begin{aligned}
+P\left(  S\right)   &  =\sum_{k=1}^{\infty}P\left(  x_{k}=k\right) \\
+&  =\sum_{k=1}^{\infty}\frac{1}{2^{k}}\\
+&  =\frac{1/2}{1-1/2}=1
+\end{aligned}
+$$
+である。分布関数は次の通りである。
+$$
+\begin{aligned}
+F\left(  K\right)   &  =\sum_{k=1}^{K}\frac{1}{2^{k}}\\
+&  =\frac{1/2\left(  1-1/2^{k}\right)  }{1-1/2}=1-\frac{1}{2^{k}}
+\end{aligned}
+$$
+```{R}
+k<-1:10
+Pk<-1/2^k
+plot(k,Pk,type="h",ylim=c(0,.5),bty="l")
+Fk<-c(0,cumsum(Pk))
+k_<-c(0,k)
+plot(k_,Fk,type="s",ylim=c(0,1),bty="l")
+```
+
+
+# 連続確率
+
+一方、確率変数$Y$が存在し、標本空間が個々の数ではなく、例えば$c\leq Y\leq d$のように連続的な範囲で表されるとき、それを「連続標本空間」と呼ぶ。この場合、$Y$の根元事象は連続的に定義され、例えば$0\leq Y\leq4$を満たせばどのような値でもよい。そのような確率変数を「連続確率変数」と呼ぶ。連続確率変数は標本空間に無数の点（根元事象）を含むため、根元事象ごとに確率を与えることができない。連続確率変数の結果に対する確率は範囲を決めることにより定義される。離散確率で見た確率関数に代わるものを「確率密度関数」と呼ぶ。確率密度関数は必ず非負である。
+
+以上の標本空間$0\leq Y\leq4$を持つ確率変数$Y$について、次のような確率密度関数を定める。
+
+**例2**
+$$
+f\left(  y\right)  =\left\{
+\begin{array}{c}
+0,\\
+\frac{y}{8},\\
+0,
+\end{array}
+\right.
+\begin{array}{c}
+y<0\\
+0\leq y\leq4\\
+4<y
+\end{array}
+$$
+
+このような確率密度関数に基づき、確率変数$Y$がとりうる事象の確率は個々の点ではなく、ある範囲に対して与えられる。すなわち、範囲$d<Y<e$について、確率関数は確率密度関数$f\left(  y\right)$を用いて以下の積分により定義される。
+$$
+P\left(  d<Y<e\right)  =\int_{d}^{e}f\left(  y\right) dy
+$$
+```{R}
+y<-seq(0,4,length=100)
+Py<-y/8
+y_<-c(seq(-1,0,length=25),y,seq(4,5,length=25))
+Py_<-c(rep(0,25),Py,rep(0,25))
+plot(y_,Py_,type="l",bty="l")
+```
+
+一方、ある点$Y=d$における確率は
+$$
+P\left( Y=d\right) =\int_{d}^{d}f\left( y\right) dy=0
+$$
+となる。換言すれば、連続確率変数は離散確率変数と異なり、任意の数に対する確率はゼロとなる。その代わり、確率変数に対して連続的な範囲を定めることにより確率を与えることができる。
+
+連続確率変数の分布関数$F$は以下の積分により定義される。
+$$
+F\left( a\right)  =\int_{-\infty}^{a}f\left( y\right) dy,
+\tag{4}
+$$
+$$
+F\left( -\infty\right)  =0,F\left(  \infty\right) =1
+\tag{5}
+$$
+上の例の場合、分布関数は次の通りである。
+$$
+\begin{aligned}
+F\left(  a\right)   &  =\int_{-\infty}^{a}\frac{y}{8}dy\\
+&  =\int_{0}^{a}\frac{y}{8}dy=\left[  \frac{y^{2}}{16}\right]  _{0}^{a}=\frac{a^{2}}{16}
+\end{aligned}
+$$
+これより$F\left(  0\right)  =0$、$F\left(4\right)  =1$であり、かつ$F\left(-\infty\right)  =0$、$F\left(  \infty\right)  =1$を満たす。
+
+```{R}
+Fy<-c(rep(0,25),y^2/16,rep(1,25))
+plot(y_,Fy,type="l",bty="l")
+```
+
+連続確率変数$Y$の期待値は、一般には次のように表される。
+$$
+E\left(  Y\right)  =\int_{-\infty}^{\infty}yf\left(  y\right)  dy
+\tag{6}
+$$
+(6)式を確率分布の「平均」と呼ぶ。また、$t$次のモーメントは次のように表される。
+$$
+E\left(  Y^{t}\right)  =\int_{-\infty}^{\infty}y^{t}f\left(  y\right)  dy
+$$
+従って、分散は
+$$
+\begin{aligned}
+&  E\left[  Y-E\left(  Y\right)  \right]  ^{2}\\
+&  =\int_{-\infty}^{\infty}\left[  y-E\left(  Y\right)  \right]  ^{2}f\left(
+y\right)  dy\\
+&  =\int_{-\infty}^{\infty}\left[  y^{2}-2yE\left(  Y\right)  +\left(
+E\left(  Y\right)  \right)  ^{2}\right]  f\left(  y\right)  dy\\
+&  =E\left(  Y^{2}\right)  -\left(  E\left(  Y\right)  \right)  ^{2}
+\end{aligned}
+$$
+と表すことができる。上の例では、期待値は
+$$
+\begin{aligned}
+E\left(  Y\right)   &  =\int_{0}^{4}\frac{y^{2}}{8}dy\\
+&  =\left[  \frac{y^{3}}{24}\right]  _{0}^{4}=\frac{8}{3}
+\end{aligned}
+$$
+である。分散は2次のモーメントが
+$$
+\begin{aligned}
+E\left(  Y^{2}\right)   &  =\int_{0}^{4}\frac{y^{3}}{8}dy\\
+&  =\left[  \frac{y^{4}}{32}\right]  _{0}^{4}=8
+\end{aligned}
+$$
+であることから、
+$$
+E\left[ Y-E\left( Y\right) \right]^{2}=8-\left( \frac{8}{3}\right)^{2}=\frac{8}{9}
+$$
+と求められる。
+
+
+# 一様分布
+
+確率変数$X$が、連続標本空間$l\leq X\leq u$を持ち、その確率密度関数が標本空間にわたり一定で
+$$
+f\left(  x\right)  =\frac{1}{u-l}
+$$
+の形をとるものを一様分布と呼ぶ。確率変数$X$が下限$l$、上限$u$の一様分布に従うことを$X\sim U\left[l,u\right]$と表す。分布関数は次の通りである。
+$$
+\begin{aligned}
+F\left(  a\right)   &  =\int_{l}^{a}f\left(  v\right)  dv\nonumber\\
+&  =\int_{l}^{a}\frac{1}{u-l}dv\nonumber\\
+&  =\left[  \frac{1}{u-l}v\right]  _{l}^{a}=\frac{a-l}{u-l}
+\end{aligned}
+$$
+従って、$F\left(  l\right)  =0,F\left(  u\right)=1$である。
+
+一様分布に従う確率変数の期待値（平均）は次の通りである。
+$$
+\begin{aligned}
+E\left(  X\right)   &  =\int_{l}^{u}\frac{v}{u-l}dv\\
+& =\left[  \frac{v^{2}}{2\left(  u-l\right)  }\right]  _{l}^{u}\\
+& =\frac{u^{2}-l^{2}}{2\left( u-l\right)} =\frac{u+l}{2}
+\end{aligned}
+$$
+他方、分散は次のように求めることができる。2次のモーメントは
+$$
+\begin{aligned}
+E\left(  X^{2}\right)   &  =\int_{l}^{u}\frac{v^{2}}{u-l}dv\\
+& =\left[  \frac{v^{3}}{3\left(  u-l\right)  }\right]  _{l}^{u}\\
+& =\frac{u^{3}-l^{3}}{3\left( u-l\right)}=\frac{u^{2}+ul+l^{2}}{3}
+\end{aligned}
+$$
+であり、よって分散は
+$$
+\begin{aligned}
+& E\left( X^{2}\right) -\left( E\left( X\right) \right) ^{2}\\
+& =\frac{u^{2}+ul+l^{2}}{3}-\frac{\left( u+l\right) ^{2}}{4}\\
+& =\frac{u^{2}-2ul+l^{2}}{12} =\frac{\left( u-l\right)^{2}}{12}
+\end{aligned}
+$$
+となる。
+
+
+# 指数分布
+
+確率変数$X$が、連続標本空間$0\leq X<\infty$を持ち、その確率分布に以下の指数関数が用いられるものを指数分布と呼ぶ。
+$$
+F\left(  x\right)  =1-e^{-\alpha x}
+\tag{12}
+$$
+ (12)式について、$F\left(  0\right)=0$、$F\left(  \infty\right)=1$であり、確率分布の条件である(5)式を満たす。確率分布の定義式(4)を微分すれば、
+$$
+\frac{dF\left(  x\right)  }{dx}=f\left(  x\right)
+$$
+となり、分布関数の微分は確率密度関数に等しい。指数分布関数を$x$により微分すれば次が得られる。
+$$
+\frac{d\left(  1-e^{-\alpha x}\right)  }{dx}=\alpha e^{-\alpha x}
+$$
+よって、指数分布の確率密度関数は$f\left(x\right)  =\alpha e^{-\alpha x}$である。
+
+指数分布の平均は、部分積分を用いて次のように求めることができる。
+$$
+\begin{aligned}
+E\left(  X\right)   &  =\int_{0}^{\infty}x\alpha e^{-\alpha x}dx\\
+&  =\left.  -xe^{-\alpha x}\right\vert _{0}^{\infty}+\int_{0}^{\infty
+}e^{-\alpha x}dx\\
+&  =\left[  -\frac{e^{-\alpha x}}{\alpha}\right]  _{0}^{\infty}\\
+&  =\frac{1}{\alpha}
+\end{aligned}
+$$
+また、2次のモーメントも部分積分により、
+$$
+\begin{aligned}
+E\left(  X^{2}\right)   &  =\int_{0}^{\infty}x^{2}\alpha e^{-\alpha x}dx\\
+&  =\left.  -x^{2}e^{-\alpha x}\right\vert _{0}^{\infty}+\int_{0}^{\infty
+}2xe^{-\alpha x}dx\\
+&  =\frac{2}{\alpha}\int_{0}^{\infty}x\alpha e^{-\alpha x}dx\\
+&  =\frac{2}{\alpha^{2}}
+\end{aligned}
+$$
+と求まる。よって、分散は次の通りである。
+$$
+\begin{aligned}
+E\left(  X^{2}\right)  -\left(  E\left(  X\right)  \right)  ^{2}  &  =\frac
+{2}{\alpha^{2}}-\frac{1}{\alpha^{2}}\\
+&  =\frac{1}{\alpha^{2}}
+\end{aligned}
+$$
+
+
+# 正規分布
+
+確率変数$X$が、連続標本空間$-\infty<X<\infty$を持ち、その確率密度関数が
+$$
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left( x-\mu\right)  ^{2}}{2\sigma^{2}}\right]
+\tag{17}
+$$
+の形をとるものを正規分布と呼ぶ。(17)式の中の$\mu$は正規分布の平均を、$\sigma^{2}$は分散を表す。確率変数$X$が平均$\mu$、分散$\sigma^{2}$の正規分布に従うことを$X\sim N\left(\mu,\sigma^{2}\right)$と表す。分布関数は次の通りである。
+$$
+F\left(  x\right)  =\int_{-\infty}^{x}\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left(  v-\mu\right)  ^{2}}{2\sigma^{2}}\right]  dv
+$$
+もちろん、$F\left( -\infty\right) =0$、$F\left( \infty\right)=1$である。正規分布の確率密度関数は
+$$
+\begin{aligned}
+&  f\left(  -x+\mu\right) \\
+&  =\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left(  -x+\mu
+-\mu\right)  ^{2}}{2\sigma^{2}}\right] \\
+&  =\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{x^{2}}{2\sigma^{2}}\right] \\
+&  =f\left(  x+\mu\right)
+\end{aligned}
+$$
+であり、平均$\mu$を境に左右対称である。
+
+従って、
+$$
+\begin{aligned}
+\int_{-\infty}^{\mu}\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left(v-\mu\right)^{2}}{2\sigma^{2}}\right] dv
+ & = \int_{\mu}^{\infty}\frac{1}{\sqrt{2\pi\sigma^{2}}}
+ \exp\left[ -\frac{\left( v-\mu\right)^{2}}{2\sigma^{2}}\right] dv,\\
+F\left( \mu\right) & =1-F\left( \mu\right)
+\end{aligned}
+$$
+であり、$F\left(  \mu\right)  =\frac{1}{2}$を満たす。
+
+# 正規分布の区間確率
+
+(17)式の確率密度関数について、$\mu=0$、$\sigma^{2}=1$を特別なものとして扱い、それを標準正規分布と呼ぶ。具体的には次の確率密度関数を指す。
+$$
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi}}\exp\left(  -\frac{x^{2}}{2}\right)
+$$
+```{R}
+plot(dnorm,-4,4,bty="l",ylab="",main=expression(f(x)))
+```
+
+その分布関数は、
+$$
+F\left(  x\right)  =\int_{-\infty}^{x}\frac{1}{\sqrt{2\pi}}\exp\left(
+-\frac{v^{2}}{2}\right)  dv
+$$
+である。
+```{R}
+plot(dnorm,-4,4,bty="l",ylab="",main=expression(F(x)))
+x<-seq(-4,qnorm(0.8),length=100)
+d<-dnorm(x)
+polygon(c(x,rev(x)),c(rep(0,100),rev(d)),col="gray") 
+```
+
+ある確率変数$X$が存在し、それが標準正規分布に従うことを$X\sim N\left(  0,1\right)$と表す。分布関数とは、そもそも$X$がとりうる値が「ある範囲」に収まる確率（区間確率）を表わし、それは以上の積分を用いて計算される。統計学の教科書の巻末にしばしば「正規分布表」と呼ばれるものが掲載される。それは統計利用者の便宜を図る目的で作成され、$X\sim N\left(  0,1\right)$が「ある範囲」に収まる確率を上手く整理し提示したものである。（講義ノートPDFの巻末にも簡素なものを付録として掲載した。)
+
+
+# 練習問題
+
+以下の問題の解答を作成し提出せよ。
+
+**問1**　確率変数$X$の標本空間が$\left\{1,2,3\right\}$で、$P\left(X=1\right)=\frac{1}{2}$、$P\left(X=2\right)=\frac{1}{3}$、$P\left(X=3\right)=\frac{1}{6}$とする。$\frac{1}{X}$の期待値と分散を求めよ。
+
+**問2**　標本空間$0\leq Y\leq3$を持つ確率変数$Y$について、次のような確率密度関数$f\left( y\right)$を定める：
+$$
+f\left( y\right) =\left\{
+\begin{array}{c}
+0,\\
+\frac{2}{9}y,\\
+0,
+\end{array}
+\right.
+\begin{array}{c}
+y<0\\
+0\leq y\leq 3\\
+3<y
+\end{array}
+$$
+$Y$の期待値と分散を求めよ。
+
+**問3**　標本空間$0\leq W\leq3$を持つ確率変数$W$について、確率密度関数$g\left( w\right)$を次のように表す：
+$$
+g\left( w\right) =\left\{
+\begin{array}{c}
+0,\\
+a\left( x-1\right)^2+\frac{1}{4},\\
+0,
+\end{array}
+\right.
+\begin{array}{c}
+w<0\\
+0\leq w\leq 3\\
+3<w
+\end{array}
+$$
+まず、$a$を求めよ。続いて、$W$の期待値を求めよ。
+
+**問4**　3章に関連する練習問題を一つ作成し、解答を沿えよ。
+

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>計量経済学講義：確率分布 | A minimal website of Keiichi Shima</title>
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="../../../../../">Home</a></li>
+      
+      <li><a href="../../../../../about/">About</a></li>
+      
+      <li><a href="../../../../../categories/">Categories</a></li>
+      
+      <li><a href="../../../../../tags/">Tags</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">計量経済学講義：確率分布</span></h1>
+<h2 class="author">嶋恵一</h2>
+<h2 class="date">2020/04/24</h2>
+</div>
+
+<main>
+
+
+
+<p>この遠隔講義では、講義ノート第3章「確率分布」に進みます。以下は第3章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは任意ですので、興味がなければ読み飛ばせばよいです。)</p>
+<p>講義ノート第3章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところ中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。</p>
+<p>それでは、講義ノート第3章を学習しましょう。</p>
+<p>確率分布</p>
+<div id="section" class="section level1">
+<h1>離散確率</h1>
+<p>確率変数<span class="math inline">\(X\)</span>について<span class="math inline">\(n\)</span>個の根元事象<span class="math inline">\(x_{k}\)</span>が存在し、事象毎の確率関数を<span class="math inline">\(P\left( X=x_{k}\right)\)</span>とする。例えば確率変数<span class="math inline">\(X\)</span>の標本空間を<span class="math inline">\(\left\{ -1,0,2\right\}\)</span>をとする。その標本空間は3つの離散的な値によって構成される。この例のように、確率変数<span class="math inline">\(X\)</span>の標本空間が個々の数により構成されるとき、それを「離散標本空間」と呼び、その標本空間を持つ確率変数を「離散確率変数」と呼ぶ。</p>
+<p>いま、確率変数<span class="math inline">\(X\)</span>の3つの根元事象が、<span class="math inline">\(P\left(X=-1\right)=\frac{1}{2}\)</span>、<span class="math inline">\(P\left(X=0\right)=\frac{1}{4}\)</span>、<span class="math inline">\(P\left(X=2\right)=\frac{1}{4}\)</span>という確率を持つと定める。このとき、確率変数<span class="math inline">\(X\)</span>がある境界値<span class="math inline">\(a\)</span>以下の値をとりうる確率
+<span class="math display">\[
+F\left(  a\right)  =P\left(  X\leq a\right)
+\]</span>
+を「（累積）分布関数」と呼ぶ。例えば
+<span class="math display">\[
+\begin{aligned}
+F\left(  -2\right)   &amp;  =P\left(  X\leq-2\right)  =0,\\
+F\left(  -1\right)   &amp;  =P\left(  X\leq-1\right)  =P\left(  X=-1\right)
+=\frac{1}{2},\\
+F\left(  1\right)   &amp;  =P\left(  X\leq1\right)  =P\left(  X=-1\right)
++P\left(  x=0\right)  =\frac{3}{4},\\
+F\left(  3\right)   &amp;  =P\left(  X\leq3\right)  =P\left(  X=-1\right)
++P\left(  X=0\right)  +P\left(  X=2\right)  =1,\\
+&amp;  etc.
+\end{aligned}
+\]</span>
+と求めることができる。</p>
+<pre class="r"><code>x&lt;-c(-1,0,2)
+Px&lt;-c(1/2,1/4,1/4)
+plot(x,Px,type=&quot;h&quot;,ylim=c(0,.6),xlim=c(-2,3),bty=&quot;l&quot;)</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>Fx&lt;-c(0,cumsum(Px),1)
+x_&lt;-c(-2,x,3)
+plot(x_,Fx,type=&quot;s&quot;,ylim=c(0,1.1),xlim=c(-2,3),bty=&quot;l&quot;)</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<p>一般化すれば、離散確率変数の分布関数は次のように表される。
+<span class="math display">\[
+F\left(  a\right)  =P\left(  X\leq a\right)  =\sum_{x_{k}\leq a}P\left(
+X=x_{k}\right)
+\]</span>
+<strong>例1</strong> 確率変数<span class="math inline">\(X\)</span>が存在し、0を含まない自然数を標本空間とする。すなわち、根元事象は<span class="math inline">\(x_{k}=k\)</span>、ただし<span class="math inline">\(k=1,2,\cdots,\infty\)</span>である。このとき、確率関数を次のように定める。
+<span class="math display">\[
+P\left(  x_{k}=k\right)  =\frac{1}{2^{k}}
+\]</span></p>
+<p>これは第1章「確率の性質」で見た確率公理(i)、(ii)を満たす。全ての自然数に対して<span class="math inline">\(P\left(x_{k}=k\right)&lt;1\)</span>であり、また標本空間<span class="math inline">\(S\)</span>に関して、
+<span class="math display">\[
+\begin{aligned}
+P\left(  S\right)   &amp;  =\sum_{k=1}^{\infty}P\left(  x_{k}=k\right) \\
+&amp;  =\sum_{k=1}^{\infty}\frac{1}{2^{k}}\\
+&amp;  =\frac{1/2}{1-1/2}=1
+\end{aligned}
+\]</span>
+である。分布関数は次の通りである。
+<span class="math display">\[
+\begin{aligned}
+F\left(  K\right)   &amp;  =\sum_{k=1}^{K}\frac{1}{2^{k}}\\
+&amp;  =\frac{1/2\left(  1-1/2^{k}\right)  }{1-1/2}=1-\frac{1}{2^{k}}
+\end{aligned}
+\]</span></p>
+<pre class="r"><code>k&lt;-1:10
+Pk&lt;-1/2^k
+plot(k,Pk,type=&quot;h&quot;,ylim=c(0,.5),bty=&quot;l&quot;)</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>Fk&lt;-c(0,cumsum(Pk))
+k_&lt;-c(0,k)
+plot(k_,Fk,type=&quot;s&quot;,ylim=c(0,1),bty=&quot;l&quot;)</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+</div>
+<div id="section-1" class="section level1">
+<h1>連続確率</h1>
+<p>一方、確率変数<span class="math inline">\(Y\)</span>が存在し、標本空間が個々の数ではなく、例えば<span class="math inline">\(c\leq Y\leq d\)</span>のように連続的な範囲で表されるとき、それを「連続標本空間」と呼ぶ。この場合、<span class="math inline">\(Y\)</span>の根元事象は連続的に定義され、例えば<span class="math inline">\(0\leq Y\leq4\)</span>を満たせばどのような値でもよい。そのような確率変数を「連続確率変数」と呼ぶ。連続確率変数は標本空間に無数の点（根元事象）を含むため、根元事象ごとに確率を与えることができない。連続確率変数の結果に対する確率は範囲を決めることにより定義される。離散確率で見た確率関数に代わるものを「確率密度関数」と呼ぶ。確率密度関数は必ず非負である。</p>
+<p>以上の標本空間<span class="math inline">\(0\leq Y\leq4\)</span>を持つ確率変数<span class="math inline">\(Y\)</span>について、次のような確率密度関数を定める。</p>
+<p><strong>例2</strong>
+<span class="math display">\[
+f\left(  y\right)  =\left\{
+\begin{array}{c}
+0,\\
+\frac{y}{8},\\
+0,
+\end{array}
+\right.
+\begin{array}{c}
+y&lt;0\\
+0\leq y\leq4\\
+4&lt;y
+\end{array}
+\]</span></p>
+<p>このような確率密度関数に基づき、確率変数<span class="math inline">\(Y\)</span>がとりうる事象の確率は個々の点ではなく、ある範囲に対して与えられる。すなわち、範囲<span class="math inline">\(d&lt;Y&lt;e\)</span>について、確率関数は確率密度関数<span class="math inline">\(f\left( y\right)\)</span>を用いて以下の積分により定義される。
+<span class="math display">\[
+P\left(  d&lt;Y&lt;e\right)  =\int_{d}^{e}f\left(  y\right) dy
+\]</span></p>
+<pre class="r"><code>y&lt;-seq(0,4,length=100)
+Py&lt;-y/8
+y_&lt;-c(seq(-1,0,length=25),y,seq(4,5,length=25))
+Py_&lt;-c(rep(0,25),Py,rep(0,25))
+plot(y_,Py_,type=&quot;l&quot;,bty=&quot;l&quot;)</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>一方、ある点<span class="math inline">\(Y=d\)</span>における確率は
+<span class="math display">\[
+P\left( Y=d\right) =\int_{d}^{d}f\left( y\right) dy=0
+\]</span>
+となる。換言すれば、連続確率変数は離散確率変数と異なり、任意の数に対する確率はゼロとなる。その代わり、確率変数に対して連続的な範囲を定めることにより確率を与えることができる。</p>
+<p>連続確率変数の分布関数<span class="math inline">\(F\)</span>は以下の積分により定義される。
+<span class="math display">\[
+F\left( a\right)  =\int_{-\infty}^{a}f\left( y\right) dy,
+\tag{4}
+\]</span>
+<span class="math display">\[
+F\left( -\infty\right)  =0,F\left(  \infty\right) =1
+\tag{5}
+\]</span>
+上の例の場合、分布関数は次の通りである。
+<span class="math display">\[
+\begin{aligned}
+F\left(  a\right)   &amp;  =\int_{-\infty}^{a}\frac{y}{8}dy\\
+&amp;  =\int_{0}^{a}\frac{y}{8}dy=\left[  \frac{y^{2}}{16}\right]  _{0}^{a}=\frac{a^{2}}{16}
+\end{aligned}
+\]</span>
+これより<span class="math inline">\(F\left( 0\right) =0\)</span>、<span class="math inline">\(F\left(4\right) =1\)</span>であり、かつ<span class="math inline">\(F\left(-\infty\right) =0\)</span>、<span class="math inline">\(F\left( \infty\right) =1\)</span>を満たす。</p>
+<pre class="r"><code>Fy&lt;-c(rep(0,25),y^2/16,rep(1,25))
+plot(y_,Fy,type=&quot;l&quot;,bty=&quot;l&quot;)</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>連続確率変数<span class="math inline">\(Y\)</span>の期待値は、一般には次のように表される。
+<span class="math display">\[
+E\left(  Y\right)  =\int_{-\infty}^{\infty}yf\left(  y\right)  dy
+\tag{6}
+\]</span>
+(6)式を確率分布の「平均」と呼ぶ。また、<span class="math inline">\(t\)</span>次のモーメントは次のように表される。
+<span class="math display">\[
+E\left(  Y^{t}\right)  =\int_{-\infty}^{\infty}y^{t}f\left(  y\right)  dy
+\]</span>
+従って、分散は
+<span class="math display">\[
+\begin{aligned}
+&amp;  E\left[  Y-E\left(  Y\right)  \right]  ^{2}\\
+&amp;  =\int_{-\infty}^{\infty}\left[  y-E\left(  Y\right)  \right]  ^{2}f\left(
+y\right)  dy\\
+&amp;  =\int_{-\infty}^{\infty}\left[  y^{2}-2yE\left(  Y\right)  +\left(
+E\left(  Y\right)  \right)  ^{2}\right]  f\left(  y\right)  dy\\
+&amp;  =E\left(  Y^{2}\right)  -\left(  E\left(  Y\right)  \right)  ^{2}
+\end{aligned}
+\]</span>
+と表すことができる。上の例では、期待値は
+<span class="math display">\[
+\begin{aligned}
+E\left(  Y\right)   &amp;  =\int_{0}^{4}\frac{y^{2}}{8}dy\\
+&amp;  =\left[  \frac{y^{3}}{24}\right]  _{0}^{4}=\frac{8}{3}
+\end{aligned}
+\]</span>
+である。分散は2次のモーメントが
+<span class="math display">\[
+\begin{aligned}
+E\left(  Y^{2}\right)   &amp;  =\int_{0}^{4}\frac{y^{3}}{8}dy\\
+&amp;  =\left[  \frac{y^{4}}{32}\right]  _{0}^{4}=8
+\end{aligned}
+\]</span>
+であることから、
+<span class="math display">\[
+E\left[ Y-E\left( Y\right) \right]^{2}=8-\left( \frac{8}{3}\right)^{2}=\frac{8}{9}
+\]</span>
+と求められる。</p>
+</div>
+<div id="section-2" class="section level1">
+<h1>一様分布</h1>
+<p>確率変数<span class="math inline">\(X\)</span>が、連続標本空間<span class="math inline">\(l\leq X\leq u\)</span>を持ち、その確率密度関数が標本空間にわたり一定で
+<span class="math display">\[
+f\left(  x\right)  =\frac{1}{u-l}
+\]</span>
+の形をとるものを一様分布と呼ぶ。確率変数<span class="math inline">\(X\)</span>が下限<span class="math inline">\(l\)</span>、上限<span class="math inline">\(u\)</span>の一様分布に従うことを<span class="math inline">\(X\sim U\left[l,u\right]\)</span>と表す。分布関数は次の通りである。
+<span class="math display">\[
+\begin{aligned}
+F\left(  a\right)   &amp;  =\int_{l}^{a}f\left(  v\right)  dv\nonumber\\
+&amp;  =\int_{l}^{a}\frac{1}{u-l}dv\nonumber\\
+&amp;  =\left[  \frac{1}{u-l}v\right]  _{l}^{a}=\frac{a-l}{u-l}
+\end{aligned}
+\]</span>
+従って、<span class="math inline">\(F\left( l\right) =0,F\left( u\right)=1\)</span>である。</p>
+<p>一様分布に従う確率変数の期待値（平均）は次の通りである。
+<span class="math display">\[
+\begin{aligned}
+E\left(  X\right)   &amp;  =\int_{l}^{u}\frac{v}{u-l}dv\\
+&amp; =\left[  \frac{v^{2}}{2\left(  u-l\right)  }\right]  _{l}^{u}\\
+&amp; =\frac{u^{2}-l^{2}}{2\left( u-l\right)} =\frac{u+l}{2}
+\end{aligned}
+\]</span>
+他方、分散は次のように求めることができる。2次のモーメントは
+<span class="math display">\[
+\begin{aligned}
+E\left(  X^{2}\right)   &amp;  =\int_{l}^{u}\frac{v^{2}}{u-l}dv\\
+&amp; =\left[  \frac{v^{3}}{3\left(  u-l\right)  }\right]  _{l}^{u}\\
+&amp; =\frac{u^{3}-l^{3}}{3\left( u-l\right)}=\frac{u^{2}+ul+l^{2}}{3}
+\end{aligned}
+\]</span>
+であり、よって分散は
+<span class="math display">\[
+\begin{aligned}
+&amp; E\left( X^{2}\right) -\left( E\left( X\right) \right) ^{2}\\
+&amp; =\frac{u^{2}+ul+l^{2}}{3}-\frac{\left( u+l\right) ^{2}}{4}\\
+&amp; =\frac{u^{2}-2ul+l^{2}}{12} =\frac{\left( u-l\right)^{2}}{12}
+\end{aligned}
+\]</span>
+となる。</p>
+</div>
+<div id="section-3" class="section level1">
+<h1>指数分布</h1>
+<p>確率変数<span class="math inline">\(X\)</span>が、連続標本空間<span class="math inline">\(0\leq X&lt;\infty\)</span>を持ち、その確率分布に以下の指数関数が用いられるものを指数分布と呼ぶ。
+<span class="math display">\[
+F\left(  x\right)  =1-e^{-\alpha x}
+\tag{12}
+\]</span>
+(12)式について、<span class="math inline">\(F\left( 0\right)=0\)</span>、<span class="math inline">\(F\left( \infty\right)=1\)</span>であり、確率分布の条件である(5)式を満たす。確率分布の定義式(4)を微分すれば、
+<span class="math display">\[
+\frac{dF\left(  x\right)  }{dx}=f\left(  x\right)
+\]</span>
+となり、分布関数の微分は確率密度関数に等しい。指数分布関数を<span class="math inline">\(x\)</span>により微分すれば次が得られる。
+<span class="math display">\[
+\frac{d\left(  1-e^{-\alpha x}\right)  }{dx}=\alpha e^{-\alpha x}
+\]</span>
+よって、指数分布の確率密度関数は<span class="math inline">\(f\left(x\right) =\alpha e^{-\alpha x}\)</span>である。</p>
+<p>指数分布の平均は、部分積分を用いて次のように求めることができる。
+<span class="math display">\[
+\begin{aligned}
+E\left(  X\right)   &amp;  =\int_{0}^{\infty}x\alpha e^{-\alpha x}dx\\
+&amp;  =\left.  -xe^{-\alpha x}\right\vert _{0}^{\infty}+\int_{0}^{\infty
+}e^{-\alpha x}dx\\
+&amp;  =\left[  -\frac{e^{-\alpha x}}{\alpha}\right]  _{0}^{\infty}\\
+&amp;  =\frac{1}{\alpha}
+\end{aligned}
+\]</span>
+また、2次のモーメントも部分積分により、
+<span class="math display">\[
+\begin{aligned}
+E\left(  X^{2}\right)   &amp;  =\int_{0}^{\infty}x^{2}\alpha e^{-\alpha x}dx\\
+&amp;  =\left.  -x^{2}e^{-\alpha x}\right\vert _{0}^{\infty}+\int_{0}^{\infty
+}2xe^{-\alpha x}dx\\
+&amp;  =\frac{2}{\alpha}\int_{0}^{\infty}x\alpha e^{-\alpha x}dx\\
+&amp;  =\frac{2}{\alpha^{2}}
+\end{aligned}
+\]</span>
+と求まる。よって、分散は次の通りである。
+<span class="math display">\[
+\begin{aligned}
+E\left(  X^{2}\right)  -\left(  E\left(  X\right)  \right)  ^{2}  &amp;  =\frac
+{2}{\alpha^{2}}-\frac{1}{\alpha^{2}}\\
+&amp;  =\frac{1}{\alpha^{2}}
+\end{aligned}
+\]</span></p>
+</div>
+<div id="section-4" class="section level1">
+<h1>正規分布</h1>
+<p>確率変数<span class="math inline">\(X\)</span>が、連続標本空間<span class="math inline">\(-\infty&lt;X&lt;\infty\)</span>を持ち、その確率密度関数が
+<span class="math display">\[
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left( x-\mu\right)  ^{2}}{2\sigma^{2}}\right]
+\tag{17}
+\]</span>
+の形をとるものを正規分布と呼ぶ。(17)式の中の<span class="math inline">\(\mu\)</span>は正規分布の平均を、<span class="math inline">\(\sigma^{2}\)</span>は分散を表す。確率変数<span class="math inline">\(X\)</span>が平均<span class="math inline">\(\mu\)</span>、分散<span class="math inline">\(\sigma^{2}\)</span>の正規分布に従うことを<span class="math inline">\(X\sim N\left(\mu,\sigma^{2}\right)\)</span>と表す。分布関数は次の通りである。
+<span class="math display">\[
+F\left(  x\right)  =\int_{-\infty}^{x}\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left(  v-\mu\right)  ^{2}}{2\sigma^{2}}\right]  dv
+\]</span>
+もちろん、<span class="math inline">\(F\left( -\infty\right) =0\)</span>、<span class="math inline">\(F\left( \infty\right)=1\)</span>である。正規分布の確率密度関数は
+<span class="math display">\[
+\begin{aligned}
+&amp;  f\left(  -x+\mu\right) \\
+&amp;  =\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left(  -x+\mu
+-\mu\right)  ^{2}}{2\sigma^{2}}\right] \\
+&amp;  =\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{x^{2}}{2\sigma^{2}}\right] \\
+&amp;  =f\left(  x+\mu\right)
+\end{aligned}
+\]</span>
+であり、平均<span class="math inline">\(\mu\)</span>を境に左右対称である。</p>
+<p>従って、
+<span class="math display">\[
+\begin{aligned}
+\int_{-\infty}^{\mu}\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\left[  -\frac{\left(v-\mu\right)^{2}}{2\sigma^{2}}\right] dv
+ &amp; = \int_{\mu}^{\infty}\frac{1}{\sqrt{2\pi\sigma^{2}}}
+ \exp\left[ -\frac{\left( v-\mu\right)^{2}}{2\sigma^{2}}\right] dv,\\
+F\left( \mu\right) &amp; =1-F\left( \mu\right)
+\end{aligned}
+\]</span>
+であり、<span class="math inline">\(F\left( \mu\right) =\frac{1}{2}\)</span>を満たす。</p>
+</div>
+<div id="section-5" class="section level1">
+<h1>正規分布の区間確率</h1>
+<p>(17)式の確率密度関数について、<span class="math inline">\(\mu=0\)</span>、<span class="math inline">\(\sigma^{2}=1\)</span>を特別なものとして扱い、それを標準正規分布と呼ぶ。具体的には次の確率密度関数を指す。
+<span class="math display">\[
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi}}\exp\left(  -\frac{x^{2}}{2}\right)
+\]</span></p>
+<pre class="r"><code>plot(dnorm,-4,4,bty=&quot;l&quot;,ylab=&quot;&quot;,main=expression(f(x)))</code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>その分布関数は、
+<span class="math display">\[
+F\left(  x\right)  =\int_{-\infty}^{x}\frac{1}{\sqrt{2\pi}}\exp\left(
+-\frac{v^{2}}{2}\right)  dv
+\]</span>
+である。</p>
+<pre class="r"><code>plot(dnorm,-4,4,bty=&quot;l&quot;,ylab=&quot;&quot;,main=expression(F(x)))
+x&lt;-seq(-4,qnorm(0.8),length=100)
+d&lt;-dnorm(x)
+polygon(c(x,rev(x)),c(rep(0,100),rev(d)),col=&quot;gray&quot;) </code></pre>
+<p><img src="../../../../../post/2020-04-24-EconometricsCh3_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>ある確率変数<span class="math inline">\(X\)</span>が存在し、それが標準正規分布に従うことを<span class="math inline">\(X\sim N\left( 0,1\right)\)</span>と表す。分布関数とは、そもそも<span class="math inline">\(X\)</span>がとりうる値が「ある範囲」に収まる確率（区間確率）を表わし、それは以上の積分を用いて計算される。統計学の教科書の巻末にしばしば「正規分布表」と呼ばれるものが掲載される。それは統計利用者の便宜を図る目的で作成され、<span class="math inline">\(X\sim N\left( 0,1\right)\)</span>が「ある範囲」に収まる確率を上手く整理し提示したものである。（講義ノートPDFの巻末にも簡素なものを付録として掲載した。)</p>
+</div>
+<div id="section-6" class="section level1">
+<h1>練習問題</h1>
+<p>以下の問題の解答を作成し提出せよ。</p>
+<p><strong>問1</strong>　確率変数<span class="math inline">\(X\)</span>の標本空間が<span class="math inline">\(\left\{1,2,3\right\}\)</span>で、<span class="math inline">\(P\left(X=1\right)=\frac{1}{2}\)</span>、<span class="math inline">\(P\left(X=2\right)=\frac{1}{3}\)</span>、<span class="math inline">\(P\left(X=3\right)=\frac{1}{6}\)</span>とする。<span class="math inline">\(\frac{1}{X}\)</span>の期待値と分散を求めよ。</p>
+<p><strong>問2</strong>　標本空間<span class="math inline">\(0\leq Y\leq3\)</span>を持つ確率変数<span class="math inline">\(Y\)</span>について、次のような確率密度関数<span class="math inline">\(f\left( y\right)\)</span>を定める：
+<span class="math display">\[
+f\left( y\right) =\left\{
+\begin{array}{c}
+0,\\
+\frac{2}{9}y,\\
+0,
+\end{array}
+\right.
+\begin{array}{c}
+y&lt;0\\
+0\leq y\leq 3\\
+3&lt;y
+\end{array}
+\]</span>
+<span class="math inline">\(Y\)</span>の期待値と分散を求めよ。</p>
+<p><strong>問3</strong>　標本空間<span class="math inline">\(0\leq W\leq3\)</span>を持つ確率変数<span class="math inline">\(W\)</span>について、確率密度関数<span class="math inline">\(g\left( w\right)\)</span>を次のように表す：
+<span class="math display">\[
+g\left( w\right) =\left\{
+\begin{array}{c}
+0,\\
+a\left( x-1\right)^2+\frac{1}{4},\\
+0,
+\end{array}
+\right.
+\begin{array}{c}
+w&lt;0\\
+0\leq w\leq 3\\
+3&lt;w
+\end{array}
+\]</span>
+まず、<span class="math inline">\(a\)</span>を求めよ。続いて、<span class="math inline">\(W\)</span>の期待値を求めよ。</p>
+<p><strong>問4</strong>　3章に関連する練習問題を一つ作成し、解答を沿えよ。</p>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © Keiichi Shima 2020
+  
+  </footer>
+  </body>
+</html>
+

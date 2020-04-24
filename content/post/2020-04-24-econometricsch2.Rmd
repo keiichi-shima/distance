@@ -1,0 +1,305 @@
+---
+title: '計量経済学講義：eの導入'
+author: 嶋恵一
+date: '2020-04-24'
+slug: econometricsch2
+categories:
+  - Lecture
+tags:
+  - Econometrics
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+この遠隔講義では、講義ノート第2章「$e$の導入」に進みます。以下は第2章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは任意ですので、興味がなければ読み飛ばせばよいです。)
+
+講義ノート第2章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところを中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。
+
+それでは、講義ノート第2章を学習しましょう。
+
+
+# 定義
+
+$e$の定義は次の通りである。
+$$
+e\equiv\lim_{n\rightarrow\infty}\left(  1+\frac{1}{n}\right)  ^{n}
+$$
+いま、ある定数$a$の下で、$y$と$x$との関係を次のように定める。
+$$
+y=a^{x}
+$$
+このとき、$y$の導関数は次のように変形できる。
+$$
+\begin{aligned}
+\frac{dy}{dx}  &  =\lim_{dx\rightarrow0}\frac{a^{x+dx}-a^{x}}{dx}\\
+&  =a^{x}\lim_{dx\rightarrow0}\frac{a^{dx}-1}{dx}\end{aligned}
+$$
+もしも、
+$$
+\lim_{dx\rightarrow0}\frac{a^{dx}-1}{dx}=1
+\tag{1}
+$$
+が成立すれば、$y=a^{x}$の導関数は次を満たす。
+$$
+\frac{dy}{dx}=y
+$$
+すなわち、(1)式を満たす特別な$a$が存在すれば、そのとき$a^{x}$の微分は$a^{x}$に一致する。
+
+(1)式を変形すれば、次が得られる。
+$$
+\begin{aligned}
+\lim_{dx\rightarrow0}\left(  a^{dx}-1\right)   &  =\lim_{dx\rightarrow0}dx,\\
+\lim_{dx\rightarrow0}a^{dx}  &  =\lim_{dx\rightarrow0}1+dx,\\
+\lim_{dx\rightarrow0}a  &  =\lim_{dx\rightarrow0}\left(  1+dx\right)
+^{\frac{1}{dx}}\end{aligned}
+$$
+上の式について、$"dx\rightarrow0"$の影響を受けるのは右辺のみであり、左辺の$a$には関係ない。果たして、
+$$
+"a"=\lim_{dx\rightarrow0}\left( 1+dx\right)^{\frac{1}{dx}}
+\tag{2}
+$$
+を満たす特別な$"a"$は存在するだろうか。ここで、$dx=\frac{1}{n}$と置き換え、(2)式の右辺を次のように書き直す。
+$$
+\lim_{n\rightarrow\infty}\left( 1+\frac{1}{n}\right) ^{n}
+\tag{3}
+$$
+括弧の中は1に近づき、括弧の指数は無限大に近づく。(3)式は極限でどのような値をとるだろうか。$n$の値を増やしながら、(3)式を求めたものを図1に示す。
+```{r}
+n<-seq(.01,14,length=100)
+a<-(1+1/n)^n
+library(ggplot2)
+qplot(n,a,geom="line",main="図1")
+```
+
+図からは(3)式の値はある水準へと「収束」するように見える。実際に収束し、その値は2.7183\...となる。その値をとる$"a"$は「ネイピア定数」と呼ばれ、$e$という記号で表される。
+
+$e$は確率統計によく現れる定数である。指数分布、正規分布などの確率密度関数で用いられ、またその計算の際には、
+$$
+\frac{de^{x}}{dx}=e^{x}
+$$
+とともに、
+$$
+\frac{de^{tx}}{dx}=te^{tx}
+\tag{4}
+$$
+という微分が利用される。(4)式の証明は次の通りである。$y=tx$と置き換える。合成関数の微分により、
+$$
+\begin{aligned}
+\frac{de^{y}}{dy}\frac{dy}{dx}  &  =e^{y}t\\
+&  =te^{tx}
+\end{aligned}
+$$
+が得られる。
+
+# $e$に関する積分と確率分布
+
+確率統計では$e^{-x}$、$e^{-x^{2}}$に基づく関数がよく用いられる。いずれも、任意の$x$に対して正であり、
+$$
+\lim_{x\rightarrow\infty}e^{-x}=0,\lim_{x\rightarrow\infty}e^{-x^{2}}=0
+$$
+である。いま、$x$の範囲として、$0\leq x<\infty$を考える。このとき、$e^{-x}$の積分はどうなるだろうか。それは次のように
+$$
+\int_{0}^{\infty}e^{-x}dx=\left[  -e^{-x}\right]  _{0}^{\infty}=1
+$$
+となる。すなわち、確率変数$X$が標本空間$0\leq x<\infty$を持ち、その確率密度関数が$f(x)=e^{-x}$のとき、それは確率公準を満たす。
+
+一方、ある定数$b>0$を用い、$0\leq x<\infty$の範囲で$e^{-bx}$の積分を求めると、
+$$
+\int_{0}^{\infty}e^{-bx}dx=\left[  -\frac{1}{b}e^{-bx}\right]  _{0}^{\infty
+}=\frac{1}{b}
+$$
+となる。もし、確率密度を
+$$
+f(x)=be^{-bx} 
+\tag{5}
+$$
+と定めれば、その積分は次の通りである。
+$$
+\int_{0}^{\infty}be^{-bx}dx=\left[  -e^{-bx}\right]  _{0}^{\infty}=1
+$$
+よって、(5)式の確率密度関数は確率公準を満たす。(5)式の確率密度を持つ確率分布関数は
+$$
+\begin{aligned}
+F\left(  \alpha\right)   &  =\int_{0}^{\alpha}be^{-bx}dx\nonumber\\
+&  =\left[  -e^{-bx}\right]  _{0}^{\alpha}=1-e^{-b\alpha}
+\end{aligned}
+\tag{6}
+$$
+で表され、その確率分布は「指数分布」と呼ばれる。指数分布に従う確率変数は正の範囲（$0$から$\infty$）を標本空間に持ち、その確率密度は単調減少関数である。
+
+今度は、$e^{-x^{2}}$を考える。$x^{2}=\left(  -x\right)  ^{2}$であり、$e^{-x^{2}}$は$x=0$で対称である。この性格は確率密度関数を定める上で好条件であり、指数分布では無理だった「すべての実数（$-\infty$から$\infty$）を標本区間に持つ」ことを可能にする。すなわち、$e^{-x^{2}}$を用いれば、$x=0$を境とする左右対称の確率密度関数を探ることができる。そこで、$-\infty<x<\infty$における$e^{-x^{2}}$の積分を考える。
+$$
+\int_{-\infty}^{\infty}e^{-x^{2}}dx 
+\tag{7}
+$$
+ $e^{-x^{2}}$の持つ対称性により、(7)式は次のように書き換えられる。
+$$
+\int_{-\infty}^{\infty}e^{-x^{2}}dx=2\int_{0}^{\infty}e^{-x^{2}}dx
+$$
+ただし、この積分を解くことは容易でない。まず、次の二重積分を定義する。
+$$
+\begin{aligned}
+\left(  \int_{0}^{\infty}e^{-x^{2}}dx\right)  ^{2}  &  =\int_{0}^{\infty
+}e^{-x^{2}}dx\int_{0}^{\infty}e^{-y^{2}}dy\\
+&  =\int_{0}^{\infty}\int_{0}^{\infty}e^{-x^{2}-y^{2}}dxdy
+\end{aligned}
+$$
+ここで、変数変換により、
+$$
+x=r\cos\theta,y=r\sin\theta
+\tag{8}
+$$
+とすれば、以上の二重積分は
+$$
+\begin{aligned}
+\int_{0}^{\infty}\int_{0}^{\infty}e^{-\left(  x^{2}+y^{2}\right)  }dxdy  &
+=\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}e^{-r^{2}\left(  \sin^{2}\theta
++\cos^{2}\theta\right)  }\left\vert r\right\vert drd\theta\nonumber\\
+&  =\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-r^{2}}drd\theta
+\end{aligned}
+\tag{9}
+$$
+と書き換えることができる。
+
+(8)式の変数変換は、$xy$平面の$dxdy$を$r\theta$平面の$drd\theta$に移すため、二つの平面間で面積が伸縮し、その調整が必要となる。それには「ヤコビ行列」と呼ばれる次式を用いる（計算自体は単純だか、若干の線形代数の知識が求められるため、初学者は以下を公式として覚えてもらえば結構である）。
+$$
+\begin{aligned}
+J  &  =\left(
+\begin{array}{c}
+\frac{\partial x}{\partial r} & \frac{\partial x}{\partial\theta}\\
+\frac{\partial y}{\partial r} & \frac{\partial y}{\partial\theta}
+\end{array}
+\right) \\
+&  =\left(
+\begin{array}{c}
+\cos\theta & -r\sin\theta\\
+\sin\theta & r\cos\theta
+\end{array}
+\right)
+\end{aligned}
+$$
+この行列式を求めれば次が得られる。
+$$
+\left\vert J\right\vert =\left\vert r\cos^{2}\theta+r\sin^{2}\theta\right\vert
+=\left\vert r\right\vert
+$$
+これより、二重積分に関する両平面間での微小な面積の変換は次のように表される。
+$$
+dxdy=\left\vert r\right\vert drd\theta
+$$
+よって、(9)式の左辺の二重積分は、(8)式の変数変換では右辺のように置き換えられる。(9)式の右辺は次のように解くことができる。
+$$
+\begin{aligned}
+\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-r^{2}}drd\theta &  =\int
+_{0}^{\frac{\pi}{2}}d\theta\int_{0}^{\infty}re^{-r^{2}}dr\\
+&  =\frac{\pi}{2}\left[  -\frac{1}{2}e^{-r^{2}}\right]  _{0}^{\infty}\\
+&  =\frac{\pi}{4}\end{aligned}
+$$
+これより、
+$$
+\int_{0}^{\infty}e^{-x^{2}}dx=\frac{\sqrt{\pi}}{2}
+$$
+が得られる。
+
+続いて、$e^{-bx^{2}}$の積分を考える。先と同様に(8)式の変数変換を用いれば、
+$$
+\begin{aligned}
+\left(  \int_{0}^{\infty}e^{-bx^{2}}dx\right)  ^{2}  &  =\int_{0}^{\infty}\int_{0}^{\infty}e^{-bx^{2}-by^{2}}dxdy\\
+&  =\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-br^{2}}drd\theta\end{aligned}
+$$
+が得られる。上式の右辺は次のように解くことができる。
+$$
+\begin{aligned}
+\int_{0}^{\infty}\int_{0}^{\frac{\pi}{2}}re^{-br^{2}}drd\theta &  =\int
+_{0}^{\frac{\pi}{2}}d\theta\int_{0}^{\infty}re^{-br^{2}}dr\\
+&  =\frac{\pi}{2}\left[  -\frac{1}{2b}e^{-br^{2}}\right]  _{0}^{\infty}\\
+&  =\frac{\pi}{4b}\end{aligned}
+$$
+これより、
+$$
+\int_{0}^{\infty}e^{-bx^{2}}dx=\frac{1}{2}\sqrt{\frac{\pi}{b}}
+$$
+が得られる。よって、$e^{-bx^{2}}$の対称性により、
+$$
+\int_{-\infty}^{\infty}e^{-bx^{2}}dx=\sqrt{\frac{\pi}{b}}
+\tag{10}
+$$
+となる。(10)式の両辺を$\sqrt{\pi/b}$で割り、確率密度関数を次のように定める。
+$$
+f\left(  x\right)  =\sqrt{\frac{b}{\pi}}e^{-bx^{2}}
+$$
+このとき、確率分布関数は
+$$
+F\left(  \alpha\right)  =\int_{-\infty}^{\alpha}\sqrt{\frac{b}{\pi}}e^{-bx^{2}}dx
+$$
+と表される。$F\left(  \infty\right)=1$であり、確率公準を満たす。以上のような確率密度関数、および確率分布関数を「正規分布」と呼ぶ。
+
+特に、$b=1/2$の確率密度関数：
+$$
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}
+$$
+に基づく確率分布を「標準正規分布」と呼ぶ。標準正規分布に従う確率変数$X$の平均は0、分散は1である。確率変数$X$の期待値は次の通りである。
+$$
+E\left(  X\right)  =\int_{-\infty}^{\infty}x\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}dx
+$$
+右辺の積分を直接解かず、ここでは標準正規分布の密度関数の微分を利用する。
+$$
+f^{\prime}\left(  x\right)  =-\frac{1}{\sqrt{2\pi}}xe^{-\frac{x^{2}}{2}}
+$$
+この$f^{\prime}\left(  x\right)$を$E\left( X\right)$の右辺の積分に代入すれば、次式が得られる。
+$$
+\begin{aligned}
+E\left(  X\right)   &  =-\int_{-\infty}^{\infty}f^{\prime}\left(  x\right)
+dx\\
+&  =-f\left(  \infty\right)  +f\left(  -\infty\right) \\
+&  =0\end{aligned}
+$$
+他方、分散は部分積分を用いて、次のように解くことができる。
+$$
+\begin{aligned}
+E\left[  X-E\left(  X\right)  \right]  ^{2}  &  =\int_{-\infty}^{\infty
+}\left(  x-0\right)  ^{2}\frac{1}{\sqrt{2\pi}}e^{-\frac{x^{2}}{2}}dx\\
+&  =-\int_{-\infty}^{\infty}xf^{\prime}\left(  x\right)  dx\\
+&  =-\left[  xf\left(  x\right)  \right]  _{-\infty}^{\infty}+\int_{-\infty
+}^{\infty}f\left(  x\right)  dx\\
+&  =1\end{aligned}
+$$
+
+以上の標準正規分布は広く用いられる正規分布の特別な表現である。一般には、正規分布の平均を$\mu$、分散を$\sigma^{2}$と定めた確率密度関数がよく用いられる。その確率密度関数は次のように表される。
+$$
+f\left(  x\right)  =\frac{1}{\sqrt{2\pi\sigma^{2}}}e^{-\frac{\left(
+x-\mu\right)  ^{2}}{2\sigma^{2}}}
+\tag{11}
+$$
+(11)式の確率密度関数による正規分布に従う確率変数$X$の期待値と分散とは、
+$$
+\begin{aligned}
+E\left(  X\right)   &  =\mu,\\
+E\left[  X-E\left(  X\right)  \right]  ^{2}  &  =\sigma^{2}
+\end{aligned}
+$$
+である。これは先の標準正規分布の期待値と分散とを求めたのと同じ方法で導くことができる。
+
+
+# 練習問題
+
+以下の問題の解答を作成し提出せよ。
+
+**問1**　次の微分公式を証明せよ。
+$$
+\frac{de^{x}}{dx}=e^{x}
+$$
+
+**問2**　次の定積分を求めよ。　
+$$
+\int_{0}^{1} \left( e-e^{x} \right) dx
+$$
+
+**問3（任意）**　次の積分公式を証明せよ。(難問なので解答提出は任意)
+$$
+\int_{0}^{\infty}e^{-x^{2}}dx=\frac{\sqrt{\pi}}{2}
+$$
+
+**問4**　2章に関連する練習問題を一つ作成し、解答を沿えよ。
