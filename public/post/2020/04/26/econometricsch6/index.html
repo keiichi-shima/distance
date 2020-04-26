@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>計量経済学講義：統計的推論 | A minimal website of Keiichi Shima</title>
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="../../../../../">Home</a></li>
+      
+      <li><a href="../../../../../about/">About</a></li>
+      
+      <li><a href="../../../../../categories/">Categories</a></li>
+      
+      <li><a href="../../../../../tags/">Tags</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">計量経済学講義：統計的推論</span></h1>
+<h2 class="author">嶋恵一</h2>
+<h2 class="date">2020/04/26</h2>
+</div>
+
+<main>
+
+
+
+<p>この遠隔講義では、講義ノート第6章「統計的推論」に進みます。以下は第4章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。（Rのコードは任意ですので、興味がなければ読み飛ばせばよいです。)</p>
+<p>講義ノート第6章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところ中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。</p>
+<p>それでは、講義ノート第4章を学習しましょう。</p>
+<div id="section" class="section level1">
+<h1>区間推定</h1>
+<p>真のモデルを
+<span class="math display">\[
+y_{i}=\alpha+\beta x_{i}+u_{i}
+\]</span>
+とする。誤差項は正規分布に従い、
+<span class="math display">\[
+u_{i}\sim N\left(  0,\sigma^{2}\right)
+\]</span>
+を仮定する。このとき、OLSによるパラメータ推定値<span class="math inline">\(\hat{\beta}\)</span>は
+<span class="math display">\[
+\hat{\beta}=\beta+\frac{\sum u_{i}\left(  x_{i}-\overline{x}\right)}{S_{xx}}
+\]</span>
+と表される。ただし、<span class="math inline">\(S_{xx}=\sum x_{i}^{2}-n\overline{x}^{2}\)</span>である。<span class="math inline">\(E\left( \hat{\beta}\right) =\beta\)</span>より<span class="math inline">\(\hat{\beta}\)</span>は真のパラメータである<span class="math inline">\(\beta\)</span>を平均に持ち、また<span class="math inline">\(E\left(\hat{\beta}-\beta\right)^{2}=\sigma^{2}/S_{xx}\)</span>であることから分散<span class="math inline">\(\sigma^{2}/S_{xx}\)</span>を持つ。<span class="math inline">\(\hat{\beta}\)</span>は<span class="math inline">\(u_{i}\)</span>の一次結合であり、よって<span class="math inline">\(\hat{\beta}\)</span>も正規分布に従い、
+<span class="math display">\[
+\hat{\beta}\sim N\left(  \beta,\frac{\sigma^{2}}{S_{xx}}\right)
+\]</span>
+と表現できる。</p>
+<p>いま、誤差項の分散<span class="math inline">\(\sigma^{2}\)</span>の値が分かっているものとする。一方で、真の平均<span class="math inline">\(\beta\)</span>の値は分からないとする。<span class="math inline">\(\hat{\beta}\)</span>が正規分布に従うこと、かつその分散が<span class="math inline">\(\sigma^{2}/S_{xx}\)</span>であることから、真の平均がどのような値をとりうるかを確率的に推測することができる。それを「区間推定」と呼ぶ。</p>
+<p><span class="math inline">\(\hat{\beta}\)</span>が正規分布に従うならば、未知の平均<span class="math inline">\(\beta\)</span>に対して、<span class="math inline">\(\hat{\beta}\)</span>は95％の確率で次の範囲の値を生じうる。
+<span class="math display">\[
+P\left(  \beta-2\sqrt{\frac{\sigma^{2}}{S_{xx}}}&lt;\hat{\beta}&lt;\beta
++2\sqrt{\frac{\sigma^{2}}{S_{xx}}}\right)  \simeq.95 
+\tag{1}
+\]</span>
+このとき、95％の確率で生じうる<span class="math inline">\(\hat{\beta}\)</span>の値の下限は<span class="math inline">\(\beta-2\sqrt{\sigma^{2}/S_{xx}}&lt;\hat{\beta}\)</span>より<span class="math inline">\(\beta&lt;\hat{\beta}+2\sqrt{\sigma^{2}/S_{xx}}\)</span>と書き直すことができる。他方、その上限は<span class="math inline">\(\hat{\beta}&lt;\beta+2\sqrt{\sigma^{2}/S_{xx}}\)</span>より<span class="math inline">\(\hat{\beta}-2\sqrt{\sigma^{2}/S_{xx}}&lt;\beta\)</span>と書き直すことができる。よって、(1)式は以下の確率に関する式を同様に満たす。
+<span class="math display">\[
+P\left(  \hat{\beta}-2\sqrt{\frac{\sigma^{2}}{S_{xx}}}&lt;\beta
+&lt;\hat{\beta}+2\sqrt{\frac{\sigma^{2}}{S_{xx}}}\right)  \simeq.95
+\tag{2}
+\]</span></p>
+<p>誤差項の分散が<span class="math inline">\(\sigma^{2}=4\)</span>と既に分かっており、説明変数<span class="math inline">\(x_{i}\)</span>から計算できる<span class="math inline">\(S_{xx}\)</span>を<span class="math inline">\(16\)</span>だとする。これより、<span class="math inline">\(\hat{\beta}\)</span>の分散も既知で<span class="math inline">\(\sigma^{2}/S_{xx}=1/4\)</span>となる。観測される変数<span class="math inline">\(y_{i}\)</span>、<span class="math inline">\(x_{i}\)</span>を用いてOLSにより計算したところ、<span class="math inline">\(\hat{\beta}=3.5\)</span>が得られたとする。<span class="math inline">\(\hat{\beta}-2\sqrt{\sigma^{2}/S_{xx}}=2.5\)</span>、<span class="math inline">\(\hat{\beta}+2\sqrt{\sigma^{2}/S_{xx}}=4.5\)</span>より、未知の平均<span class="math inline">\(\beta\)</span>は95％の確率で
+<span class="math display">\[
+2.5&lt;\beta&lt;4.5
+\]</span>
+の範囲に存在すると推測できる。このような推測を真の平均<span class="math inline">\(\beta\)</span>に関する「95％の区間推定」と呼ぶ。2.5から4.5の幅を「95％の信頼区間」と呼ぶ。</p>
+<p>以下の図は、<span class="math inline">\(\hat{\beta} \sim N \left( \beta,\frac{\sigma^2}{S_{xx}} \right)\)</span>の分布を、95％の信頼区間で塗りつぶしたものである。</p>
+<pre class="r"><code>library(ggplot2)
+limitRange &lt;- function(fun, min, max) {
+  function(x) {
+    y &lt;- fun(x)
+    y[x &lt; min  |  x &gt; max] &lt;- NA
+    return(y)
+  }
+}
+tr&lt;-&quot;italic( beta + 2*sqrt( frac(sigma^2,S[xx]) ) )&quot;
+tl&lt;-&quot;italic( beta - 2*sqrt( frac(sigma^2,S[xx]) ) )&quot;
+p &lt;- ggplot(data.frame(x=c(-4, 4)), aes(x=x))
+p + stat_function(fun = dnorm) +
+  stat_function(fun = limitRange(dnorm, -2, 2),
+    geom=&quot;area&quot;, fill=&quot;blue&quot;, alpha=0.2)+
+  geom_line(data=data.frame(x=c(-4, 4)),aes(x=x,y=0))+
+  geom_line(data=data.frame(y=c(0, dnorm(0))),aes(x=0,y=y))+
+  geom_point(data=data.frame(),aes(x=2,y=0))+
+  annotate(&quot;text&quot;,label=tr,x=2,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=-2,y=0))+
+  annotate(&quot;text&quot;,label=tl,x=-2,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=0,y=0))+
+  annotate(&quot;text&quot;,label=&quot;italic(beta)&quot;,x=0,y=-.02,parse=TRUE)+
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())</code></pre>
+<p><img src="../../../../../post/2020-04-26-EconometricsCh6_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="section-1" class="section level1">
+<h1>仮説検定</h1>
+<p>回帰分析において、真の<span class="math inline">\(\beta\)</span>は分からない。そこで、真の<span class="math inline">\(\beta\)</span>の値について例えば次のような仮説：
+<span class="math display">\[
+&quot;\beta=5&quot;
+\]</span>
+を立てるならば、どのような統計的推論ができるだろうか。もし仮説が正しく<span class="math inline">\(\beta=5\)</span>ならば、<span class="math inline">\(\hat{\beta}\)</span>の実現値（OLSによる推定値）について、「このような値は95％の確率で起こり得る」、あるいは「このような値は95％の確率で起こらないはずだ」などと確率を前提にして考えることができる。ここでは<span class="math inline">\(\hat{\beta}\)</span>の分散は<span class="math inline">\(\sigma^{2}/S_{xx}=1/4\)</span>だと分かっているものとする。仮説<span class="math inline">\(\beta=5\)</span>が正しければ、<span class="math inline">\(\hat{\beta}\sim N\left( 5,\frac{1}{4}\right)\)</span>に従い、95％の信頼区間は
+<span class="math display">\[
+P\left(  5-2\cdot\frac{1}{2}&lt;\hat{\beta}&lt;5+2\cdot\frac{1}{2}\right)
+\simeq.95
+\]</span>
+と表すことができる。</p>
+<p>95％の確率で信じるならば、<span class="math inline">\(\beta=5\)</span>とする仮説の下では<span class="math inline">\(4&lt;\hat{\beta}&lt;6\)</span>であり、もし仮説が正しければ<span class="math inline">\(\hat{\beta}\)</span>の実現値はこの範囲で現われるはずと考えることができる。上述の通り、OLSによる計算から<span class="math inline">\(\hat{\beta}=3.5\)</span>を得たとする。仮説の下では<span class="math inline">\(4&lt;\hat{\beta}&lt;6\)</span>であり、<span class="math inline">\(\hat{\beta}=3.5\)</span>が生じる可能性は極めて低い。すなわち、仮説である「<span class="math inline">\(\beta=5\)</span>」とその実現値である「<span class="math inline">\(\hat{\beta}=3.5\)</span>」とは確率的に矛盾する関係にある。未知である真の<span class="math inline">\(\beta\)</span>に対して仮説を立て、その実現値<span class="math inline">\(\hat{\beta}\)</span>を用い、仮説が誤りか否かを統計的推論により判断することを「仮説検定」と呼ぶ。<span class="math inline">\(\beta=5\)</span>のような仮説は「帰無仮説」と呼ばれ、
+<span class="math display">\[
+H_{0}:\beta=5
+\]</span>
+と表現される。</p>
+<p>95％の確信の下で、以上の帰無仮説が導く実現値の範囲は<span class="math inline">\(4&lt;\hat{\beta}&lt;6\)</span>であり、<span class="math inline">\(\hat{\beta}=3.5\)</span>が出ることは考えにくいため、「<span class="math inline">\(\beta=5\)</span>」という仮説を立てたことが誤っていたと判断する。このとき、帰無仮説：<span class="math inline">\(\beta=5\)</span>を「棄却する」という。反対に、例えば<span class="math inline">\(\hat{\beta}=4.7\)</span>を得たとする。このとき、帰無仮説と<span class="math inline">\(\hat{\beta}=4.7\)</span>とは矛盾せず、これより仮説は誤りではなかろうと判断する。これを指して、帰無仮説を「受容する」という。</p>
+<p>帰無仮説である<span class="math inline">\(\beta=5\)</span>が「正しい」と断言しない理由は次の通りである。例えば帰無仮説を「<span class="math inline">\(\beta=5.1\)</span>」とする。同じ分散の下で、95％の信頼区間は<span class="math inline">\(4.1&lt;\hat{\beta}&lt;5.1\)</span>であり、この帰無仮説の下でも<span class="math inline">\(\hat{\beta}=4.7\)</span>は生じうる。すなわち、帰無仮説：<span class="math inline">\(\beta=5\)</span>は棄却されないが、他にも棄却されない仮説の候補は存在し、以上の検定から真の平均が<span class="math inline">\(\beta=5\)</span>であると断定することはできないからである。</p>
+</div>
+<div id="section-2" class="section level1">
+<h1>確率変数の標準化による検定</h1>
+<p>確率変数<span class="math inline">\(w\)</span>が正規分布<span class="math inline">\(N\left(\mu,\sigma^{2}\right)\)</span>に従うとき、定義より<span class="math inline">\(E\left(w\right)=\mu\)</span>、<span class="math inline">\(E\left(w-\mu\right)^2=\sigma^2\)</span>である。ここで、新たな確率変数<span class="math inline">\(z\)</span>を次のように定義する：
+<span class="math display">\[
+z=\frac{w-\mu}{\sigma} \tag{3}
+\]</span>
+このとき、<span class="math inline">\(z\)</span>の平均は
+<span class="math display">\[
+\begin{aligned}
+E\left(  z\right)   &amp;  =E\left(  \frac{w-\mu}{\sigma}\right) \\
+&amp;  =\frac{1}{\sigma}\left[  E\left(  w\right)  -\mu\right]  =0\end{aligned}
+\]</span>
+であり、分散は
+<span class="math display">\[
+\begin{aligned}
+E\left(  z^{2}\right) &amp; =E\left(\frac{w-\mu}{\sigma}\right)^2\\
+&amp; =\frac{1}{\sigma^2}E\left(w-\mu\right)^2=1
+\end{aligned}
+\]</span>
+である。すなわち、<span class="math inline">\(z\)</span>は標準正規分布<span class="math inline">\(N\left(0,1\right)\)</span>に従う。(3)式のような変換を「標準化変換」、または「<span class="math inline">\(z\)</span>変換」と呼ぶ。</p>
+<p>以下の図は標準正規分布<span class="math inline">\(z \sim N(0,1)\)</span>を、95％の信頼区間で塗りつぶしたものである。</p>
+<pre class="r"><code>p + stat_function(fun = dnorm) +
+  stat_function(fun = limitRange(dnorm, -2, 2),
+    geom=&quot;area&quot;, fill=&quot;blue&quot;, alpha=0.2)+
+  geom_line(data=data.frame(x=c(-4, 4)),aes(x=x,y=0))+
+  geom_line(data=data.frame(y=c(0, dnorm(0))),aes(x=0,y=y))+
+  geom_point(data=data.frame(),aes(x=2,y=0))+
+  annotate(&quot;text&quot;,label=&quot;2&quot;,x=2,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=-2,y=0))+
+  annotate(&quot;text&quot;,label=&quot;-2&quot;,x=-2,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=0,y=0))+
+  annotate(&quot;text&quot;,label=&quot;0&quot;,x=0,y=-.02,parse=TRUE)+
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())</code></pre>
+<p><img src="../../../../../post/2020-04-26-EconometricsCh6_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>帰無仮説<span class="math inline">\(\beta=5\)</span>の下で、<span class="math inline">\(\hat{\beta}\)</span>の分散が既知で<span class="math inline">\(1/4\)</span>ならば、<span class="math inline">\(\hat{\beta}\)</span>は正規分布<span class="math inline">\(N\left(5,\frac{1}{4}\right)\)</span>に従う確率変数と表せる。ここで、
+<span class="math display">\[
+z=\frac{\hat{\beta}-\beta}{\sqrt{\frac{\sigma^{2}}{S_{xx}}}}
+\]</span>
+と標準化する。帰無仮説の下で、<span class="math inline">\(z\)</span>は標準正規分布<span class="math inline">\(N\left( 0,1\right)\)</span>に従うはずである。このとき、95％の確信の下で以上の帰無仮説が導く<span class="math inline">\(z\)</span>の範囲は<span class="math inline">\(-2&lt;z&lt;2\)</span>と考えられる。上の例では
+<span class="math display">\[
+z=\frac{3.5-5}{\sqrt{\frac{1}{4}}}=-3
+\]</span>
+であり、帰無仮説の下で計算された<span class="math inline">\(z=-3\)</span>は95％の信頼区間に入らない。帰無仮説の下で<span class="math inline">\(\hat{\beta}\)</span>を標準化し、標準正規分布の<span class="math inline">\(\theta\)</span>％の信頼区間を定めて仮説検定を行うことを「<span class="math inline">\(\left(1-\theta\right)\)</span>％の有意性検定」と呼ぶ。信頼区間の左右の外側を表す確率<span class="math inline">\(\left(1-\theta\right)\)</span>％を「有意水準」と呼ぶ。この例では、帰無仮説「<span class="math inline">\(\beta=5\)</span>」は有意水準5％で棄却されたという。</p>
+</div>
+<div id="section-3" class="section level1">
+<h1>分散未知の仮説検定</h1>
+<p>確率変数<span class="math inline">\(\hat{\beta}\)</span>について真の平均<span class="math inline">\(\beta\)</span>のみならず分散も分からない場合、以上の仮説検定に正規分布を用いることができないことが確率統計では知られている。<span class="math inline">\(\hat{\beta}\)</span>の真の分散を知らず、その代用として分散をデータから推定する場合、推定される分散は定数ではなく、カイ二乗分布に従う確率変数となる。その誤差により<span class="math inline">\(\hat{\beta}\)</span>は正規分布には従わず、より裾幅の広い別の分布に従うことが知られている。その確率分布を「スチューデントの<span class="math inline">\(t\)</span>分布」と呼ぶ。</p>
+<p><span class="math inline">\(t\)</span>分布は正規分布と同じく左右対称であるが、標本数の自由度によって分布の形状が変化する。自由度が小さければ推定分散の誤差により<span class="math inline">\(t\)</span>分布の裾は正規分布よりも広く、自由度が大きければ分布の裾は狭まり、極限で正規分布に一致する。正確に言えば、<span class="math inline">\(t\)</span>分布が極限で一致するのは標準正規分布である。すなわち、分散が未知である<span class="math inline">\(\hat{\beta}\)</span>についてそれを標準化した確率変数は正規分布には従わず、「自由度<span class="math inline">\(m\)</span>の<span class="math inline">\(t\)</span>分布」に従う。</p>
+<p><span class="math inline">\(\hat{\beta}\)</span>の分散は<span class="math inline">\(\sigma^{2}/S_{xx}\)</span>であり、誤差項<span class="math inline">\(u_{i}\)</span>の分散<span class="math inline">\(\sigma^{2}\)</span>が既知ならば、平均<span class="math inline">\(\beta\)</span>が未知であっても<span class="math inline">\(\hat{\beta}\)</span>は正規分布に従う。未知の平均<span class="math inline">\(\beta\)</span>を用いて標準化すれば
+<span class="math display">\[
+z=\frac{\hat{\beta}-\beta}{\sqrt{\frac{\sigma^{2}}{S_{xx}}}}
+\]</span>
+となり、<span class="math inline">\(z\sim N\left( 0,1\right)\)</span>と表すことができる。95％の信頼区間は標本数にかかわらず、以下を満たす。
+<span class="math display">\[
+P\left( -2&lt;z&lt;2\right) \simeq .95
+\]</span></p>
+<p>一方、誤差項の分散が未知のとき、その分散をOLSの残差<span class="math inline">\(\hat{u}_{i}\)</span>から不偏推定すれば、その推定量<span class="math inline">\(s^{2}\)</span>は次式に従う。
+<span class="math display">\[
+s^{2}=\frac{\sum\hat{u}_{i}^{2}}{n-2} \tag{4}
+\]</span>
+(4)式で求めた値を真の<span class="math inline">\(\sigma^{2}\)</span>の代わりとして用い、また未知の平均<span class="math inline">\(\beta\)</span>を用いて標準化すれば
+<span class="math display">\[
+z_{s}=\frac{\hat{\beta}-\beta}{\sqrt{\frac{s^{2}}{S_{xx}}}}
+\]</span>
+と書ける。このとき、<span class="math inline">\(z_{s}\)</span>は未知の平均<span class="math inline">\(\beta\)</span>の下で自由度<span class="math inline">\(n-2\)</span>の<span class="math inline">\(t\)</span>分布に従い、<span class="math inline">\(z_{s}\sim t\left(0,1,n-2\right)\)</span>と表すことができる。</p>
+<p>正規分布とは異なり、<span class="math inline">\(t\)</span>分布の95％の信頼区間の境界は自由度<span class="math inline">\(m\)</span>によって変化する。
+<span class="math display">\[
+P\left(  -C_{m}&lt;z_{s}&lt;C_{m}\right)  \simeq.95
+\]</span>
+<span class="math inline">\(m\)</span>が小さいほど境界<span class="math inline">\(C_{m}\)</span>は広く、<span class="math inline">\(C_{2}=4.30265\)</span>、<span class="math inline">\(C_{3}=3.18245\)</span>、<span class="math inline">\(C_{4}=2.77645\)</span>というように自由度の増加によって<span class="math inline">\(t\)</span>分布の信頼区間は狭まり、正規分布の信頼区間に近づいてゆく。自由度<span class="math inline">\(m\)</span>について、<span class="math inline">\(P\left(-C_{m}&lt;z_{s}&lt;C_{m}\right) \simeq.\theta \%\)</span> で表される信頼区間の境界<span class="math inline">\(C_{m}\)</span>の外側を「棄却域」と呼ぶ。標準化された確率変数<span class="math inline">\(z_{s}\)</span>が<span class="math inline">\(t\)</span>分布に従うことを前提とし、自由度<span class="math inline">\(m\)</span>の95％の信頼区間により棄却域<span class="math inline">\(C_{m}&lt;\left\vert z_{s}\right\vert\)</span>を定めて検定することを、「有意水準5％の<span class="math inline">\(t\)</span>検定」という。同様に、99％の信頼区間により検定することを「有意水準1％の<span class="math inline">\(t\)</span>検定」という。</p>
+<p>以下の図は自由度<span class="math inline">\(m\)</span>の<span class="math inline">\(t\)</span>分布について、棄却域を塗りつぶしたものである。</p>
+<pre class="r"><code>cmr &lt;- qt(0.975, df=4)
+cml &lt;- qt(0.025, df=4)
+ggplot(NULL, aes(x = c(-4, 4))) +
+  # T-distribution with 4 degrees of freedom
+  #   Non-significant area
+  stat_function(fun=dt,args=list(df=4),
+      geom=&quot;line&quot;,xlim=c(-4,4))+
+  #   Significant area
+  stat_function(fun=dt,args=list(df=4),
+      geom=&quot;area&quot;,fill =&quot;blue&quot;,alpha=.2,xlim=c(cmr,4))+
+  stat_function(fun=dt,args=list(df=4),
+      geom=&quot;area&quot;,fill =&quot;blue&quot;,alpha=.2,xlim=c(-4,cml))+
+  xlim(-4, 4)+
+  geom_line(data=data.frame(x=c(-4, 4)),aes(x=x,y=0))+
+  geom_line(data=data.frame(y=c(0, dt(0,4))),aes(x=0,y=y))+
+  geom_point(data=data.frame(),aes(x=2,y=0))+
+  annotate(&quot;text&quot;,label=&quot;2&quot;,x=2,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=-2,y=0))+
+  annotate(&quot;text&quot;,label=&quot;-2&quot;,x=-2,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=0,y=0))+
+  annotate(&quot;text&quot;,label=&quot;0&quot;,x=0,y=-.02,parse=TRUE)+
+  
+  geom_point(data=data.frame(),aes(x=2,y=0))+
+  annotate(&quot;text&quot;,label=&quot;italic(Cm)&quot;,x=cmr,y=-.02,parse=TRUE)+
+  geom_point(data=data.frame(),aes(x=cmr,y=0))+
+  annotate(&quot;text&quot;,label=&quot;italic(-Cm)&quot;,x=cml,y=-.02,
+    parse=TRUE)+
+  theme(axis.text=element_blank(),axis.title=element_blank())</code></pre>
+<p><img src="../../../../../post/2020-04-26-EconometricsCh6_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="section-4" class="section level1">
+<h1>練習問題</h1>
+<p>以下の問題の解答を作成し提出せよ。</p>
+<p><strong>問1</strong>　手元にある体温計には次のような誤差がある。誤差は正規分布をしており、平均は0、標準偏差は0.4（単位は<span class="math inline">\(^\circ \rm C\)</span>）とする。</p>
+<p><strong>(i)</strong>　本当は36.5<span class="math inline">\(^\circ \rm C\)</span>の人が、誤差のせいで37.0<span class="math inline">\(^\circ \rm C\)</span>以上と測定されてしまう確率はいくらか。</p>
+<p><strong>(ii)</strong>　本当は38.0<span class="math inline">\(^\circ \rm C\)</span>の人が、誤差のせいで37.0<span class="math inline">\(^\circ \rm C\)</span>未満と測定されてしまう確率はいくらか。</p>
+<p><strong>問2</strong>　100個のデータからなる標本について調べたところ、標本の平均は8.2、標準偏差は4だったとする。
+<strong>(i)</strong>　母集団の平均が含まれる95%の信頼区間を求めよ。</p>
+<p><strong>(ii)</strong>　95%の信頼区間を現在の半分にするには、標本数はいくら必要か。</p>
+<p><strong>問4</strong>　6章に関連する練習問題を二つ作成し、解答を沿えよ。</p>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © Keiichi Shima 2020
+  
+  </footer>
+  </body>
+</html>
+

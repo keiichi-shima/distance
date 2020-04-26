@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>計量経済学講義：単回帰 | A minimal website of Keiichi Shima</title>
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="../../../../../">Home</a></li>
+      
+      <li><a href="../../../../../about/">About</a></li>
+      
+      <li><a href="../../../../../categories/">Categories</a></li>
+      
+      <li><a href="../../../../../tags/">Tags</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">計量経済学講義：単回帰</span></h1>
+<h2 class="author">嶋恵一</h2>
+<h2 class="date">2020/04/26</h2>
+</div>
+
+<main>
+
+
+
+<p>この遠隔講義では、講義ノート第4章「単回帰」に進みます。以下は第4章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。</p>
+<p>講義ノート第4章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところ中心に解説することを予定しております。最後に、練習問題を解いて、期限を決めて提出してもらおうと考えております。</p>
+<p>それでは、講義ノート第4章を学習しましょう。</p>
+<div id="section" class="section level1">
+<h1>最小二乗法による推定値</h1>
+<p>真の回帰方程式を
+<span class="math display">\[
+y_i =\alpha +\beta x_i +u_i
+\tag{1}
+\]</span>
+とする。ただし、<span class="math inline">\(y_i\)</span>、<span class="math inline">\(x_i\)</span>は観測される変数であり、標本数は<span class="math inline">\(n\)</span>とする。誤差項は未知であり、<span class="math inline">\(u_{i}\sim N\left( 0,\sigma^2\right)\)</span>を仮定する。
+<span class="math inline">\(\alpha,\beta\)</span>は未知係数であり、最小二乗法（OLS）による推定値を<span class="math inline">\(\hat{\alpha},\hat{\beta}\)</span>と表わす。誤差項の推定値を残差と呼び、<span class="math inline">\(\hat u_i=y_i-\hat{\alpha}-\hat{\beta}x_i\)</span>により表わす。このとき、残差二乗和<span class="math inline">\(J=\sum\hat{u}_i^2\)</span>の最小化より、<span class="math inline">\(\hat{\alpha},\hat{\beta}\)</span>に関する以下の正規方程式が導かれる。
+<span class="math display">\[
+\left\{
+\begin{array}{c}
+\sum y_{i}-n\hat{\alpha}-\hat{\beta}\sum x_{i}=0,\\
+\sum y_{i}x_{i}-\hat{\alpha}\sum x_{i}-\hat{\beta}\sum x_{i}^{2}=0
+\end{array}
+\right.
+\tag{2}
+\]</span>
+(2)式の一段目より、
+<span class="math display">\[
+\hat{\alpha}=\overline{y}-\hat{\beta}\overline{x}
+\tag{3}
+\]</span>
+が得られる。ただし、<span class="math inline">\(\overline{x}\)</span>、<span class="math inline">\(\overline{y}\)</span>は平均を表す。(3)式を(2)式の二段目に代入すれば、次式が得られる。
+<span class="math display">\[
+\begin{aligned}
+\sum y_{i}x_{i}-\left(  \overline{y}-\hat{\beta}\overline{x}\right)
+n\overline{x}-\hat{\beta}\sum x_{i}^{2}  &amp;  =0,\\
+\sum y_{i}x_{i}-n\overline{y}\overline{x}-\hat{\beta}\left(  \sum
+x_{i}^{2}-n\overline{x}^{2}\right)   &amp;  =0 
+\end{aligned}
+\tag{4}
+\]</span></p>
+<p>ここで、<span class="math inline">\(S_{yx}=\sum y_{i}x_{i}-n\overline{y}\overline{x}\)</span>、<span class="math inline">\(S_{xx}=\sum x_i^2-n\overline{x}^2\)</span>と置く。以上を用いて(4)式を書き直せば、次が得られる。
+<span class="math display">\[
+S_{yx}=S_{xx}\hat{\beta}
+\]</span>
+これを解けば、<span class="math inline">\(\hat{\beta}\)</span>は次のように求められる。
+<span class="math display">\[
+\hat{\beta}=\frac{S_{yx}}{S_{xx}} \tag{5}
+\]</span>
+また、<span class="math inline">\(\hat{\beta}\)</span>の推定値を(3)式に代入すれば、
+<span class="math display">\[
+\hat{\alpha}=\overline{y}-\frac{S_{yx}}{S_{xx}}\overline{x} \tag{6}
+\]</span>
+が求まる。</p>
+</div>
+<div id="section-1" class="section level1">
+<h1>推定値の分散</h1>
+<p>最初に、<span class="math inline">\(\hat{\beta}\)</span>の期待値と分散を求める。(5)式より、<span class="math inline">\(\hat{\beta}\)</span>の右辺の分子<span class="math inline">\(S_{yx}\)</span>は
+<span class="math display">\[
+S_{yx}=\left( \sum y_i x_i -n\overline{y}\overline{x}\right)
+=\sum\left(y_{i}-\overline{y}\right)\left(x_i-\overline{x}\right)
+\tag{7}
+\]</span>
+と書ける。真の回帰方程式(1)について、その平均は以下を満たす：
+<span class="math display">\[
+\overline{y}=\alpha+\beta\overline{x}+\overline{u} \tag{s8}
+\]</span>
+ただし、<span class="math inline">\(\overline{u}=\sum u_i/n\)</span>は未知である。真の回帰方程式(1)とその平均である(8)式とを(7)式に代入すれば、右辺は次のように書き直せる。
+<span class="math display">\[
+\begin{aligned}
+&amp; \sum\left(y_i-\overline{y}\right) \left(  x_i-\overline{x}\right)\\
+&amp; =\sum\left[ \alpha+\beta x_i+u_i-\left( \alpha+\beta\overline{x} +\overline{u}\right) \right] \left(x_i-\overline{x}\right)\\
+&amp; =\sum\left[ \beta\left( x_i-\overline{x}\right) +u_i-\overline{u} \right]  \left( x_i-\overline{x}\right)\\
+&amp; =\beta\sum\left(x_i-\overline{x}\right) ^2+\sum u_i\left(
+x_i-\overline{x}\right) -\overline{u}\sum\left( x_i-\overline{x}\right)\\
+&amp; =\beta S_{xx}+\sum u_i\left(  x_i-\overline{x}\right)  \end{aligned}
+\tag{9}
+\]</span>
+(9)式を用いて(5)式の分子を書き換えれば、<span class="math inline">\(\hat{\beta}\)</span>に関する次の表現が得られる。
+<span class="math display">\[
+\hat{\beta}=\beta+\frac{\sum u_i\left(x_i-\overline{x}\right)}{S_{xx}} 
+\tag{10}
+\]</span></p>
+<p>OLSでは真の誤差項と説明変数とが独立（無相関）であること、すなわち<span class="math inline">\(E\left[ u_ix_i\right] =0\)</span>を仮定する。かつ、異なる時点<span class="math inline">\(i\neq j\)</span>の誤差項も独立であり、<span class="math inline">\(E\left[ u_i u_j \right]=0\)</span>を仮定する。このとき、
+<span class="math display">\[
+E\left(  \hat{\beta}\right)  =\beta
+\]</span>
+が成り立つ。OLSにより求められた<span class="math inline">\(\hat{\beta}\)</span>の期待値が何の偏りもなく真の<span class="math inline">\(\beta\)</span>に一致する性質を「不偏性」と呼ぶ。</p>
+<p>一方、分散は(10)式を用いることにより、次式で表すことができる。
+<span class="math display">\[
+E\left( \hat{\beta}-\beta \right) ^2 
+= E\left[ \frac{\sum u_i\left(x_i-\overline{x}\right)}{S_{xx}}
+\right]^2 
+\tag{11}
+\]</span>
+ここで、(11)式の分子を展開すれば、次の表現が得られる。
+<span class="math display">\[
+\begin{aligned}
+&amp;  E\left[  \sum u_{i}\left(  x_{i}-\overline{x}\right)  \right]^2\\
+&amp;  =E\left[  \sum_{i}\sum_{j}u_{i}u_{j}\left(  x_{i}-\overline{x}\right)
+\left(  x_{j}-\overline{x}\right)  \right]  
+\end{aligned}
+\tag{12}
+\]</span>
+OLSの仮定より、<span class="math inline">\(E\left(u_i u_j\right)=0\)</span>、
+<span class="math inline">\(E\left(u_j^2\right)=\sigma^2\)</span>を用いれば、以上は
+<span class="math display">\[
+\begin{aligned}
+E\left[  \sum_{i}\sum_{j}u_{i}u_{j}\left(  x_{i}-\overline{x}\right) \left(
+x_{j}-\overline{x}\right)  \right]   &amp;  =\sum_{i}\sum_{j}\left(
+x_{i}-\overline{x}\right)  \left(  x_{j}-\overline{x}\right)  E\left(
+u_{i}u_{j}\right) \\
+&amp;  =\sum_{j}\left(  x_{j}-\overline{x}\right)  \left(  x_{j}-\overline
+{x}\right)  E\left(  u_{j}^{2}\right) \\
+&amp; =S_{xx}\sigma^{2} 
+\end{aligned}
+\tag{13}
+\]</span>
+と書き直せる。よって、(11)-(13)式により、<span class="math inline">\(\hat{\beta}\)</span>の分散は次のように求められる。
+<span class="math display">\[
+E\left(  \hat{\beta}-\beta\right)  ^{2}=\frac{S_{xx}\sigma^{2}}{S_{xx}^{2}}=\frac{\sigma^{2}}{S_{xx}}
+\]</span></p>
+<p>次に、<span class="math inline">\(\hat{\alpha}\)</span>の期待値と分散を求める。(8)式の代入により、(3)式は
+<span class="math display">\[
+\begin{aligned}
+\hat{\alpha}  &amp;  =\alpha+\beta\overline{x}+\overline{u}-\hat{\beta
+}\overline{x}\nonumber\\
+&amp;  =\alpha-\left(  \hat{\beta}-\beta\right)  \overline{x}+\overline{u}
+\end{aligned}
+\tag{14}
+\]</span>
+と書ける。従って、<span class="math inline">\(\hat{\alpha}\)</span>の期待値は次のように表現できる。
+<span class="math display">\[
+\begin{aligned}
+E\left(  \hat{\alpha}\right)   &amp;  =E\left[  \alpha-\left(  \hat{\beta}-\beta\right)  \overline{x}+\overline{u}\right] \\
+&amp;  =\alpha-\overline{x}E\left(  \hat{\beta}-\beta\right)  +E\left(
+\overline{u}\right)
+\end{aligned}
+\]</span>
+OLSの仮定より、<span class="math inline">\(E\left[\overline{u}\right] =\sum E\left( u_i\right)=0\)</span>が成り立つ。更に<span class="math inline">\(E\left( \hat{\beta}\right)=\beta\)</span>より、
+<span class="math display">\[
+E\left(  \hat{\alpha}\right)  =\alpha
+\]</span>
+が得られる。<span class="math inline">\(\hat{\beta}\)</span>と同じく、<span class="math inline">\(\hat{\alpha}\)</span>は不偏性を持つ。</p>
+<p>一方、分散は(14)式より、次のように表すことができる。
+<span class="math display">\[
+E\left(  \hat{\alpha}-\alpha\right)  ^{2}=E\left[  -\left(  \hat
+{\beta}-\beta\right)  \overline{x}+\frac{1}{n}\sum u_{i}\right]  ^{2}
+\tag{15}
+\]</span>
+ここで、OLSの仮定より<span class="math inline">\(E\left(u_i u_j \right)=0\)</span>、<span class="math inline">\(E\left(u_j^2\right)=\sigma^2\)</span>を用いれば、(15)式の右辺を次のように書き直すことができる。
+<span class="math display">\[
+\begin{aligned}
+&amp;  E\left[  \left(  \hat{\beta}-\beta\right)  ^{2}\overline{x}^{2}+\frac{1}{n^{2}}\sum u_{i}\sum u_{j}-\frac{2}{n}\left(  \hat{\beta}-\beta\right)  \overline{x}\sum u_{i}\right] \nonumber\\
+&amp;  =\overline{x}^{2}E\left(  \hat{\beta}-\beta\right)  ^{2}+\frac{1}{n}\sigma^{2}-\frac{2\overline{x}}{n}E\left[  \left(  \hat{\beta}-\beta\right)  \sum_{i}u_{i}\right]
+\end{aligned}
+\tag{16}
+\]</span>
+(16)式の第3項を整理すれば、
+<span class="math display">\[
+\begin{aligned}
+E\left[  \left(  \hat{\beta}-\beta\right)  \sum_{i}u_{i}\right]   &amp;
+=E\left[  \frac{\sum u_{j}\left(  x_{j}-\overline{x}\right)  }{S_{xx}}\sum
+_{i}u_{i}\right]\\
+&amp;  =\frac{1}{S_{xx}}E\left[  \sum u_{j}\left(  x_{j}-\overline{x}\right)
+\sum_{i}u_{i}\right]\\
+&amp;  =\frac{1}{S_{xx}}E\left[  \sum u_{j}^{2}\left(  x_{j}-\overline{x}\right)
+\right]\\
+&amp;  =\frac{\sigma^{2}}{S_{xx}}\sum\left(  x_{j}-\overline{x}\right)  =0
+\end{aligned}
+\tag{17}
+\]</span>
+となる。よって、(15)-(17)式により、<span class="math inline">\(\hat{\alpha}\)</span>の分散は次のように求められる。
+<span class="math display">\[
+\begin{aligned}
+E\left(  \hat{\alpha}-\alpha\right)  ^{2}  &amp;  =\overline{x}^{2}\frac{\sigma^{2}}{S_{xx}}+\frac{1}{n}\sigma^{2}\\
+&amp;  =\left(  \frac{\overline{x}^{2}}{S_{xx}}+\frac{1}{n}\right)  \sigma^{2}\\
+&amp;  =\frac{n\overline{x}^{2}+S_{xx}}{nS_{xx}}\sigma^{2}\\
+&amp;  =\frac{\sum x_{i}^{2}}{nS_{xx}}\sigma^{2}\end{aligned}
+\]</span></p>
+</div>
+<div id="section-2" class="section level1">
+<h1>決定係数</h1>
+<p>回帰分析には、推定される回帰式のパフォーマンスを評価するための指標があり、それを決定係数と呼ぶ。具体的には次のようなアイデアに基づく。</p>
+<p><span class="math inline">\(n\)</span>個のデータ<span class="math inline">\((x_i,y_i)\)</span>に対して、OLSにより<span class="math inline">\(\hat{y}_i=\hat{\alpha}+\hat{\beta}x_i\)</span>を求める。残差を<span class="math inline">\(\hat{u}_i=y_i-\hat{y}_i\)</span>と定義する。正規方程式の解より、<span class="math inline">\(\sum \hat{u}_{i}=0\)</span>、<span class="math inline">\(\overline{y}=\hat{\alpha}+\hat{\beta}\overline{x}\)</span>が成立する。すなわち残差の合計はゼロであり、かつ回帰直線は<span class="math inline">\(X\)</span>と<span class="math inline">\(Y\)</span>のデータの平均を必ず通過する。また、真の<span class="math inline">\(y_i\)</span>と回帰式により推定された<span class="math inline">\(\hat{y}_i\)</span>との間には、次の関係が成り立つ。
+<span class="math display">\[
+y_{i}=\hat{\alpha}+\hat{\beta}x_{i}+\hat{u}_{i} \tag{18}
+\]</span></p>
+<p>ここで、<span class="math inline">\(y_i\)</span>についてその平均を<span class="math inline">\(\overline{y}\)</span>と表し、<span class="math inline">\(y_{i}\)</span>の平均<span class="math inline">\(\overline{y}\)</span>からの偏差を用いて、<span class="math inline">\(y_{i}\)</span>のばらつきを次のように定義する。
+<span class="math display">\[
+\sum\left(  y_{i}-\overline{y}\right)  ^{2} \tag{19}
+\]</span>
+(19)式で表される<span class="math inline">\(y_i\)</span>の平均<span class="math inline">\(\overline{y}\)</span>からの偏差の二乗の総和を「平均周りの変動和」と呼ぶ。(18)式の両辺から<span class="math inline">\(\overline{y}\)</span>を引き整理すれば次が得られる：
+<span class="math display">\[
+\begin{aligned}
+y_{i}-\overline{y}  &amp;  =\hat{\alpha}+\hat{\beta}x_{i}+\hat{u}_{i}-\hat{\alpha}-\hat{\beta}\overline{x}\\
+&amp;  =\hat{\beta}\left(  x_{i}-\overline{x}\right)  +\hat{u}_{i}
+\end{aligned}
+\tag{20}
+\]</span>
+(20)式の両辺をそれぞれ二乗すれば、次の関係が得られる。
+<span class="math display">\[
+\begin{aligned}
+\sum\left(  y_{i}-\overline{y}\right)  ^{2}  &amp;  =\sum\left(  \hat{\beta
+}\left(  x_{i}-\overline{x}\right)  +\hat{u}_{i}\right)  ^{2}\\
+&amp;  =\sum\hat{\beta}^{2}\left(  x_{i}-\overline{x}\right)  ^{2}+\sum\hat{u}_{i}^{2}+2\hat{\beta}\sum\left(  x_{i}-\overline
+{x}\right)  \hat{u}_{i} 
+\end{aligned}
+\tag{21}
+\]</span>
+ただし、正規方程式より<span class="math inline">\(\sum x_i\hat{u}_{i}=0\)</span>かつ<span class="math inline">\(\sum\hat{u}_{i}=0\)</span>より、(21)式は以下のように書き直せる。
+<span class="math display">\[
+\sum\left(  y_{i}-\overline{y}\right)  ^{2}=\hat{\beta}^{2}\sum\left(
+x_{i}-\overline{x}\right)  ^{2}+\sum\hat{u}_{i}^{2}
+\tag{22}
+\]</span>
+(22)式の左辺は前述の<span class="math inline">\(y_i\)</span>の平均周りの変動和である。他方、右辺は<span class="math inline">\(x_{i}\)</span>の平均周りの変動和<span class="math inline">\(\sum\left(x_i-\overline{x}\right)^2\)</span>の<span class="math inline">\(\hat{\beta}^2\)</span>倍と残差の変動和<span class="math inline">\(\sum\hat{u}_i^2\)</span>との合計で表される。すなわち、<span class="math inline">\(y_i\)</span>の変動和は「単回帰によって説明される変動部分」と回帰式では説明できない「残差の変動部分」とに切り分けることができる。</p>
+<p>ここで、式の両辺を<span class="math inline">\(\sum\left(y_i-\overline{y}\right)^2\)</span>で割ると、次の関係式が得られる。
+<span class="math display">\[
+\frac{\hat{\beta}^{2}\sum\left(  x_{i}-\overline{x}\right)  ^{2}}{\sum\left(  y_{i}-\overline{y}\right)  ^{2}}+\frac{\sum\hat{u}_{i}^{2}}{\sum\left(  y_{i}-\overline{y}\right)  ^{2}}=1
+\]</span>
+さらに、
+<span class="math display">\[
+\frac{\hat{\beta}^{2}\sum\left(  x_{i}-\overline{x}\right)  ^{2}}{\sum\left(  y_{i}-\overline{y}\right)  ^{2}}=w
+\]</span>
+と定義する。<span class="math inline">\(w\)</span>は単回帰の説明変数<span class="math inline">\(x_i\)</span>の変動和によって<span class="math inline">\(y_i\)</span>の変動和を説明できる割合を表す。これより、上述の関係式は次のように書き直せる。
+<span class="math display">\[
+w+\frac{\sum\hat{u}_{i}^{2}}{\sum\left(  y_{i}-\overline{y}\right)  ^{2}}=1
+\]</span>
+ここでは<span class="math inline">\(w\geq0\)</span>、<span class="math inline">\(\sum\hat{u}_i^{2}\geq 0\)</span>であり、単回帰の説明変数の変動和によって<span class="math inline">\(y_i\)</span>の変動和の多くを説明できるほど<span class="math inline">\(w\)</span>は1に近づく。反対に、単回帰が<span class="math inline">\(y\)</span>の変動和を説明できないほど残差変動和の占める割合は大きくなり、<span class="math inline">\(w\)</span>は0に近づく。被説明変数である<span class="math inline">\(y\)</span>の変動和に着目し、それを回帰式で説明できる変動部分と説明できない残差による変動部分とに分け、回帰式の貢献比率を表したものが決定係数のアイデアである。</p>
+<p>より正確な定義は以下の通りである。
+<span class="math display">\[
+\begin{aligned}
+y_{i}-\overline{y}  &amp;  =\left(  y_{i}-\hat{y}_{i}\right)  +\left(
+\hat{y}_{i}-\overline{y}\right) \\
+&amp;  =\left(  \hat{y}_{i}-\overline{y}\right)  +\hat{u}_{i}
+\end{aligned}
+\]</span>
+この両辺をそれぞれ二乗すれば、次の関係が得られる。
+<span class="math display">\[
+\begin{aligned}
+\sum\left(  y_{i}-\overline{y}\right)  ^{2}  &amp;  =\sum\left(  \left(
+\hat{y}_{i}-\overline{y}\right)  +\hat{u}_{i}\right)  ^{2}\\
+&amp;  =\sum\left(  \hat{y}_{i}-\overline{y}\right)  ^{2}+\sum\hat{u}_{i}^{2}+2\sum\left(  \hat{y}_{i}-\overline{y}\right)  \hat{u}_{i}
+\end{aligned}
+\]</span>
+ただし、正規方程式より、
+<span class="math display">\[
+\sum\hat{y}_{i}\hat{u}_{i}=\hat{\alpha}\sum\hat{u}_{i}+\hat{\beta}\sum x_{i}\hat{u}_{i}=0
+\]</span>
+であるため、次が導ける。
+<span class="math display">\[
+\sum\left(  y_{i}-\overline{y}\right)  ^{2}=\sum\left(  \hat{y}_{i}-\overline{y}\right)  ^{2}+\sum\hat{u}_{i}^{2}
+\]</span>
+以上の両辺を<span class="math inline">\(\sum\left( y_{i}-\overline{y}\right)^{2}\)</span>で割ると次の関係が得られる：
+<span class="math display">\[
+1=\frac{\sum\left(  \hat{y}_{i}-\overline{y}\right)  ^{2}}{\sum\left(
+y_{i}-\overline{y}\right)  ^{2}}+\frac{\sum\hat{u}_{i}^{2}}{\sum\left(
+y_{i}-\overline{y}\right)  ^{2}}
+\]</span></p>
+<p>ここで、
+<span class="math display">\[
+\frac{\sum\left(  \hat{y}_{i}-\overline{y}\right)  ^{2}}{\sum\left(
+y_{i}-\overline{y}\right)  ^{2}}=R^{2}
+\]</span>
+と定義する。これより、以上の関係式は次のように書き直せる。
+<span class="math display">\[
+R^2=1-\frac{\sum\hat{u}_i^2}{\sum\left( y_i-\overline{y}\right)^2}
+\]</span>
+これが決定係数の定義であり、通常<span class="math inline">\(R^2\)</span>で表記される。決定係数は、推定された回帰式が被説明変数の変動をどれだけ説明できるかを表す比重である。</p>
+</div>
+<div id="section-3" class="section level1">
+<h1>練習問題</h1>
+<p>以下の問題の解答を作成し提出せよ。</p>
+<p><strong>問1</strong>　二つの変数<span class="math inline">\(x_i\)</span>、<span class="math inline">\(y_i\)</span>がペアで観察され、<span class="math inline">\(i=1…n\)</span>の標本が存在する。両変数の間に回帰式<span class="math inline">\(y_i=\alpha+\beta x_i+u_i\)</span>を当てはめ、最小二乗法によるパラメータ推定<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>を考える。誤差項<span class="math inline">\(u_i\)</span>は平均0、定数の分散に従う確率変数と仮定する。推定される残差を<span class="math inline">\(\hat{u}_i=y_i-\hat{\alpha}-\hat{\beta} x_i\)</span>と定義する。<span class="math inline">\(x_i\)</span>、<span class="math inline">\(y_i\)</span>の平均を<span class="math inline">\(\overline{x}=\frac{1}{n} \sum_{i=1}^n x_i\)</span>、<span class="math inline">\(\overline{y}=\frac{1}{n} \sum_{i=1}^n y_i\)</span>と表す。</p>
+<p><strong>(i)</strong> 正規方程式より、<span class="math inline">\(\sum_{i=1}^n \hat{u}_i=0\)</span>、かつ、<span class="math inline">\(\sum_{i=1}^n x_i \hat{u}_i=0\)</span>であることを示せ。</p>
+<p><strong>(ii)</strong> 正規方程式を解き、<span class="math inline">\(\hat{\alpha}_i=\overline{y}_i-\hat{\beta} \overline{x}_i\)</span>となることを示せ。</p>
+<p><strong>(iii)</strong> 同じく、<span class="math inline">\(\hat{\beta}=\sum_{i=1}^n \left( x_{i}-\overline{x}\right) \left( y_{i}-\overline{y}\right)/ \sum_{i=1}^n \left( x_{i}-\overline{x}\right)^2\)</span>となることを示せ。</p>
+<p><strong>問2</strong>　両変数の間に回帰式<span class="math inline">\(y_i=\alpha+\beta x_i+u_i\)</span>を当てはめ、最小二乗法による推定結果が<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>として求められたとする。以下を説明せよ。</p>
+<p><strong>(i)</strong> 説明変数<span class="math inline">\(x_i\)</span>がすべて半分（1/2倍）になったとき、<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>はどのように変わるか。</p>
+<p><strong>(ii)</strong> 説明変数<span class="math inline">\(x_i\)</span>がすべて<span class="math inline">\(x_i-2\)</span>になったとき、<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>はどのように変わるか。</p>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © Keiichi Shima 2020
+  
+  </footer>
+  </body>
+</html>
+
