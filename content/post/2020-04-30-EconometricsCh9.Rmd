@@ -1,0 +1,982 @@
+---
+title: '計量経済学講義：線形代数'
+author: 嶋恵一
+date: '2020-04-30'
+slug: EconometricsCh9
+categories:
+  - Lecture
+tags:
+  - Econometrics
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+この遠隔講義では、講義ノート第9章「線形代数」に進みます。以下は第9章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。Rのコードは任意で、興味がなければ読み飛ばせばよいです。実際に計算してみたい方のために掲載しています。
+
+講義ノート第9章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところを中心に解説する予定です。練習問題は後日お伝え致しますのでお待ち下さい。
+
+
+# ベクトル
+
+$x=\left[ \begin{array}{c} 1\\ 2\\ 3\\ 4\end{array}\right]$を列ベクトル、$X=[1,2,3,4]$を行ベクトルという。$x^{\prime}$を転置と呼び、列を行に、あるいは行を列に置き換える役目を果たす。すなわち、$[1,2,3,4]^{\prime}=\left[\begin{array}{c} 1\\ 2\\ 3\\ 4 \end{array} \right]$、また
+$\left[ \begin{array}{c} 1\\ 2\\ 3\\ 4 \end{array} \right]^\prime=[1,2,3,4]$であり、$x^\prime=X$、$X^\prime=x$を満たす。
+
+## 積
+
+ベクトルに含まれる要素の数が同じ行ベクトル$A=\left[  a,b\right]$と列ベクトル$B=\left[\begin{array}{c}c\\d\end{array}\right]$により、行ベクトル$A$と列ベクトル$B$との積は次の原則に従う：
+$$
+AB=\left[  a,b\right]  \left[
+\begin{array}
+{c}c\\
+d
+\end{array}
+\right]  =ac+bd
+$$
+$Xx$すなわち、$x^\prime x$の積は次に従う。
+$$
+Xx=x^{\prime}x=[1,2,3,4]\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  =1^{2}+2^{2}+3^{2}+4^{2}=30
+$$
+```{R}
+x<-matrix(1:4,ncol=1)
+X<-t(x)
+X
+x
+X%*%x
+```
+すべての要素が1の列ベクトルを$h=\left[\begin{array}{c} 1\\ 1\\ 1\\ 1 \end{array}\right]$とする。$x^{\prime}h$の積は次に従う。
+$$
+x^{\prime}h=[1,2,3,4]\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  =1+2+3+4=10
+$$
+```{R}
+h<-matrix(rep(1,4))
+h
+t(x)%*%h
+```
+すなわち、要素の数が同じ行ベクトルと列ベクトルにより、要素の積の和を得る。従って、$w=\left[\begin{array}{c}w_{1}\\w_{2}\\\vdots\\w_{n}\end{array}\right]$のとき、$w^{\prime}w=\sum_{i=1}^{n}w_{i}^{2}$であり、$l=\left[\begin{array}{c}1\\1\\\vdots\\1\end{array}\right]  _{n}$を用い、$w^{\prime}l=\sum_{i=1}^{n}w_{i}$である。
+
+## 倍数
+
+ベクトルの定数倍は次に従う：
+$$
+\frac{1}{4}h^{\prime}=\left[  \frac{1}{4},\frac{1}{4},\frac{1}{4},\frac{1}{4}\right]
+$$
+以上を利用すれば、$x$の4つの要素の平均$m$は次式で求めることができる：
+$$
+m=x^{\prime}h/4=\frac{1+2+3+4}{4}=2.5
+$$
+```{R}
+m<-t(x)%*%h/4
+m
+```
+他方、$x$の4つの要素による分散$v$は次式で求められる：
+$$
+v=\frac{\sum x_{i}^{2}-nm^{2}}{n}=x^{\prime}x/4-m^{2}=7.5-2.5^{2}=1.25
+$$
+```{R}
+t(x)%*%x/4-m^2
+```
+
+## 加減
+
+要素の数が同じ列ベクトル（行ベクトルも同様）について、ベクトルの加減算が行える。$x$の要素の偏差を集めた行ベクトルは次のように求められる：
+$$
+x-mh=\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  -2.5\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}-1.5\\
+-.5\\
+.5\\
+1.5
+\end{array}
+\right]
+$$
+```{R}
+x-h%*%m
+```
+これを用いれば、次式からも分散を求めることができる：
+$$
+\begin{aligned}
+v  &  =\frac{\sum\left(  x_{i}-m\right)  ^{2}}{4}=\left(  x-mh\right)
+^{\prime}\left(  x-mh\right)  /4\\
+&  =\frac{\left(  -1.5\right)  ^{2}+\left(  -.5\right)  ^{2}+\left(
+1.5\right)  ^{2}+\left(  .5\right)  ^{2}}{4}=1.25
+\end{aligned}
+$$
+```{R}
+t(x-h%*%m)%*%(x-h%*%m)/4
+```
+
+## 行列
+
+他方、列ベクトル$B$と行ベクトル$A$との積は次の原則に従う：
+$$
+BA=\left[
+\begin{array}
+{c}c\\
+d
+\end{array}
+\right]  \left[  a,b\right]  =\left[
+\begin{array}
+{cc}ca & cb\\
+da & db
+\end{array}
+\right]
+$$
+$\left[\begin{array}{cc}ca & cb\\da & db\end{array}\right]$を2行、2列の行列と呼ぶ。$h$と$X=x^{\prime}$との積は次に従う。
+$$
+hX=hx^{\prime}=\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  [1,2,3,4]=\left[
+\begin{array}
+{cccc}1 & 2 & 3 & 4\\
+1 & 2 & 3 & 4\\
+1 & 2 & 3 & 4\\
+1 & 2 & 3 & 4
+\end{array}
+\right]
+$$
+```{R}
+h%*%t(x)
+```
+$x$と$x^{\prime}$との積は次に従う。
+$$
+xx^{\prime}=\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  [1,2,3,4]=\left[
+\begin{array}
+{cccc}1 & 2 & 3 & 4\\
+2 & 4 & 6 & 8\\
+3 & 6 & 9 & 12\\
+4 & 8 & 12 & 16
+\end{array}
+\right]
+$$
+```{R}
+x%*%t(x)
+```
+$xx^{\prime}$は4行4列の行列、一方で$x^{\prime}x$はある値になる。すなわち、$xx^{\prime}\neq x^{\prime}x$である。
+
+
+## 転置
+
+転置の原則を示す。要素の数が同じ列ベクトル（行ベクトルも同様）について、ベクトルの加減算の転置は次の原則に従う：
+$$
+\left(  x-y\right)  ^{\prime}=x^{\prime}-y^{\prime}
+$$
+列ベクトル$y=\left[\begin{array}{c}1\\1\\2\\2\end{array}\right]$のとき、
+$$
+\left(  x-y\right)  ^{\prime}=\left[
+\begin{array}
+{c}1-1\\
+2-1\\
+3-2\\
+4-2
+\end{array}
+\right]  ^{\prime}=[1-1,2-1,3-2,4-2]=x^{\prime}-y^{\prime}
+$$
+となる。
+```{R}
+y<-matrix(c(1,1,2,2))
+t(x-y)
+t(x)-t(y)
+```
+$x^{\prime}y$の転置は次に従う：
+$$
+\begin{aligned}
+\left(  x^{\prime}y\right)  ^{\prime}  &  =\left(  [1,2,3,4]\left[
+\begin{array}{c}
+1\\
+1\\
+2\\
+2
+\end{array}
+\right]  \right)  ^{\prime}=\left(  1+2+6+8\right)  ^{\prime}\\
+&  =1+2+6+8=[1,1,2,2]\left[
+\begin{array}{c}
+1\\
+2\\
+3\\
+4
+\end{array}
+\right]  =y^\prime x
+\end{aligned}
+$$
+```{R}
+t(t(x)%*%y)
+t(y)%*%x
+```
+$xy^{\prime}$の転置は次に従う： 
+$$
+\begin{aligned}
+\left(  xy^{\prime}\right)  ^{\prime}  &  =\left(  \left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  [1,1,2,2]\right)  ^{\prime}=\left[
+\begin{array}
+{cccc}1 & 1 & 2 & 2\\
+2 & 2 & 4 & 4\\
+3 & 3 & 6 & 6\\
+4 & 4 & 8 & 8
+\end{array}
+\right]  ^{\prime}\\
+&  =\left[
+\begin{array}
+{cccc}1 & 2 & 3 & 4\\
+1 & 2 & 3 & 4\\
+2 & 4 & 6 & 8\\
+2 & 4 & 6 & 8
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}1\\
+1\\
+2\\
+2
+\end{array}
+\right]  [1,2,3,4]=yx^{\prime}\end{aligned}
+$$
+```{R}
+t(x%*%t(y))
+y%*%t(x)
+```
+$\left(  x-y\right)  ^{\prime}\left(  x-y\right)$は次に従う：
+$$
+\left(  x-y\right)  ^{\prime}\left(  x-y\right)  =x^{\prime}x-y^{\prime
+}x-x^{\prime}y+y^{\prime}y
+$$
+
+
+# OLS
+
+真の回帰方程式を
+$$
+y_{i}=\alpha+\beta x_{i}+u_{i}
+\tag{1}
+$$
+とする。誤差項を$u_{i}\sim N\left(  0,\sigma^{2}\right)$と仮定する。ここで、$y_{i},x_{i},u_{i}$をそれぞれ要素とする三つの列ベクトル$y,x,u$を次のように表す。 
+$$
+y=\left[
+\begin{array}
+{c}1\\
+1\\
+2\\
+2
+\end{array}
+\right]  ,x=\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  ,u=\left[
+\begin{array}
+{c}u_{1}\\
+u_{2}\\
+u_{3}\\
+u_{4}\end{array}
+\right]
+$$
+OLSによるパラメータ推定値を$\hat{\alpha},\hat{\beta}$、誤差項の推定値（残差）を$\hat{u}_{i}=y_{i}-\hat{\alpha}-\hat{\beta}x_{i}$で表わす。正規方程式の解より、$\hat{\alpha},\hat{\beta}$は次式を満たす。
+$$
+\hat{\beta}=\frac{\sum y_{i}x_{i}-4\overline{y}\overline{x}}
+{\sum x_{i}^{2}-4\overline{x}^{2}},
+\hat{\alpha}=\overline{y}-\hat{\beta}\overline{x}
+$$
+
+
+## ベクトルによる計算
+
+以上をベクトルを用いて計算する。$\sum y_{i}x_{i}=y^{\prime}x=17$、$\sum x_{i}^{2}=x^{\prime}x=30$であり、平均は要素がすべて1の列ベクトル$h$を用い、$\overline{y}=\sum y_{i}/4=y^{\prime}h/4=1.5$、$\overline{x}=\sum x_{i}/4=x^\prime h/4=2.5$である。
+```{R}
+t(y)%*%x
+t(x)%*%x
+ybar<-t(y)%*%h/4
+xbar<-t(x)%*%h/4
+```
+これより、パラメータの推定値は次の通りである。 
+$$
+\begin{aligned}
+\hat{\beta}  &  =\frac{17-4\ast1.5\ast2.5}{30-4\ast2.5^{2}}=\frac{2}{5}=.4\\
+\hat{\alpha}  &  =1.5-.4\ast2.5=.5\end{aligned}
+$$
+```{R}
+ybar<-t(y)%*%h/4
+xbar<-t(x)%*%h/4
+betahat<-(t(y)%*%x-4*ybar*xbar)/(t(x)%*%x-4*xbar^2)
+betahat
+alphahat<-ybar-betahat*xbar
+alphahat
+```
+パラメータの分散$V\left( \hat{\beta}\right)$、$V\left(  \hat{\alpha}\right)$は次式に従う。
+$$
+V\left(  \hat{\beta}\right)  =\frac{1}{\sum x_{i}^{2}-4\overline{x}^{2}}s^{2},V\left(  \hat{\alpha}\right)  =\frac{\sum x_{i}^{2} }{4\left( \sum x_{i}^{2}-4\overline{x}^{2}\right)  }s^{2}
+$$
+ただし、$s^2$は自由度2の$\sigma^2$の推定値であり次式に従う。
+$$
+s^{2}=\frac{\sum\widehat{u}_{i}^{2}}{2}
+$$
+このとき、$\sum\hat{u}_{i}^{2}=\hat{u}^{\prime}\hat{u}$であり、$\hat{u}=\left[\begin{array}{r}.1\\-.3\\.3\\-.1\end{array}\right]$より次が得られる。
+$$
+s^2=.2/2=.1
+$$
+```{R}
+uhat<-y-h%*%alphahat-x%*%betahat
+uhat
+s2<-t(uhat)%*%uhat/2
+s2
+```
+よって、パラメータの分散は次のように計算できる。
+$$
+\begin{aligned}
+V\left(  \hat{\beta}\right)   &  =\frac{1}{5}\ast.1=.02\\
+V\left(  \hat{\alpha}\right)   &  =\frac{30}{20}\ast.1=.15\end{aligned}
+$$
+
+```{R}
+vbeta<-1/(t(x)%*%x-4*xbar^2)*s2
+vbeta
+valpha<-t(x)%*%x/(4*(t(x)%*%x-4*xbar^2))*s2
+valpha
+```
+
+パラメータ推定値に関する有意性検定は次の通りである。$\hat{\beta}$の標準偏差は$\sqrt{.02}=.14142$となり、$t$統計量は$t\left(  \hat{\beta}\right)=.4/.14142=2.\,8285$である。一方、$\hat{\alpha}$の標準偏差は$\sqrt{.15}=0.3873$となり、$t$統計量は$t\left(\hat{\alpha}\right)  =.5/.3873=1.\,2910$である。いずれも有意水準5% で棄却されない。
+```{R}
+tbeta<-betahat/sqrt(vbeta)
+tbeta
+talpha<-alphahat/sqrt(valpha)
+talpha
+qt(0.975,2)
+```
+
+# OLSのベクトル、行列表現
+
+## ベクトル表現
+
+$h=\left[\begin{array}{c}1\\1\\1\\1\end{array}\right]$を用い、回帰式(1)を列ベクトルで表現すれば、以下のようにまとめて書くことができる：
+
+$$
+\left[
+\begin{array}
+{c}y_{1}\\
+y_{2}\\
+y_{3}\\
+y_{4}\end{array}
+\right]  =\alpha\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  +\beta\left[
+\begin{array}
+{c}x_{1}\\
+x_{2}\\
+x_{3}\\
+x_{4}\end{array}
+\right]  +\left[
+\begin{array}
+{c}u_{1}\\
+u_{2}\\
+u_{3}\\
+u_{4}\end{array}
+\right]
+$$
+すなわち、$y_{i},x_{i},u_{i}$をそれぞれ要素とする三つの列ベクトル$y,x,u$により、回帰式を次のように表現できる。
+$$
+y=\alpha h+\beta x+u \tag{2}
+$$
+
+
+## 行列表現
+
+回帰式のベクトル表現は行列による表現に拡張することができる。ここで、複数の列ベクトルを列要素とする行列を考える。列ベクトル$h$、$x$を列要素とする行列を$X$、また回帰式のパラメータ$\alpha$、$\beta$を縦に並べ、それを要素とする列ベクトル$B$を次のように定義する。
+$$
+X=\left[  h,x\right]  =\left[
+\begin{array}
+{cc}1 & 1\\
+1 & 2\\
+1 & 3\\
+1 & 4
+\end{array}
+\right]  ,B=\left[
+\begin{array}
+{c}\alpha\\
+\beta
+\end{array}
+\right]
+$$
+行列$X$は4行2列の要素を持ち、他方、列ベクトル$B$は2行1列の要素を持つ行列とみなすことができる。行列$X$と列ベクトル$B$とを用いれば、回帰式をより単純に表現することができる。ただし、それには行列の積に関する次の原則を必要とする。すなわち、左の行列の列数と右の行列の行数が同じとき、行列の積は次の原則に従う： 
+$$
+\left[
+\begin{array}
+{ccc}1 & 2 & 3\\
+4 & 5 & 6
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}a & b\\
+c & d\\
+e & f
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a+2c+3e & b+2d+3f\\
+4a+5c+6e & 4b+5d+6f
+\end{array}
+\right]
+$$
+これを用いれば、次の関係を得ることができる。
+$$
+XB=\left[
+\begin{array}
+{cc}1 & 1\\
+1 & 2\\
+1 & 3\\
+1 & 4
+\end{array}
+\right]  \left[
+\begin{array}
+{c}\alpha\\
+\beta
+\end{array}
+\right]  =\alpha\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  +\beta\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  =\alpha h+\beta x
+$$
+よって、$XB=\left[  h,x\right]  \left[\begin{array}{c}\alpha\\\beta\end{array}\right]  =\alpha h+\beta x$であり、回帰式を次のように表現することができる。
+$$
+y=XB+u \tag{3}
+$$
+行列$X$には転置行列$X^\prime$が存在し、$X^{\prime}$は次のように表される。
+$$
+X^{\prime}=\left[  h,x\right]  ^{\prime}=\left[
+\begin{array}
+{c}1,1,1,1\\
+1,2,3,4
+\end{array}
+\right]
+$$
+これを用い、回帰式の両辺に左から転置行列$X^{\prime}$を掛けると次の関係が成り立つ。
+$$
+X^{\prime}y=X^{\prime}XB+X^{\prime}u \tag{4}
+$$
+左辺の$X^{\prime}y$は、
+$$
+\left[
+\begin{array}
+{c}1,1,1,1\\
+1,2,3,4
+\end{array}
+\right]  \left[
+\begin{array}
+{c}1\\
+1\\
+2\\
+2
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}h^{\prime}y\\
+x^{\prime}y
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}6\\
+17
+\end{array}
+\right]
+$$
+```{R}
+X<-cbind(h,x)
+t(X)%*%y
+```
+を満たす。他方、$X^{\prime}X$は以下を満たす。 
+$$
+\begin{aligned}
+X^{\prime}X  &  =\left[  h,x\right]  ^{\prime}\left[  h,x\right] \\
+&  =\left[
+\begin{array}
+{c}1,1,1,1\\
+1,2,3,4
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}1 & 1\\
+1 & 2\\
+1 & 3\\
+1 & 4
+\end{array}
+\right] \\
+&  =\left[
+\begin{array}
+{c}h^{\prime}h,h^{\prime}x\\
+x^{\prime}h,x^{\prime}x
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}4 & 10\\
+10 & 30
+\end{array}
+\right]\end{aligned}
+$$
+```{R}
+t(X)%*%X
+```
+
+
+# 単位行列、逆行列
+
+$A=\left[\begin{array}{cc}4 & 10\\10 & 30\end{array}\right]$に対して、$A^{-1}$を逆行列という。$I=\left[\begin{array}{cc}1 & 0\\0 & 1\end{array}\right]$のように対角線上の値がすべて1、それ以外は0の行列を単位行列という。単位行列は行と列の数が必ず同じである。$A$のように行と列の数が同じのものを正方行列と呼ぶ。正方行列のみ、逆行列が存在しうる。
+
+例えば$a=3$のような定数に対し、その逆数は$1/a=1/3$である。ここに着目すれば、次の関係式が成り立つ。
+$$
+a \cdot {1 \over a} =1
+$$
+逆数は以上の関係を満たす。逆行列は逆数に似ており、行列$A$が正方であれば、逆行列$A^{-1}$が存在しうる。すなわち、逆行列は、
+$$
+A^{-1}A=AA^{-1}=I
+$$
+という関係を満たす。ある正方行列に対してその逆行列が存在するとき、二つの積は必ず単位行列となる。単位行列$I$は正方行列の世界で定数$1$の役割を果たす。ただし、$a=0$のときに逆数が存在しないように、正方行列にも逆行列が存在しない条件がある。
+
+
+## 単位行列
+
+正方行列と単位行列の積は次を満たす：
+$$
+\begin{aligned}
+\left[
+\begin{array}
+{cc}a & b\\
+c & d
+\end{array}
+\right]  I  &  =\left[
+\begin{array}
+{cc}a & b\\
+c & d
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}1 & 0\\
+0 & 1
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a1+b0 & a0+b1\\
+c1+d0 & c0+d1
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a & b\\
+c & d
+\end{array}
+\right]  ,\\
+I\left[
+\begin{array}
+{cc}a & b\\
+c & d
+\end{array}
+\right]   &  =\left[
+\begin{array}
+{cc}1 & 0\\
+0 & 1
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}a & b\\
+c & d
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}1a+0c & 1b+0d\\
+0a+1c & 0b+1d
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a & b\\
+c & d
+\end{array}
+\right]
+\end{aligned}
+$$
+すなわち、$B=\left[\begin{array}{cc}a & b\\c & d\end{array}\right]$に対して、積の順序を問わず$BI=IB=B$である。
+
+## 逆行列
+
+$A$の逆行列は$A$と同じ行と列の数を持ち、逆行列を$B$で表せば、
+$$
+A^{-1}A =\left[
+\begin{array}{cc}
+a & b\\
+c & d
+\end{array}
+\right] \left[
+\begin{array}{cc}
+4 & 10\\
+10 & 30
+\end{array}
+\right] =\left[
+\begin{array}{cc}
+1 & 0\\
+0 & 1
+\end{array}
+\right]
+$$
+を満たす。従って、
+$$
+\left[
+\begin{array}{cc}
+a & b\\
+c & d
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}4 & 10\\
+10 & 30
+\end{array}
+\right]  =\left[
+\begin{array}{cc}
+a+4b & 4a+30b\\
+c+4d & 4c+30d
+\end{array}
+\right]
+$$
+より、逆行列の要素は次の関係を満たす。
+$$
+\left\{
+\begin{array}{c}
+4a+10b=1\\
+10a+30b=0\\
+4c+10d=0\\
+10c+30d=1
+\end{array}
+\right.
+$$
+以上を解けば、$a=3/2$、$b=-1/2$、$c=-1/2$、$d=1/5$が求まる。すなわち、
+$$
+A^{-1}=\left[
+\begin{array}
+{cc}\frac{3}{2} & -\frac{1}{2}\\
+-\frac{1}{2} & \frac{1}{5}\end{array}
+\right]  =\frac{1}{20}\left[
+\begin{array}
+{cc}30 & -10\\
+-10 & 4
+\end{array}
+\right]
+$$
+である。
+```{R}
+A<-matrix(c(4,10,10,30),ncol=2)
+A
+Ainv<-solve(A)
+Ainv
+```
+2行2列の場合、次の逆行列の公式が存在する：
+$$
+\frac{1}{|ad-bc|}\left[
+\begin{array}
+{cc}d & -b\\
+-c & a
+\end{array}
+\right]
+$$
+これより、
+$$
+A^{-1}A=\frac{1}{20}\left[
+\begin{array}{cc}
+30 & -10\\
+-10 & 4
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}4 & 10\\
+10 & 30
+\end{array}
+\right]  =\frac{1}{20}\left[
+\begin{array}
+{cc}20 & 0\\
+0 & 20
+\end{array}
+\right]  =I
+$$
+を確認でき、また$AA^{-1}=I$も同様に成立する。
+```{R}
+solve(A)%*%A
+round(solve(A)%*%A,2)
+```
+
+# OLSの推定値、分散
+
+## 行列による解法
+
+既に導出した(4)式： 
+$$
+X^{\prime}y=X^{\prime}XB+X^{\prime}u
+$$
+について、$X^{\prime}X$の逆行列を適用する。(4)式の両辺に対し、左から$X^{\prime}X$の逆行列を掛ければ、次の関係が得られる。
+$$
+\left(X^{\prime}X\right)  ^{-1}X^{\prime}y=B+\left(  X^{\prime}X\right)
+^{-1}X^{\prime}u 
+\tag{5}
+$$
+OLSの仮定に従えば、誤差項の列ベクトル$u$は$X$と独立であり、
+$$
+E\left[  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  =0
+$$
+を満たす。よって、以上の期待値は
+$$
+E\left[  \left( X^{\prime}X\right) ^{-1}X^{\prime}y\right]
+=B
+\tag{6}
+$$
+となる。すなわち、$\left(  X^{\prime}X\right)  ^{-1}X^{\prime}y$は回帰式のパラメータ$B$の推定値を意味する。
+
+$X^{\prime}X$はすでに行列$A$として計算しており、$X^{\prime}X=\left[\begin{array}{cc}4 & 10\\10 & 30\end{array}\right]$、その逆行列は$\left(X^{\prime}X\right) ^{-1}=\frac{1}{20}\left[\begin{array}{cc}30 & -10\\-10 & 4\end{array}\right]$である。これより、以下の解が得られる。
+$$
+\begin{aligned}
+\widehat{B}  &  \equiv\left(  X^{\prime}X\right)  ^{-1}X^{\prime}y=\frac
+{1}{20}\left[
+\begin{array}
+{cc}30 & -10\\
+-10 & 4
+\end{array}
+\right]  \left[
+\begin{array}
+{c}6\\
+17
+\end{array}
+\right] \\
+&  =\frac{1}{20}\left[
+\begin{array}
+{c}10\\
+8
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}.5\\
+.4
+\end{array}
+\right]\end{aligned}
+$$
+```{R}
+Bhat<-solve(t(X)%*%X)%*%t(X)%*%y
+Bhat
+```
+
+## 分散共分散行列
+
+一方、パラメータ$B$の推定値の分散は以下の式で表すことができる。
+$$
+\begin{aligned}
+&  E\left[  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}y-B\right]  \left[
+\left(  X^{\prime}X\right)  ^{-1}X^{\prime}y-B\right]  ^{\prime}=E\left[
+\left(  X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  \left[  \left(
+X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  ^{\prime}\\
+&  =E\left[  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  \left[
+u^{\prime}X\left(  X^{\prime}X\right)  ^{-1}\right]  =\left(  X^{\prime
+}X\right)  ^{-1}X^{\prime}E\left(  uu^{\prime}\right)  X\left(  X^{\prime
+}X\right)  ^{-1} 
+\end{aligned}
+\tag{7}
+$$
+ただし、以上は2行2列の行列となる。$E\left(uu^{\prime}\right)$は次のように求めることができる。
+$$
+\begin{aligned}
+E\left(  uu^{\prime}\right)   &  =E\left[
+\begin{array}
+{c}u_{1}\\
+u_{2}\\
+u_{3}\\
+u_{4}\end{array}
+\right]  \left[  u_{1},u,u_{3},u_{4}\right]  =E\left[
+\begin{array}
+{cccc}u_{1}^{2} & u_{1}u_{2} & u_{1}u_{3} & u_{1}u_{4}\\
+u_{2}u_{1} & u_{2}^{2} & u_{2}u_{3} & u_{2}u_{4}\\
+u_{3}u_{1} & u_{3}u_{2} & u_{3}^{2} & u_{3}u_{4}\\
+u_{4}u_{1} & u_{4}u_{2} & u_{4}u_{3} & u_{4}^{2}\end{array}
+\right] \\
+&  =\left[
+\begin{array}
+{cccc}\sigma^{2} & 0 & 0 & 0\\
+0 & \sigma^{2} & 0 & 0\\
+0 & 0 & \sigma^{2} & 0\\
+0 & 0 & 0 & \sigma^{2}\end{array}
+\right]  =\sigma^{2}\left[
+\begin{array}
+{cccc}1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{array}
+\right]  =\sigma^{2}I\end{aligned}
+$$
+以上を利用すれば、パラメータ$B$の推定値の分散行列は
+$$
+\begin{aligned}
+&  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}E\left(  uu^{\prime}\right)
+X\left(  X^{\prime}X\right)  ^{-1}=\left(  X^{\prime}X\right)  ^{-1}X^{\prime
+}\left(  \sigma^{2}I\right)  X\left(  X^{\prime}X\right)  ^{-1}\nonumber\\
+&  =\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}X^{\prime}IX\left(  X^{\prime
+}X\right)  ^{-1}=\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}X^{\prime}X\left(
+X^{\prime}X\right)  ^{-1}\nonumber\\
+&  =\sigma^{2}\left(  X^{\prime}X\right)  ^{-1} \end{aligned}\tag{8}
+$$
+と求められる。以下の計算で確認できるように、この分散行列は対角要素にパラメータ推定値$\hat{\alpha}$、$\hat{\beta}$の分散を含む。$X^{\prime}X$を列ベクトル$h,x$により求めれば、次のように表現できる。
+$$
+\begin{aligned}
+X^{\prime}X  &  =\left[  h,x\right]  ^{\prime}\left[  h,x\right] \\
+&  =\left[
+\begin{array}
+{c}h^{\prime}h,h^{\prime}x\\
+x^{\prime}h,x^{\prime}x
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}n & \sum x_{i}\\
+\sum x_{i} & \sum x_{i}^{2}\end{array}
+\right]\end{aligned}
+$$
+よって逆行列の公式より、
+$$
+\left(  X^{\prime}X\right)  ^{-1}=\frac{1}{n|\sum x_{i}^{2}-n\overline{X}^{2}|}\left[
+\begin{array}
+{cc}\sum x_{i}^{2} & -\sum x_{i}\\
+-\sum x_{i} & n
+\end{array}
+\right]
+$$
+である。これを用いて分散行列を書き直せば、
+$$
+\begin{aligned}
+\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}  &  =\frac{\sigma^{2}}{nS_{xx}}\left[
+\begin{array}
+{cc}\sum x_{i}^{2} & -\sum x_{i}\\
+-\sum x_{i} & n
+\end{array}
+\right] \\
+&  =\left[
+\begin{array}
+{cc}\frac{\sum x_{i}^{2}}{nS_{xx}}\sigma^{2} & -\frac{\sigma^{2}}{S_{xx}}\overline{x}\\
+-\frac{\sigma^{2}}{S_{xx}}\overline{x} & \frac{\sigma^{2}}{S_{xx}}\end{array}
+\right]\end{aligned}
+$$
+となる。すなわち、
+$$
+\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}=\left[
+\begin{array}
+{cc}V\left(  \hat{\alpha}\right)  & Cov\left(  \hat{\alpha},\hat {\beta}\right) \\
+Cov\left(  \hat{\alpha},\hat{\beta}\right)  & V\left(  \hat{\beta }\right)
+\end{array}
+\right]  
+\tag{9}
+$$
+となる。左上からの対角線上に$\hat{\alpha}$、$\hat{\beta}$の分散、反対の対角線にその共分散をもつことから、以上は$\hat{\alpha}$、$\hat{\beta}$の分散共分散行列と呼ばれる。
+
+$\sigma^{2}$の推定値を$s^{2}$とする。回帰式に含まれる列ベクトル$x$、$y$の要素は4であり、$s^{2}$の自由度2となる。よって$s^{2}$は次式により求められる。
+$$
+\begin{aligned}
+s^{2}  &  =\frac{1}{2}\hat{u}^{\prime}\hat{u}\\
+&  =\frac{1}{2}\left[  .1,-.3,.3,-.1\right]  \left[
+\begin{array}
+{r}.1\\
+-.3\\
+.3\\
+-.1
+\end{array}
+\right] \\
+&  =\frac{1}{2}\left(  .01+.09+.09+.01\right)  =.1\end{aligned}
+$$
+```{R}
+uhat<-y-X%*%Bhat
+uhat
+s2<-t(uhat)%*%uhat/2
+s2
+```
+従って、$\hat{\alpha}$、$\hat{\beta}$の分散共分散行列の推定値は
+$$
+s^{2}\left(  X^{\prime}X\right)  ^{-1}=\frac{.1}{20}\left[
+\begin{array}
+{cc}30 & -10\\
+-10 & 4
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}.15 & -.05\\
+-.05 & .02
+\end{array}
+\right]
+$$
+となる。
+```{R}
+V<-c(s2)*solve(t(X)%*%X)
+V
+```
+以上で求めたパラメータ推定値と、その分散共分散行列の対角要素を取り出せば、パラメータの有意性を検定することができる。その方法をRのコードで示す：
+```{R}
+diag(c(s2)*solve(t(X)%*%X))
+Bhat/sqrt(diag(c(s2)*solve(t(X)%*%X)))
+```
+標本数4に対して二つのパラメータを推定したため自由度は2である。自由度2の$t$分布について、95%の信頼区間を考えれば棄却域は両側5%である。従って、下位、上位2.5%の臨界値を求めると、
+```{R}
+qt(0.025,2)
+qt(0.975,2)
+```
+となり、$\alpha,\beta$いずれもその値は0であるという帰無仮説を棄却できない。

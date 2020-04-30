@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>計量経済学講義：線形代数 | A minimal website of Keiichi Shima</title>
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="../../../../../">Home</a></li>
+      
+      <li><a href="../../../../../about/">About</a></li>
+      
+      <li><a href="../../../../../categories/">Categories</a></li>
+      
+      <li><a href="../../../../../tags/">Tags</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">計量経済学講義：線形代数</span></h1>
+<h2 class="author">嶋恵一</h2>
+<h2 class="date">2020/04/30</h2>
+</div>
+
+<main>
+
+
+
+<p>この遠隔講義では、講義ノート第9章「線形代数」に進みます。以下は第9章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しております。PDFを読む方が勉強しやすいと思います。Rのコードは任意で、興味がなければ読み飛ばせばよいです。実際に計算してみたい方のために掲載しています。</p>
+<p>講義ノート第9章を自習しながら、分からないところをノートにまとめて下さい。後ほど、こちらから連絡致しますので、分からないところを中心に解説する予定です。練習問題は後日お伝え致しますのでお待ち下さい。</p>
+<div id="section" class="section level1">
+<h1>ベクトル</h1>
+<p><span class="math inline">\(x=\left[ \begin{array}{c} 1\\ 2\\ 3\\ 4\end{array}\right]\)</span>を列ベクトル、<span class="math inline">\(X=[1,2,3,4]\)</span>を行ベクトルという。<span class="math inline">\(x^{\prime}\)</span>を転置と呼び、列を行に、あるいは行を列に置き換える役目を果たす。すなわち、<span class="math inline">\([1,2,3,4]^{\prime}=\left[\begin{array}{c} 1\\ 2\\ 3\\ 4 \end{array} \right]\)</span>、また
+<span class="math inline">\(\left[ \begin{array}{c} 1\\ 2\\ 3\\ 4 \end{array} \right]^\prime=[1,2,3,4]\)</span>であり、<span class="math inline">\(x^\prime=X\)</span>、<span class="math inline">\(X^\prime=x\)</span>を満たす。</p>
+<div id="section-1" class="section level2">
+<h2>積</h2>
+<p>ベクトルに含まれる要素の数が同じ行ベクトル<span class="math inline">\(A=\left[ a,b\right]\)</span>と列ベクトル<span class="math inline">\(B=\left[\begin{array}{c}c\\d\end{array}\right]\)</span>により、行ベクトル<span class="math inline">\(A\)</span>と列ベクトル<span class="math inline">\(B\)</span>との積は次の原則に従う：
+<span class="math display">\[
+AB=\left[  a,b\right]  \left[
+\begin{array}
+{c}c\\
+d
+\end{array}
+\right]  =ac+bd
+\]</span>
+<span class="math inline">\(Xx\)</span>すなわち、<span class="math inline">\(x^\prime x\)</span>の積は次に従う。
+<span class="math display">\[
+Xx=x^{\prime}x=[1,2,3,4]\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  =1^{2}+2^{2}+3^{2}+4^{2}=30
+\]</span></p>
+<pre class="r"><code>x&lt;-matrix(1:4,ncol=1)
+X&lt;-t(x)
+X</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4</code></pre>
+<pre class="r"><code>x</code></pre>
+<pre><code>##      [,1]
+## [1,]    1
+## [2,]    2
+## [3,]    3
+## [4,]    4</code></pre>
+<pre class="r"><code>X%*%x</code></pre>
+<pre><code>##      [,1]
+## [1,]   30</code></pre>
+<p>すべての要素が1の列ベクトルを<span class="math inline">\(h=\left[\begin{array}{c} 1\\ 1\\ 1\\ 1 \end{array}\right]\)</span>とする。<span class="math inline">\(x^{\prime}h\)</span>の積は次に従う。
+<span class="math display">\[
+x^{\prime}h=[1,2,3,4]\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  =1+2+3+4=10
+\]</span></p>
+<pre class="r"><code>h&lt;-matrix(rep(1,4))
+h</code></pre>
+<pre><code>##      [,1]
+## [1,]    1
+## [2,]    1
+## [3,]    1
+## [4,]    1</code></pre>
+<pre class="r"><code>t(x)%*%h</code></pre>
+<pre><code>##      [,1]
+## [1,]   10</code></pre>
+<p>すなわち、要素の数が同じ行ベクトルと列ベクトルにより、要素の積の和を得る。従って、<span class="math inline">\(w=\left[\begin{array}{c}w_{1}\\w_{2}\\\vdots\\w_{n}\end{array}\right]\)</span>のとき、<span class="math inline">\(w^{\prime}w=\sum_{i=1}^{n}w_{i}^{2}\)</span>であり、<span class="math inline">\(l=\left[\begin{array}{c}1\\1\\\vdots\\1\end{array}\right] _{n}\)</span>を用い、<span class="math inline">\(w^{\prime}l=\sum_{i=1}^{n}w_{i}\)</span>である。</p>
+</div>
+<div id="section-2" class="section level2">
+<h2>倍数</h2>
+<p>ベクトルの定数倍は次に従う：
+<span class="math display">\[
+\frac{1}{4}h^{\prime}=\left[  \frac{1}{4},\frac{1}{4},\frac{1}{4},\frac{1}{4}\right]
+\]</span>
+以上を利用すれば、<span class="math inline">\(x\)</span>の4つの要素の平均<span class="math inline">\(m\)</span>は次式で求めることができる：
+<span class="math display">\[
+m=x^{\prime}h/4=\frac{1+2+3+4}{4}=2.5
+\]</span></p>
+<pre class="r"><code>m&lt;-t(x)%*%h/4
+m</code></pre>
+<pre><code>##      [,1]
+## [1,]  2.5</code></pre>
+<p>他方、<span class="math inline">\(x\)</span>の4つの要素による分散<span class="math inline">\(v\)</span>は次式で求められる：
+<span class="math display">\[
+v=\frac{\sum x_{i}^{2}-nm^{2}}{n}=x^{\prime}x/4-m^{2}=7.5-2.5^{2}=1.25
+\]</span></p>
+<pre class="r"><code>t(x)%*%x/4-m^2</code></pre>
+<pre><code>##      [,1]
+## [1,] 1.25</code></pre>
+</div>
+<div id="section-3" class="section level2">
+<h2>加減</h2>
+<p>要素の数が同じ列ベクトル（行ベクトルも同様）について、ベクトルの加減算が行える。<span class="math inline">\(x\)</span>の要素の偏差を集めた行ベクトルは次のように求められる：
+<span class="math display">\[
+x-mh=\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  -2.5\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}-1.5\\
+-.5\\
+.5\\
+1.5
+\end{array}
+\right]
+\]</span></p>
+<pre class="r"><code>x-h%*%m</code></pre>
+<pre><code>##      [,1]
+## [1,] -1.5
+## [2,] -0.5
+## [3,]  0.5
+## [4,]  1.5</code></pre>
+<p>これを用いれば、次式からも分散を求めることができる：
+<span class="math display">\[
+\begin{aligned}
+v  &amp;  =\frac{\sum\left(  x_{i}-m\right)  ^{2}}{4}=\left(  x-mh\right)
+^{\prime}\left(  x-mh\right)  /4\\
+&amp;  =\frac{\left(  -1.5\right)  ^{2}+\left(  -.5\right)  ^{2}+\left(
+1.5\right)  ^{2}+\left(  .5\right)  ^{2}}{4}=1.25
+\end{aligned}
+\]</span></p>
+<pre class="r"><code>t(x-h%*%m)%*%(x-h%*%m)/4</code></pre>
+<pre><code>##      [,1]
+## [1,] 1.25</code></pre>
+</div>
+<div id="section-4" class="section level2">
+<h2>行列</h2>
+<p>他方、列ベクトル<span class="math inline">\(B\)</span>と行ベクトル<span class="math inline">\(A\)</span>との積は次の原則に従う：
+<span class="math display">\[
+BA=\left[
+\begin{array}
+{c}c\\
+d
+\end{array}
+\right]  \left[  a,b\right]  =\left[
+\begin{array}
+{cc}ca &amp; cb\\
+da &amp; db
+\end{array}
+\right]
+\]</span>
+<span class="math inline">\(\left[\begin{array}{cc}ca &amp; cb\\da &amp; db\end{array}\right]\)</span>を2行、2列の行列と呼ぶ。<span class="math inline">\(h\)</span>と<span class="math inline">\(X=x^{\prime}\)</span>との積は次に従う。
+<span class="math display">\[
+hX=hx^{\prime}=\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  [1,2,3,4]=\left[
+\begin{array}
+{cccc}1 &amp; 2 &amp; 3 &amp; 4\\
+1 &amp; 2 &amp; 3 &amp; 4\\
+1 &amp; 2 &amp; 3 &amp; 4\\
+1 &amp; 2 &amp; 3 &amp; 4
+\end{array}
+\right]
+\]</span></p>
+<pre class="r"><code>h%*%t(x)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    1    2    3    4
+## [3,]    1    2    3    4
+## [4,]    1    2    3    4</code></pre>
+<p><span class="math inline">\(x\)</span>と<span class="math inline">\(x^{\prime}\)</span>との積は次に従う。
+<span class="math display">\[
+xx^{\prime}=\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  [1,2,3,4]=\left[
+\begin{array}
+{cccc}1 &amp; 2 &amp; 3 &amp; 4\\
+2 &amp; 4 &amp; 6 &amp; 8\\
+3 &amp; 6 &amp; 9 &amp; 12\\
+4 &amp; 8 &amp; 12 &amp; 16
+\end{array}
+\right]
+\]</span></p>
+<pre class="r"><code>x%*%t(x)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    2    4    6    8
+## [3,]    3    6    9   12
+## [4,]    4    8   12   16</code></pre>
+<p><span class="math inline">\(xx^{\prime}\)</span>は4行4列の行列、一方で<span class="math inline">\(x^{\prime}x\)</span>はある値になる。すなわち、<span class="math inline">\(xx^{\prime}\neq x^{\prime}x\)</span>である。</p>
+</div>
+<div id="section-5" class="section level2">
+<h2>転置</h2>
+<p>転置の原則を示す。要素の数が同じ列ベクトル（行ベクトルも同様）について、ベクトルの加減算の転置は次の原則に従う：
+<span class="math display">\[
+\left(  x-y\right)  ^{\prime}=x^{\prime}-y^{\prime}
+\]</span>
+列ベクトル<span class="math inline">\(y=\left[\begin{array}{c}1\\1\\2\\2\end{array}\right]\)</span>のとき、
+<span class="math display">\[
+\left(  x-y\right)  ^{\prime}=\left[
+\begin{array}
+{c}1-1\\
+2-1\\
+3-2\\
+4-2
+\end{array}
+\right]  ^{\prime}=[1-1,2-1,3-2,4-2]=x^{\prime}-y^{\prime}
+\]</span>
+となる。</p>
+<pre class="r"><code>y&lt;-matrix(c(1,1,2,2))
+t(x-y)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    0    1    1    2</code></pre>
+<pre class="r"><code>t(x)-t(y)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    0    1    1    2</code></pre>
+<p><span class="math inline">\(x^{\prime}y\)</span>の転置は次に従う：
+<span class="math display">\[
+\begin{aligned}
+\left(  x^{\prime}y\right)  ^{\prime}  &amp;  =\left(  [1,2,3,4]\left[
+\begin{array}{c}
+1\\
+1\\
+2\\
+2
+\end{array}
+\right]  \right)  ^{\prime}=\left(  1+2+6+8\right)  ^{\prime}\\
+&amp;  =1+2+6+8=[1,1,2,2]\left[
+\begin{array}{c}
+1\\
+2\\
+3\\
+4
+\end{array}
+\right]  =y^\prime x
+\end{aligned}
+\]</span></p>
+<pre class="r"><code>t(t(x)%*%y)</code></pre>
+<pre><code>##      [,1]
+## [1,]   17</code></pre>
+<pre class="r"><code>t(y)%*%x</code></pre>
+<pre><code>##      [,1]
+## [1,]   17</code></pre>
+<p><span class="math inline">\(xy^{\prime}\)</span>の転置は次に従う：
+<span class="math display">\[
+\begin{aligned}
+\left(  xy^{\prime}\right)  ^{\prime}  &amp;  =\left(  \left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  [1,1,2,2]\right)  ^{\prime}=\left[
+\begin{array}
+{cccc}1 &amp; 1 &amp; 2 &amp; 2\\
+2 &amp; 2 &amp; 4 &amp; 4\\
+3 &amp; 3 &amp; 6 &amp; 6\\
+4 &amp; 4 &amp; 8 &amp; 8
+\end{array}
+\right]  ^{\prime}\\
+&amp;  =\left[
+\begin{array}
+{cccc}1 &amp; 2 &amp; 3 &amp; 4\\
+1 &amp; 2 &amp; 3 &amp; 4\\
+2 &amp; 4 &amp; 6 &amp; 8\\
+2 &amp; 4 &amp; 6 &amp; 8
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}1\\
+1\\
+2\\
+2
+\end{array}
+\right]  [1,2,3,4]=yx^{\prime}\end{aligned}
+\]</span></p>
+<pre class="r"><code>t(x%*%t(y))</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    1    2    3    4
+## [3,]    2    4    6    8
+## [4,]    2    4    6    8</code></pre>
+<pre class="r"><code>y%*%t(x)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    1    2    3    4
+## [3,]    2    4    6    8
+## [4,]    2    4    6    8</code></pre>
+<p><span class="math inline">\(\left( x-y\right) ^{\prime}\left( x-y\right)\)</span>は次に従う：
+<span class="math display">\[
+\left(  x-y\right)  ^{\prime}\left(  x-y\right)  =x^{\prime}x-y^{\prime
+}x-x^{\prime}y+y^{\prime}y
+\]</span></p>
+</div>
+</div>
+<div id="ols" class="section level1">
+<h1>OLS</h1>
+<p>真の回帰方程式を
+<span class="math display">\[
+y_{i}=\alpha+\beta x_{i}+u_{i}
+\tag{1}
+\]</span>
+とする。誤差項を<span class="math inline">\(u_{i}\sim N\left( 0,\sigma^{2}\right)\)</span>と仮定する。ここで、<span class="math inline">\(y_{i},x_{i},u_{i}\)</span>をそれぞれ要素とする三つの列ベクトル<span class="math inline">\(y,x,u\)</span>を次のように表す。
+<span class="math display">\[
+y=\left[
+\begin{array}
+{c}1\\
+1\\
+2\\
+2
+\end{array}
+\right]  ,x=\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  ,u=\left[
+\begin{array}
+{c}u_{1}\\
+u_{2}\\
+u_{3}\\
+u_{4}\end{array}
+\right]
+\]</span>
+OLSによるパラメータ推定値を<span class="math inline">\(\hat{\alpha},\hat{\beta}\)</span>、誤差項の推定値（残差）を<span class="math inline">\(\hat{u}_{i}=y_{i}-\hat{\alpha}-\hat{\beta}x_{i}\)</span>で表わす。正規方程式の解より、<span class="math inline">\(\hat{\alpha},\hat{\beta}\)</span>は次式を満たす。
+<span class="math display">\[
+\hat{\beta}=\frac{\sum y_{i}x_{i}-4\overline{y}\overline{x}}
+{\sum x_{i}^{2}-4\overline{x}^{2}},
+\hat{\alpha}=\overline{y}-\hat{\beta}\overline{x}
+\]</span></p>
+<div id="section-6" class="section level2">
+<h2>ベクトルによる計算</h2>
+<p>以上をベクトルを用いて計算する。<span class="math inline">\(\sum y_{i}x_{i}=y^{\prime}x=17\)</span>、<span class="math inline">\(\sum x_{i}^{2}=x^{\prime}x=30\)</span>であり、平均は要素がすべて1の列ベクトル<span class="math inline">\(h\)</span>を用い、<span class="math inline">\(\overline{y}=\sum y_{i}/4=y^{\prime}h/4=1.5\)</span>、<span class="math inline">\(\overline{x}=\sum x_{i}/4=x^\prime h/4=2.5\)</span>である。</p>
+<pre class="r"><code>t(y)%*%x</code></pre>
+<pre><code>##      [,1]
+## [1,]   17</code></pre>
+<pre class="r"><code>t(x)%*%x</code></pre>
+<pre><code>##      [,1]
+## [1,]   30</code></pre>
+<pre class="r"><code>ybar&lt;-t(y)%*%h/4
+xbar&lt;-t(x)%*%h/4</code></pre>
+<p>これより、パラメータの推定値は次の通りである。
+<span class="math display">\[
+\begin{aligned}
+\hat{\beta}  &amp;  =\frac{17-4\ast1.5\ast2.5}{30-4\ast2.5^{2}}=\frac{2}{5}=.4\\
+\hat{\alpha}  &amp;  =1.5-.4\ast2.5=.5\end{aligned}
+\]</span></p>
+<pre class="r"><code>ybar&lt;-t(y)%*%h/4
+xbar&lt;-t(x)%*%h/4
+betahat&lt;-(t(y)%*%x-4*ybar*xbar)/(t(x)%*%x-4*xbar^2)
+betahat</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.4</code></pre>
+<pre class="r"><code>alphahat&lt;-ybar-betahat*xbar
+alphahat</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.5</code></pre>
+<p>パラメータの分散<span class="math inline">\(V\left( \hat{\beta}\right)\)</span>、<span class="math inline">\(V\left( \hat{\alpha}\right)\)</span>は次式に従う。
+<span class="math display">\[
+V\left(  \hat{\beta}\right)  =\frac{1}{\sum x_{i}^{2}-4\overline{x}^{2}}s^{2},V\left(  \hat{\alpha}\right)  =\frac{\sum x_{i}^{2} }{4\left( \sum x_{i}^{2}-4\overline{x}^{2}\right)  }s^{2}
+\]</span>
+ただし、<span class="math inline">\(s^2\)</span>は自由度2の<span class="math inline">\(\sigma^2\)</span>の推定値であり次式に従う。
+<span class="math display">\[
+s^{2}=\frac{\sum\widehat{u}_{i}^{2}}{2}
+\]</span>
+このとき、<span class="math inline">\(\sum\hat{u}_{i}^{2}=\hat{u}^{\prime}\hat{u}\)</span>であり、<span class="math inline">\(\hat{u}=\left[\begin{array}{r}.1\\-.3\\.3\\-.1\end{array}\right]\)</span>より次が得られる。
+<span class="math display">\[
+s^2=.2/2=.1
+\]</span></p>
+<pre class="r"><code>uhat&lt;-y-h%*%alphahat-x%*%betahat
+uhat</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.1
+## [2,] -0.3
+## [3,]  0.3
+## [4,] -0.1</code></pre>
+<pre class="r"><code>s2&lt;-t(uhat)%*%uhat/2
+s2</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.1</code></pre>
+<p>よって、パラメータの分散は次のように計算できる。
+<span class="math display">\[
+\begin{aligned}
+V\left(  \hat{\beta}\right)   &amp;  =\frac{1}{5}\ast.1=.02\\
+V\left(  \hat{\alpha}\right)   &amp;  =\frac{30}{20}\ast.1=.15\end{aligned}
+\]</span></p>
+<pre class="r"><code>vbeta&lt;-1/(t(x)%*%x-4*xbar^2)*s2
+vbeta</code></pre>
+<pre><code>##      [,1]
+## [1,] 0.02</code></pre>
+<pre class="r"><code>valpha&lt;-t(x)%*%x/(4*(t(x)%*%x-4*xbar^2))*s2
+valpha</code></pre>
+<pre><code>##      [,1]
+## [1,] 0.15</code></pre>
+<p>パラメータ推定値に関する有意性検定は次の通りである。<span class="math inline">\(\hat{\beta}\)</span>の標準偏差は<span class="math inline">\(\sqrt{.02}=.14142\)</span>となり、<span class="math inline">\(t\)</span>統計量は<span class="math inline">\(t\left( \hat{\beta}\right)=.4/.14142=2.\,8285\)</span>である。一方、<span class="math inline">\(\hat{\alpha}\)</span>の標準偏差は<span class="math inline">\(\sqrt{.15}=0.3873\)</span>となり、<span class="math inline">\(t\)</span>統計量は<span class="math inline">\(t\left(\hat{\alpha}\right) =.5/.3873=1.\,2910\)</span>である。いずれも有意水準5% で棄却されない。</p>
+<pre class="r"><code>tbeta&lt;-betahat/sqrt(vbeta)
+tbeta</code></pre>
+<pre><code>##          [,1]
+## [1,] 2.828427</code></pre>
+<pre class="r"><code>talpha&lt;-alphahat/sqrt(valpha)
+talpha</code></pre>
+<pre><code>##          [,1]
+## [1,] 1.290994</code></pre>
+<pre class="r"><code>qt(0.975,2)</code></pre>
+<pre><code>## [1] 4.302653</code></pre>
+</div>
+</div>
+<div id="ols-1" class="section level1">
+<h1>OLSのベクトル、行列表現</h1>
+<div id="section-7" class="section level2">
+<h2>ベクトル表現</h2>
+<p><span class="math inline">\(h=\left[\begin{array}{c}1\\1\\1\\1\end{array}\right]\)</span>を用い、回帰式(1)を列ベクトルで表現すれば、以下のようにまとめて書くことができる：</p>
+<p><span class="math display">\[
+\left[
+\begin{array}
+{c}y_{1}\\
+y_{2}\\
+y_{3}\\
+y_{4}\end{array}
+\right]  =\alpha\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  +\beta\left[
+\begin{array}
+{c}x_{1}\\
+x_{2}\\
+x_{3}\\
+x_{4}\end{array}
+\right]  +\left[
+\begin{array}
+{c}u_{1}\\
+u_{2}\\
+u_{3}\\
+u_{4}\end{array}
+\right]
+\]</span>
+すなわち、<span class="math inline">\(y_{i},x_{i},u_{i}\)</span>をそれぞれ要素とする三つの列ベクトル<span class="math inline">\(y,x,u\)</span>により、回帰式を次のように表現できる。
+<span class="math display">\[
+y=\alpha h+\beta x+u \tag{2}
+\]</span></p>
+</div>
+<div id="section-8" class="section level2">
+<h2>行列表現</h2>
+<p>回帰式のベクトル表現は行列による表現に拡張することができる。ここで、複数の列ベクトルを列要素とする行列を考える。列ベクトル<span class="math inline">\(h\)</span>、<span class="math inline">\(x\)</span>を列要素とする行列を<span class="math inline">\(X\)</span>、また回帰式のパラメータ<span class="math inline">\(\alpha\)</span>、<span class="math inline">\(\beta\)</span>を縦に並べ、それを要素とする列ベクトル<span class="math inline">\(B\)</span>を次のように定義する。
+<span class="math display">\[
+X=\left[  h,x\right]  =\left[
+\begin{array}
+{cc}1 &amp; 1\\
+1 &amp; 2\\
+1 &amp; 3\\
+1 &amp; 4
+\end{array}
+\right]  ,B=\left[
+\begin{array}
+{c}\alpha\\
+\beta
+\end{array}
+\right]
+\]</span>
+行列<span class="math inline">\(X\)</span>は4行2列の要素を持ち、他方、列ベクトル<span class="math inline">\(B\)</span>は2行1列の要素を持つ行列とみなすことができる。行列<span class="math inline">\(X\)</span>と列ベクトル<span class="math inline">\(B\)</span>とを用いれば、回帰式をより単純に表現することができる。ただし、それには行列の積に関する次の原則を必要とする。すなわち、左の行列の列数と右の行列の行数が同じとき、行列の積は次の原則に従う：
+<span class="math display">\[
+\left[
+\begin{array}
+{ccc}1 &amp; 2 &amp; 3\\
+4 &amp; 5 &amp; 6
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d\\
+e &amp; f
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a+2c+3e &amp; b+2d+3f\\
+4a+5c+6e &amp; 4b+5d+6f
+\end{array}
+\right]
+\]</span>
+これを用いれば、次の関係を得ることができる。
+<span class="math display">\[
+XB=\left[
+\begin{array}
+{cc}1 &amp; 1\\
+1 &amp; 2\\
+1 &amp; 3\\
+1 &amp; 4
+\end{array}
+\right]  \left[
+\begin{array}
+{c}\alpha\\
+\beta
+\end{array}
+\right]  =\alpha\left[
+\begin{array}
+{c}1\\
+1\\
+1\\
+1
+\end{array}
+\right]  +\beta\left[
+\begin{array}
+{c}1\\
+2\\
+3\\
+4
+\end{array}
+\right]  =\alpha h+\beta x
+\]</span>
+よって、<span class="math inline">\(XB=\left[ h,x\right] \left[\begin{array}{c}\alpha\\\beta\end{array}\right] =\alpha h+\beta x\)</span>であり、回帰式を次のように表現することができる。
+<span class="math display">\[
+y=XB+u \tag{3}
+\]</span>
+行列<span class="math inline">\(X\)</span>には転置行列<span class="math inline">\(X^\prime\)</span>が存在し、<span class="math inline">\(X^{\prime}\)</span>は次のように表される。
+<span class="math display">\[
+X^{\prime}=\left[  h,x\right]  ^{\prime}=\left[
+\begin{array}
+{c}1,1,1,1\\
+1,2,3,4
+\end{array}
+\right]
+\]</span>
+これを用い、回帰式の両辺に左から転置行列<span class="math inline">\(X^{\prime}\)</span>を掛けると次の関係が成り立つ。
+<span class="math display">\[
+X^{\prime}y=X^{\prime}XB+X^{\prime}u \tag{4}
+\]</span>
+左辺の<span class="math inline">\(X^{\prime}y\)</span>は、
+<span class="math display">\[
+\left[
+\begin{array}
+{c}1,1,1,1\\
+1,2,3,4
+\end{array}
+\right]  \left[
+\begin{array}
+{c}1\\
+1\\
+2\\
+2
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}h^{\prime}y\\
+x^{\prime}y
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}6\\
+17
+\end{array}
+\right]
+\]</span></p>
+<pre class="r"><code>X&lt;-cbind(h,x)
+t(X)%*%y</code></pre>
+<pre><code>##      [,1]
+## [1,]    6
+## [2,]   17</code></pre>
+<p>を満たす。他方、<span class="math inline">\(X^{\prime}X\)</span>は以下を満たす。
+<span class="math display">\[
+\begin{aligned}
+X^{\prime}X  &amp;  =\left[  h,x\right]  ^{\prime}\left[  h,x\right] \\
+&amp;  =\left[
+\begin{array}
+{c}1,1,1,1\\
+1,2,3,4
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}1 &amp; 1\\
+1 &amp; 2\\
+1 &amp; 3\\
+1 &amp; 4
+\end{array}
+\right] \\
+&amp;  =\left[
+\begin{array}
+{c}h^{\prime}h,h^{\prime}x\\
+x^{\prime}h,x^{\prime}x
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}4 &amp; 10\\
+10 &amp; 30
+\end{array}
+\right]\end{aligned}
+\]</span></p>
+<pre class="r"><code>t(X)%*%X</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    4   10
+## [2,]   10   30</code></pre>
+</div>
+</div>
+<div id="section-9" class="section level1">
+<h1>単位行列、逆行列</h1>
+<p><span class="math inline">\(A=\left[\begin{array}{cc}4 &amp; 10\\10 &amp; 30\end{array}\right]\)</span>に対して、<span class="math inline">\(A^{-1}\)</span>を逆行列という。<span class="math inline">\(I=\left[\begin{array}{cc}1 &amp; 0\\0 &amp; 1\end{array}\right]\)</span>のように対角線上の値がすべて1、それ以外は0の行列を単位行列という。単位行列は行と列の数が必ず同じである。<span class="math inline">\(A\)</span>のように行と列の数が同じのものを正方行列と呼ぶ。正方行列のみ、逆行列が存在しうる。</p>
+<p>例えば<span class="math inline">\(a=3\)</span>のような定数に対し、その逆数は<span class="math inline">\(1/a=1/3\)</span>である。ここに着目すれば、次の関係式が成り立つ。
+<span class="math display">\[
+a \cdot {1 \over a} =1
+\]</span>
+逆数は以上の関係を満たす。逆行列は逆数に似ており、行列<span class="math inline">\(A\)</span>が正方であれば、逆行列<span class="math inline">\(A^{-1}\)</span>が存在しうる。すなわち、逆行列は、
+<span class="math display">\[
+A^{-1}A=AA^{-1}=I
+\]</span>
+という関係を満たす。ある正方行列に対してその逆行列が存在するとき、二つの積は必ず単位行列となる。単位行列<span class="math inline">\(I\)</span>は正方行列の世界で定数<span class="math inline">\(1\)</span>の役割を果たす。ただし、<span class="math inline">\(a=0\)</span>のときに逆数が存在しないように、正方行列にも逆行列が存在しない条件がある。</p>
+<div id="section-10" class="section level2">
+<h2>単位行列</h2>
+<p>正方行列と単位行列の積は次を満たす：
+<span class="math display">\[
+\begin{aligned}
+\left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d
+\end{array}
+\right]  I  &amp;  =\left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}1 &amp; 0\\
+0 &amp; 1
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a1+b0 &amp; a0+b1\\
+c1+d0 &amp; c0+d1
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d
+\end{array}
+\right]  ,\\
+I\left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d
+\end{array}
+\right]   &amp;  =\left[
+\begin{array}
+{cc}1 &amp; 0\\
+0 &amp; 1
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}1a+0c &amp; 1b+0d\\
+0a+1c &amp; 0b+1d
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}a &amp; b\\
+c &amp; d
+\end{array}
+\right]
+\end{aligned}
+\]</span>
+すなわち、<span class="math inline">\(B=\left[\begin{array}{cc}a &amp; b\\c &amp; d\end{array}\right]\)</span>に対して、積の順序を問わず<span class="math inline">\(BI=IB=B\)</span>である。</p>
+</div>
+<div id="section-11" class="section level2">
+<h2>逆行列</h2>
+<p><span class="math inline">\(A\)</span>の逆行列は<span class="math inline">\(A\)</span>と同じ行と列の数を持ち、逆行列を<span class="math inline">\(B\)</span>で表せば、
+<span class="math display">\[
+A^{-1}A =\left[
+\begin{array}{cc}
+a &amp; b\\
+c &amp; d
+\end{array}
+\right] \left[
+\begin{array}{cc}
+4 &amp; 10\\
+10 &amp; 30
+\end{array}
+\right] =\left[
+\begin{array}{cc}
+1 &amp; 0\\
+0 &amp; 1
+\end{array}
+\right]
+\]</span>
+を満たす。従って、
+<span class="math display">\[
+\left[
+\begin{array}{cc}
+a &amp; b\\
+c &amp; d
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}4 &amp; 10\\
+10 &amp; 30
+\end{array}
+\right]  =\left[
+\begin{array}{cc}
+a+4b &amp; 4a+30b\\
+c+4d &amp; 4c+30d
+\end{array}
+\right]
+\]</span>
+より、逆行列の要素は次の関係を満たす。
+<span class="math display">\[
+\left\{
+\begin{array}{c}
+4a+10b=1\\
+10a+30b=0\\
+4c+10d=0\\
+10c+30d=1
+\end{array}
+\right.
+\]</span>
+以上を解けば、<span class="math inline">\(a=3/2\)</span>、<span class="math inline">\(b=-1/2\)</span>、<span class="math inline">\(c=-1/2\)</span>、<span class="math inline">\(d=1/5\)</span>が求まる。すなわち、
+<span class="math display">\[
+A^{-1}=\left[
+\begin{array}
+{cc}\frac{3}{2} &amp; -\frac{1}{2}\\
+-\frac{1}{2} &amp; \frac{1}{5}\end{array}
+\right]  =\frac{1}{20}\left[
+\begin{array}
+{cc}30 &amp; -10\\
+-10 &amp; 4
+\end{array}
+\right]
+\]</span>
+である。</p>
+<pre class="r"><code>A&lt;-matrix(c(4,10,10,30),ncol=2)
+A</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    4   10
+## [2,]   10   30</code></pre>
+<pre class="r"><code>Ainv&lt;-solve(A)
+Ainv</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]  1.5 -0.5
+## [2,] -0.5  0.2</code></pre>
+<p>2行2列の場合、次の逆行列の公式が存在する：
+<span class="math display">\[
+\frac{1}{|ad-bc|}\left[
+\begin{array}
+{cc}d &amp; -b\\
+-c &amp; a
+\end{array}
+\right]
+\]</span>
+これより、
+<span class="math display">\[
+A^{-1}A=\frac{1}{20}\left[
+\begin{array}{cc}
+30 &amp; -10\\
+-10 &amp; 4
+\end{array}
+\right]  \left[
+\begin{array}
+{cc}4 &amp; 10\\
+10 &amp; 30
+\end{array}
+\right]  =\frac{1}{20}\left[
+\begin{array}
+{cc}20 &amp; 0\\
+0 &amp; 20
+\end{array}
+\right]  =I
+\]</span>
+を確認でき、また<span class="math inline">\(AA^{-1}=I\)</span>も同様に成立する。</p>
+<pre class="r"><code>solve(A)%*%A</code></pre>
+<pre><code>##              [,1]          [,2]
+## [1,] 1.000000e+00 -1.776357e-15
+## [2,] 2.220446e-16  1.000000e+00</code></pre>
+<pre class="r"><code>round(solve(A)%*%A,2)</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    0
+## [2,]    0    1</code></pre>
+</div>
+</div>
+<div id="ols-2" class="section level1">
+<h1>OLSの推定値、分散</h1>
+<div id="section-12" class="section level2">
+<h2>行列による解法</h2>
+<p>既に導出した(4)式：
+<span class="math display">\[
+X^{\prime}y=X^{\prime}XB+X^{\prime}u
+\]</span>
+について、<span class="math inline">\(X^{\prime}X\)</span>の逆行列を適用する。(4)式の両辺に対し、左から<span class="math inline">\(X^{\prime}X\)</span>の逆行列を掛ければ、次の関係が得られる。
+<span class="math display">\[
+\left(X^{\prime}X\right)  ^{-1}X^{\prime}y=B+\left(  X^{\prime}X\right)
+^{-1}X^{\prime}u 
+\tag{5}
+\]</span>
+OLSの仮定に従えば、誤差項の列ベクトル<span class="math inline">\(u\)</span>は<span class="math inline">\(X\)</span>と独立であり、
+<span class="math display">\[
+E\left[  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  =0
+\]</span>
+を満たす。よって、以上の期待値は
+<span class="math display">\[
+E\left[  \left( X^{\prime}X\right) ^{-1}X^{\prime}y\right]
+=B
+\tag{6}
+\]</span>
+となる。すなわち、<span class="math inline">\(\left( X^{\prime}X\right) ^{-1}X^{\prime}y\)</span>は回帰式のパラメータ<span class="math inline">\(B\)</span>の推定値を意味する。</p>
+<p><span class="math inline">\(X^{\prime}X\)</span>はすでに行列<span class="math inline">\(A\)</span>として計算しており、<span class="math inline">\(X^{\prime}X=\left[\begin{array}{cc}4 &amp; 10\\10 &amp; 30\end{array}\right]\)</span>、その逆行列は<span class="math inline">\(\left(X^{\prime}X\right) ^{-1}=\frac{1}{20}\left[\begin{array}{cc}30 &amp; -10\\-10 &amp; 4\end{array}\right]\)</span>である。これより、以下の解が得られる。
+<span class="math display">\[
+\begin{aligned}
+\widehat{B}  &amp;  \equiv\left(  X^{\prime}X\right)  ^{-1}X^{\prime}y=\frac
+{1}{20}\left[
+\begin{array}
+{cc}30 &amp; -10\\
+-10 &amp; 4
+\end{array}
+\right]  \left[
+\begin{array}
+{c}6\\
+17
+\end{array}
+\right] \\
+&amp;  =\frac{1}{20}\left[
+\begin{array}
+{c}10\\
+8
+\end{array}
+\right]  =\left[
+\begin{array}
+{c}.5\\
+.4
+\end{array}
+\right]\end{aligned}
+\]</span></p>
+<pre class="r"><code>Bhat&lt;-solve(t(X)%*%X)%*%t(X)%*%y
+Bhat</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.5
+## [2,]  0.4</code></pre>
+</div>
+<div id="section-13" class="section level2">
+<h2>分散共分散行列</h2>
+<p>一方、パラメータ<span class="math inline">\(B\)</span>の推定値の分散は以下の式で表すことができる。
+<span class="math display">\[
+\begin{aligned}
+&amp;  E\left[  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}y-B\right]  \left[
+\left(  X^{\prime}X\right)  ^{-1}X^{\prime}y-B\right]  ^{\prime}=E\left[
+\left(  X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  \left[  \left(
+X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  ^{\prime}\\
+&amp;  =E\left[  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}u\right]  \left[
+u^{\prime}X\left(  X^{\prime}X\right)  ^{-1}\right]  =\left(  X^{\prime
+}X\right)  ^{-1}X^{\prime}E\left(  uu^{\prime}\right)  X\left(  X^{\prime
+}X\right)  ^{-1} 
+\end{aligned}
+\tag{7}
+\]</span>
+ただし、以上は2行2列の行列となる。<span class="math inline">\(E\left(uu^{\prime}\right)\)</span>は次のように求めることができる。
+<span class="math display">\[
+\begin{aligned}
+E\left(  uu^{\prime}\right)   &amp;  =E\left[
+\begin{array}
+{c}u_{1}\\
+u_{2}\\
+u_{3}\\
+u_{4}\end{array}
+\right]  \left[  u_{1},u,u_{3},u_{4}\right]  =E\left[
+\begin{array}
+{cccc}u_{1}^{2} &amp; u_{1}u_{2} &amp; u_{1}u_{3} &amp; u_{1}u_{4}\\
+u_{2}u_{1} &amp; u_{2}^{2} &amp; u_{2}u_{3} &amp; u_{2}u_{4}\\
+u_{3}u_{1} &amp; u_{3}u_{2} &amp; u_{3}^{2} &amp; u_{3}u_{4}\\
+u_{4}u_{1} &amp; u_{4}u_{2} &amp; u_{4}u_{3} &amp; u_{4}^{2}\end{array}
+\right] \\
+&amp;  =\left[
+\begin{array}
+{cccc}\sigma^{2} &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; \sigma^{2} &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; \sigma^{2} &amp; 0\\
+0 &amp; 0 &amp; 0 &amp; \sigma^{2}\end{array}
+\right]  =\sigma^{2}\left[
+\begin{array}
+{cccc}1 &amp; 0 &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0 &amp; 0\\
+0 &amp; 0 &amp; 1 &amp; 0\\
+0 &amp; 0 &amp; 0 &amp; 1
+\end{array}
+\right]  =\sigma^{2}I\end{aligned}
+\]</span>
+以上を利用すれば、パラメータ<span class="math inline">\(B\)</span>の推定値の分散行列は
+<span class="math display">\[
+\begin{aligned}
+&amp;  \left(  X^{\prime}X\right)  ^{-1}X^{\prime}E\left(  uu^{\prime}\right)
+X\left(  X^{\prime}X\right)  ^{-1}=\left(  X^{\prime}X\right)  ^{-1}X^{\prime
+}\left(  \sigma^{2}I\right)  X\left(  X^{\prime}X\right)  ^{-1}\nonumber\\
+&amp;  =\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}X^{\prime}IX\left(  X^{\prime
+}X\right)  ^{-1}=\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}X^{\prime}X\left(
+X^{\prime}X\right)  ^{-1}\nonumber\\
+&amp;  =\sigma^{2}\left(  X^{\prime}X\right)  ^{-1} \end{aligned}\tag{8}
+\]</span>
+と求められる。以下の計算で確認できるように、この分散行列は対角要素にパラメータ推定値<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>の分散を含む。<span class="math inline">\(X^{\prime}X\)</span>を列ベクトル<span class="math inline">\(h,x\)</span>により求めれば、次のように表現できる。
+<span class="math display">\[
+\begin{aligned}
+X^{\prime}X  &amp;  =\left[  h,x\right]  ^{\prime}\left[  h,x\right] \\
+&amp;  =\left[
+\begin{array}
+{c}h^{\prime}h,h^{\prime}x\\
+x^{\prime}h,x^{\prime}x
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}n &amp; \sum x_{i}\\
+\sum x_{i} &amp; \sum x_{i}^{2}\end{array}
+\right]\end{aligned}
+\]</span>
+よって逆行列の公式より、
+<span class="math display">\[
+\left(  X^{\prime}X\right)  ^{-1}=\frac{1}{n|\sum x_{i}^{2}-n\overline{X}^{2}|}\left[
+\begin{array}
+{cc}\sum x_{i}^{2} &amp; -\sum x_{i}\\
+-\sum x_{i} &amp; n
+\end{array}
+\right]
+\]</span>
+である。これを用いて分散行列を書き直せば、
+<span class="math display">\[
+\begin{aligned}
+\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}  &amp;  =\frac{\sigma^{2}}{nS_{xx}}\left[
+\begin{array}
+{cc}\sum x_{i}^{2} &amp; -\sum x_{i}\\
+-\sum x_{i} &amp; n
+\end{array}
+\right] \\
+&amp;  =\left[
+\begin{array}
+{cc}\frac{\sum x_{i}^{2}}{nS_{xx}}\sigma^{2} &amp; -\frac{\sigma^{2}}{S_{xx}}\overline{x}\\
+-\frac{\sigma^{2}}{S_{xx}}\overline{x} &amp; \frac{\sigma^{2}}{S_{xx}}\end{array}
+\right]\end{aligned}
+\]</span>
+となる。すなわち、
+<span class="math display">\[
+\sigma^{2}\left(  X^{\prime}X\right)  ^{-1}=\left[
+\begin{array}
+{cc}V\left(  \hat{\alpha}\right)  &amp; Cov\left(  \hat{\alpha},\hat {\beta}\right) \\
+Cov\left(  \hat{\alpha},\hat{\beta}\right)  &amp; V\left(  \hat{\beta }\right)
+\end{array}
+\right]  
+\tag{9}
+\]</span>
+となる。左上からの対角線上に<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>の分散、反対の対角線にその共分散をもつことから、以上は<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>の分散共分散行列と呼ばれる。</p>
+<p><span class="math inline">\(\sigma^{2}\)</span>の推定値を<span class="math inline">\(s^{2}\)</span>とする。回帰式に含まれる列ベクトル<span class="math inline">\(x\)</span>、<span class="math inline">\(y\)</span>の要素は4であり、<span class="math inline">\(s^{2}\)</span>の自由度2となる。よって<span class="math inline">\(s^{2}\)</span>は次式により求められる。
+<span class="math display">\[
+\begin{aligned}
+s^{2}  &amp;  =\frac{1}{2}\hat{u}^{\prime}\hat{u}\\
+&amp;  =\frac{1}{2}\left[  .1,-.3,.3,-.1\right]  \left[
+\begin{array}
+{r}.1\\
+-.3\\
+.3\\
+-.1
+\end{array}
+\right] \\
+&amp;  =\frac{1}{2}\left(  .01+.09+.09+.01\right)  =.1\end{aligned}
+\]</span></p>
+<pre class="r"><code>uhat&lt;-y-X%*%Bhat
+uhat</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.1
+## [2,] -0.3
+## [3,]  0.3
+## [4,] -0.1</code></pre>
+<pre class="r"><code>s2&lt;-t(uhat)%*%uhat/2
+s2</code></pre>
+<pre><code>##      [,1]
+## [1,]  0.1</code></pre>
+<p>従って、<span class="math inline">\(\hat{\alpha}\)</span>、<span class="math inline">\(\hat{\beta}\)</span>の分散共分散行列の推定値は
+<span class="math display">\[
+s^{2}\left(  X^{\prime}X\right)  ^{-1}=\frac{.1}{20}\left[
+\begin{array}
+{cc}30 &amp; -10\\
+-10 &amp; 4
+\end{array}
+\right]  =\left[
+\begin{array}
+{cc}.15 &amp; -.05\\
+-.05 &amp; .02
+\end{array}
+\right]
+\]</span>
+となる。</p>
+<pre class="r"><code>V&lt;-c(s2)*solve(t(X)%*%X)
+V</code></pre>
+<pre><code>##       [,1]  [,2]
+## [1,]  0.15 -0.05
+## [2,] -0.05  0.02</code></pre>
+<p>以上で求めたパラメータ推定値と、その分散共分散行列の対角要素を取り出せば、パラメータの有意性を検定することができる。その方法をRのコードで示す：</p>
+<pre class="r"><code>diag(c(s2)*solve(t(X)%*%X))</code></pre>
+<pre><code>## [1] 0.15 0.02</code></pre>
+<pre class="r"><code>Bhat/sqrt(diag(c(s2)*solve(t(X)%*%X)))</code></pre>
+<pre><code>##          [,1]
+## [1,] 1.290994
+## [2,] 2.828427</code></pre>
+<p>標本数4に対して二つのパラメータを推定したため自由度は2である。自由度2の<span class="math inline">\(t\)</span>分布について、95%の信頼区間を考えれば棄却域は両側5%である。従って、下位、上位2.5%の臨界値を求めると、</p>
+<pre class="r"><code>qt(0.025,2)</code></pre>
+<pre><code>## [1] -4.302653</code></pre>
+<pre class="r"><code>qt(0.975,2)</code></pre>
+<pre><code>## [1] 4.302653</code></pre>
+<p>となり、<span class="math inline">\(\alpha,\beta\)</span>いずれもその値は0であるという帰無仮説を棄却できない。</p>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © Keiichi Shima 2020
+  
+  </footer>
+  </body>
+</html>
+

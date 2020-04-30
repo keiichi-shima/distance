@@ -6,10 +6,19 @@
     <description>Recent content in Lecture on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 30 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/lecture/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>計量経済学講義：線形代数</title>
+      <link>/post/2020/04/30/econometricsch9/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/30/econometricsch9/</guid>
+      <description>この遠隔講義では、講義ノート第9章「線形代数」に進みます。以下は第9章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しておりま</description>
+    </item>
     
     <item>
       <title>計量経済学講義：単回帰</title>
@@ -26,7 +35,7 @@
       <pubDate>Sun, 26 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/04/26/econometricsch6/</guid>
-      <description>この遠隔講義では、講義ノート第6章「統計的推論」に進みます。以下は第4章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しており</description>
+      <description>この遠隔講義では、講義ノート第6章「統計的推論」に進みます。以下は第6章と同じ内容をwebに掲載したものです。ただし、練習問題を追加しており</description>
     </item>
     
     <item>
