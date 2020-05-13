@@ -6,10 +6,19 @@
     <description>Recent content in Econometrics on A minimal website of Keiichi Shima</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/econometrics/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>計量経済学の講義開始　必ずお読み下さい</title>
+      <link>/post/2020/05/13/econometricsreadme/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/05/13/econometricsreadme/</guid>
+      <description>講義開始のお知らせとお詫び 弊学の遠隔授業が5月14日から7月31日の日程で始まります。遠隔講義が決まり、大学からはテレビ電話会議アプリZoo</description>
+    </item>
     
     <item>
       <title>計量経済学講義：線形代数</title>
