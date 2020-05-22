@@ -370,7 +370,7 @@ $$
 g\left( w\right) =\left\{
 \begin{array}{c}
 0,\\
-a\left( x-1\right)^2+\frac{1}{4},\\
+a\left( w-1\right)^2+\frac{1}{4},\\
 0,
 \end{array}
 \right.
